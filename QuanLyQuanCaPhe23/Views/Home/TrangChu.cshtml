@@ -1,0 +1,1023 @@
+﻿@{
+    ViewData["Title"] = "TrangChu";
+    Layout = "_LayoutHome";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>PPK&#39;Coffee </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/style.css">
+    <!-- icon -->
+    <link rel="icon" href="./images/shortcut_icon.jpg">
+    <!-- library izmir -->
+    <link href="./Izmir-master/izmir.min.css" rel="stylesheet">
+    <!-- library slick slider -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.css" />
+    <style>
+        body {
+background: url(./../images/bg-body.jpg) repeat center top;
+color: #d5b084;
+font-family: 'open_sansregular';
+font-size: 12px;
+margin: 0;
+min-width: 960px;
+padding: 0;
+font-weight: normal;
+font-style: normal;
+}
+
+a {
+outline: none;
+}
+
+img {
+border: 0;
+}
+
+p {
+letter-spacing: 0.025em;
+line-height: 20px;
+}
+
+p a {
+color: #d5af87;
+}
+
+p a:hover {
+color: #bfcb75;
+}
+        /* slide show auto */
+        .slide {
+            margin-top: 4px;
+            display: flex;
+            position: relative;
+        }
+
+        .slick-arrows {
+            position: absolute;
+            width: 40px;
+            height: 50px;
+            border-radius: 4px;
+            border: none;
+            outline: none;
+            background: rgba(0, 0,0,0.6);
+            color: #fff;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+            .slick-arrows:hover {
+                background: rgba(255, 255,255,0.6);
+                color: #000;
+            }
+
+        .slick-prev {
+            left: 0;
+        }
+
+        .slick-next {
+            right: 0;
+        }
+
+        .slick-dots {
+            position: absolute;
+            list-style: none;
+            display: flex !important;
+            z-index: 2;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -30px;
+        }
+
+            .slick-dots button {
+                background-color: rgb(207, 204, 204);
+                font-size: 0;
+                border-radius: 50%;
+                border: none;
+                outline: none;
+                width: 15px;
+                margin: 5px;
+                height: 15px;
+            }
+
+                .slick-dots .slick-active button,
+                .slick-dots button:hover {
+                    background: #0a5e98;
+                }
+        /*end auto slide*/
+#page {
+    background: url(./../images/bg-page.png) repeat;
+    margin: 30px auto 0;
+    padding: 10px;
+    width: 940px;
+}
+
+    #page div {
+        background: #f5f1e6 url(./../images/bg-logo.jpg) no-repeat left top;
+        padding: 0;
+        width: 940px;
+    }
+
+#page div div#header {
+background: none;
+overflow: hidden;
+padding: 0;
+width: auto;
+}
+
+#page div div#header img {
+float: left;
+margin: -10px 0 0 10px;
+}
+
+#page div div#header ul {
+float: right;
+list-style: none;
+margin: 77px 0 0;
+overflow: hidden;
+padding: 0;
+width: 550px;
+}
+
+#page div div#header ul li {
+float: left;
+padding: 0 20px;
+}
+
+#page div div#header ul li a {
+color: #db9e29;
+display: block;
+font-family: 'UltraRegular';
+font-size: 16px;
+text-decoration: none;
+}
+
+#page div div#header ul li.current a,
+#page div div#header ul li a:hover {
+border-bottom: 5px solid #a2b83c;
+}
+
+        #page div div#body {
+            background: url(./../images/separator-long.png) no-repeat bottom center;
+            padding: 0 0 10px;
+        }
+
+#page div div#body div#figure {
+font-family: 'UltraRegular';
+padding: 0;
+position: relative;
+}
+
+#page div div#body div#figure span {
+color: #dade7d;
+display: block;
+font-size: 35px;
+left: 50px;
+position: absolute;
+top: 85px;
+text-shadow: 1px 5px #605012;
+}
+
+#page div div#body div#figure span#home {
+color: #f9b94b;
+font-size: 45px;
+line-height: 45px;
+top: 118px;
+text-shadow: 1px 5px #824622;
+width: 590px;
+}
+
+    #page div div#body div#figure span#home a {
+        background: url(./../images/bg-find-out.png) repeat;
+        color: #f6f1e7;
+        display: inline-block;
+        font-size: 14px;
+        height: 30px;
+        letter-spacing: -0.025em;
+        line-height: 30px;
+        padding: 0 10px;
+        text-align: center;
+        text-decoration: none;
+        text-shadow: none;
+        vertical-align: middle;
+    }
+
+        #page div div#body div#figure span#home a:hover {
+            background: url(./../images/bg-find-out-hover.png) repeat;
+        }
+
+#page div div#body div {
+background: none;
+overflow: hidden;
+padding: 0 0 30px;
+width: auto;
+}
+
+#page div div#body div div {
+background: none;
+float: left;
+width: 660px;
+}
+
+#page div div#body div div#blog {
+width: 685px;
+}
+
+#page div div#body div div p {
+font-family: 'open_sansregular';
+font-size: 13px;
+margin: 0 0 20px;
+}
+
+#page div div#body div div h3 {
+color: #858f48;
+font-family: 'UltraRegular';
+font-size: 20px;
+font-weight: normal;
+letter-spacing: 0.025em;
+line-height: 20px;
+margin: 20px 0;
+}
+
+#page div div#body div div dl {
+float: left;
+margin: 30px 0 10px;
+width: 330px;
+}
+
+#page div div#body div div dl dt {
+color: #a2b83d;
+font-family: 'UltraRegular';
+font-size: 16px;
+letter-spacing: -0.025em;
+line-height: 20px;
+}
+
+#page div div#body div div dl dd {
+font-family: 'open_sansregular';
+font-size: 13px;
+letter-spacing: 0.025em;
+line-height: 20px;
+margin: 0;
+}
+
+#page div div#body div div ul {
+list-style: none;
+margin: 0;
+overflow: hidden;
+padding: 0;
+}
+
+#page div div#body div div ul li {
+float: left;
+height: 320px;
+width: 220px;
+}
+
+    #page div div#body div div ul li div {
+        background: url(./../images/bg-item-title.png) no-repeat center top;
+        height: 57px;
+        float: none;
+        margin: 0 auto;
+        padding: 0;
+        text-align: center;
+        width: 142px;
+    }
+
+#page div div#body div div ul li div a {
+    color: #bfcb75;
+    display: block;
+    font-family: 'UltraRegular';
+    font-size: 14px;
+    letter-spacing: -0.025em;
+    line-height: 16px;
+    padding: 14px 0 0;
+    text-decoration: none;
+}
+
+#page div div#body div#featured {
+background: none;
+overflow: hidden;
+padding: 0;
+}
+
+#page div div#body div a.about,
+#page div div#body div a.locations,
+#page div div#body div a.whatshot,
+#page div div#body div a.blog {
+display: block;
+float: left;
+text-indent: -999999px;
+}
+
+#page div div#body div a.about,
+#page div div#body div a.locations,
+#page div div#body div a.whatshot,
+#page div div#body div a.blog {
+height: 162px;
+margin: 0 10px 0 0;
+width: 231px;
+}
+
+    #page div div#body div#featured span.whatshot {
+        background: url(./../images/whats-hot.jpg) no-repeat left top;
+        display: block;
+        float: left;
+        height: 189px;
+        margin: 0;
+        position: relative;
+        width: 237px;
+    }
+
+    #page div div#body div#featured span.whatshot a {
+        background: url(./../images/bg-find-out2.png) repeat;
+        color: #f6f1e7;
+        display: inline-block;
+        height: 30px;
+        font-family: 'UltraRegular';
+        font-size: 14px;
+        letter-spacing: -0.025em;
+        line-height: 30px;
+        margin: 127px 0 0 33px;
+        padding: 0 10px;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    #page div div#body div#featured span.whatshot a:hover {
+        background: url(./../images/bg-find-out2-hover.png) repeat;
+    }
+
+    #page div div#body div a.about {
+        background: url(./../images/about.jpg) no-repeat left top;
+    }
+
+    #page div div#body div a.locations {
+        background: url(./../images/locations.jpg) no-repeat left top;
+    }
+
+    #page div div#body div a.whatshot {
+        background: url(./../images/whats-hot2.jpg) no-repeat left top;
+    }
+
+    #page div div#body div a.blog {
+        background: url(./../images/blog.jpg) no-repeat left top;
+    }
+
+#page div div#body div div#blog ul:first-child {
+background: none;
+float: left;
+margin: 0;
+padding: 0;
+width: 460px;
+}
+
+    #page div div#body div div#blog ul:first-child li {
+        background: url(./../images/separator-blog-entry.png) no-repeat center top;
+        float: none;
+        height: auto;
+        padding: 40px 0 15px;
+        width: auto;
+    }
+
+#page div div#body div div#blog ul:first-child li:first-child {
+background: none;
+padding: 20px 0 15px;
+}
+
+#page div div#body div div#blog ul:first-child li div {
+background: none;
+height: auto;
+margin: 0 0 10px;
+overflow: hidden;
+text-align: left;
+width: auto;
+}
+
+#page div div#body div div#blog ul:first-child li div div {
+background: none;
+display: block;
+float: left;
+height: 50px;
+margin: 0;
+padding: 0;
+position: relative;
+text-align: center;
+width: 45px;
+}
+
+#page div div#body div div#blog ul:first-child li div div span.month {
+    color: #dc9f29;
+    display: block;
+    font-family: 'UltraRegular';
+    font-size: 8px;
+    letter-spacing: 0.025em;
+    line-height: 22px;
+    padding: 0;
+}
+
+#page div div#body div div#blog ul:first-child li div div span.date {
+    color: #dc9f29;
+    display: block;
+    font-family: 'UltraRegular';
+    font-size: 28px;
+    left: 2px;
+    letter-spacing: 0.025em;
+    line-height: 22px;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 16px;
+}
+
+#page div div#body div div#blog ul:first-child li div h1 {
+float: left;
+font-family: 'UltraRegular';
+font-size: 18px;
+font-weight: normal;
+letter-spacing: 0.025em;
+line-height: 20px;
+margin: 0 0 0 20px;
+width: 375px;
+}
+
+#page div div#body div div#blog ul:first-child li div h1 a {
+    color: #858F48;
+    display: block;
+    font-size: inherit;
+    padding: 17px 0 0;
+    text-decoration: none;
+}
+
+#page div div#body div div#blog ul:first-child li a.readmore {
+color: #bcc680;
+display: inline-block;
+font-family: 'UltraRegular';
+font-size: 10px;
+letter-spacing: 0.025em;
+line-height: 20px;
+margin: 0 0 0 380px;
+text-align: right;
+}
+
+#page div div#body div div#blog ul:first-child li a.readmore:hover {
+text-decoration: none;
+}
+
+#page div div#body div div#blog ul:first-child li p {
+font-size: 13px;
+letter-spacing: 0.025em;
+line-height: 20px;
+}
+
+#page div div#body div div#blog ul {
+background: #f9f6ef;
+float: right;
+margin: 10px 0 0;
+padding: 27px 0 15px;
+width: 210px;
+}
+
+#page div div#body div div#blog ul li {
+float: none;
+height: auto;
+padding: 20px 10px 0;
+width: auto;
+}
+
+#page div div#body div div#blog ul li:first-child {
+padding: 0 10px;
+}
+
+#page div div#body div div#blog ul li h2 {
+font-family: 'UltraRegular';
+font-size: 12px;
+font-weight: normal;
+letter-spacing: 0.025em;
+line-height: 18px;
+margin: 0;
+}
+
+#page div div#body div div#blog ul li h2 a {
+color: #869048;
+text-decoration: none;
+}
+
+#page div div#body div div#blog ul li span.date {
+color: #dc9f2a;
+display: block;
+font-family: 'UltraRegular';
+font-size: 10px;
+letter-spacing: 0.025em;
+line-height: 18px;
+padding: 0 0 20px;
+}
+
+#page div div#body div div#blog ul li p {
+font-size: 12px;
+letter-spacing: 0.025em;
+line-height: 18px;
+margin: 0;
+}
+
+#page div div#body div div#blog ul li a.readmore {
+color: #b0c26d;
+display: inline-block;
+font-family: 'open_sansregular';
+font-size: 10px;
+letter-spacing: 0.01em;
+line-height: 18px;
+margin: 0 0 0 133px;
+padding: 3px 0 6px;
+text-transform: capitalize;
+}
+
+#page div div#body div#featured div {
+background: none;
+float: left;
+padding: 0;
+width: 703px;
+}
+
+#page div div#body div#featured div a {
+display: inline-block;
+margin: 0 0 0 5px;
+}
+
+    #page div div#body div.section {
+        background: #3c200b url(./../images/separator-content.jpg) no-repeat top center;
+        overflow: hidden;
+        padding: 30px 30px 0;
+        width: 940px;
+    }
+
+#page div div#body div.section ul {
+float: left;
+list-style: none;
+margin: 0;
+overflow: hidden;
+padding: 20px 0 0;
+width: 640px;
+}
+
+#page div div#body div.section ul li {
+float: left;
+margin: 0 0 0 20px;
+width: 200px;
+}
+
+#page div div#body div.section ul li h2 {
+font-family: 'UltraRegular';
+font-size: 20px;
+font-weight: normal;
+letter-spacing: -0.025em;
+line-height: 26px;
+margin: 0;
+padding: 10px 0 13px;
+}
+
+#page div div#body div.section ul li h2 a {
+    color: #899148;
+    display: inline-block;
+    text-decoration: none;
+}
+
+#page div div#body div.section ul li p {
+color: #b98d6c;
+letter-spacing: 0.025em;
+line-height: 16px;
+margin: 0;
+width: 190px;
+}
+
+    #page div div#body div.section ul li a.readmore {
+        background: url(./../images/icon-arrow.png) no-repeat left center;
+        color: #b0c26d;
+        display: inline-block;
+        float: right;
+        font-size: 10px;
+        letter-spacing: 0.01em;
+        margin: 10px 0 0 0;
+        padding: 0 22px 0 15px;
+        text-align: right;
+        text-transform: capitalize;
+    }
+
+#page div div#body div.section ul li a.readmore:hover {
+    text-decoration: none;
+}
+
+#page div div#body div.section ul li:first-child {
+margin: 0;
+}
+
+#page div div#body div.section ul li img {
+border: 3px solid #f7f0e6;
+}
+
+#page div div#body div.section ul li a img,
+#page div div#body div div ul li a img {
+display: block;
+}
+
+    #page div div#body div.section div {
+        background: url(./../images/bg-recent-blog.jpg) no-repeat;
+        float: right;
+        height: 398px;
+        padding: 0;
+        width: 220px;
+    }
+
+#page div div#body div.section div ul {
+float: none;
+margin: 70px 0 0;
+width: auto;
+}
+
+    #page div div#body div.section div ul li {
+        background: url(./../images/separator-recent-blog.jpg) no-repeat center top;
+        display: block;
+        float: none;
+        height: auto;
+        margin: 0;
+        padding: 12px 0 0;
+        width: 220px;
+    }
+
+    #page div div#body div.section div ul li:first-child {
+        background: url(./../images/separator-recent-blog-1st.jpg) no-repeat center top;
+    }
+
+#page div div#body div.section div ul li h3 {
+    font-family: 'UltraRegular';
+    font-size: 14px;
+    font-weight: normal;
+    letter-spacing: -0.025em;
+    line-height: 16px;
+    margin: 0;
+    padding: 0 5px 0 20px;
+}
+
+    #page div div#body div.section div ul li h3 a {
+        color: #9daf4b;
+        text-decoration: none;
+    }
+
+#page div div#body div.section div ul li span {
+    color: #cbca75;
+    display: block;
+    font-family: 'UltraRegular';
+    font-size: 10px;
+    letter-spacing: -0.025em;
+    line-height: 16px;
+    padding: 0 5px 5px 20px;
+}
+
+#page div div#body div.section div ul li p {
+    color: #b98d6c;
+    font-size: 12px;
+    letter-spacing: 0.025em;
+    line-height: 16px;
+    padding: 0 5px 0 20px;
+}
+
+#page div div#body div.section div ul li a.readmore {
+    background: none;
+    color: #b0c26d;
+    display: inline-block;
+    float: none;
+    font-family: 'open_sansregular';
+    font-size: 10px;
+    letter-spacing: 0.01em;
+    line-height: 18px;
+    margin: 0 0 0 152px;
+    padding: 3px 0 6px;
+    text-align: left;
+    text-transform: capitalize;
+}
+
+#page div div#body div div#blog ul li a.readmore:hover {
+text-decoration: none;
+}
+
+#page div div#footer {
+background: #f5f1e6;
+height: 120px;
+}
+
+#page div div#footer div {
+background: none;
+float: left;
+margin: 20px 0 0 30px;
+width: 190px;
+}
+
+#page div div#footer div a {
+display: inline-block;
+}
+
+#page div div#footer div p.footnote {
+color: #e2cfae;
+font-family: 'UltraRegular';
+font-size: 10px;
+letter-spacing: -0.025em;
+line-height: 12px;
+margin: 5px 0 0;
+}
+
+#page div div#footer div.section {
+background: none;
+margin: 0 0 0 30px;
+position: relative;
+width: 655px;
+}
+
+#page div div#footer div.section ul {
+list-style: none;
+margin: 30px 0 0;
+overflow: hidden;
+padding: 0;
+}
+
+#page div div#footer div.section ul li {
+border-left: 2px solid #e0ceaa;
+float: left;
+height: 15px;
+line-height: 13px;
+padding: 0 10px;
+}
+
+#page div div#footer div.section ul li a {
+color: #e0ceab;
+display: block;
+font-family: 'UltraRegular';
+letter-spacing: -0.025em;
+text-decoration: none;
+text-align: center;
+}
+
+#page div div#footer div.section ul li.current a {
+color: #becb73;
+border-bottom: 2px solid #e8e7cb;
+}
+
+#page div div#footer div.section ul li:first-child {
+border: 0;
+padding: 0 10px 0 0;
+}
+
+#page div div#footer div.section p {
+color: #c6a971;
+font-family: Arial, Helvetica, sans-serif;
+font-size: 10px;
+font-weight: bold;
+line-height: 13px;
+margin: 20px 0 0;
+}
+
+#page div div#footer div.section p a {
+color: #c6a971;
+}
+
+#page div div#footer div.section p a:hover {
+color: #91a130;
+}
+
+#page div div#footer div.section div#connect {
+background: none;
+float: none;
+height: 18px;
+margin: 0;
+position: absolute;
+right: 0;
+top: 28px;
+width: auto;
+}
+
+#page div div#footer div.section div#connect a {
+display: inline-block;
+float: left;
+height: 18px;
+margin: 0 8px;
+text-indent: -99999px;
+width: 18px;
+}
+
+    #page div div#footer div.section div#connect a#facebook {
+        background: url(./../images/icons.png) no-repeat 0 0;
+    }
+
+    #page div div#footer div.section div#connect a#facebook:hover {
+        background: url(./../images/icons.png) no-repeat -18px 0;
+    }
+
+    #page div div#footer div.section div#connect a#twitter {
+        background: url(./../images/icons.png) no-repeat 0 -28px;
+    }
+
+    #page div div#footer div.section div#connect a#twitter:hover {
+        background: url(./../images/icons.png) no-repeat -18px -28px;
+    }
+
+    #page div div#footer div.section div#connect a#googleplus {
+        background: url(./../images/icons.png) no-repeat 0 -56px;
+    }
+
+    #page div div#footer div.section div#connect a#googleplus:hover {
+        background: url(./../images/icons.png) no-repeat -18px -56px;
+    }
+
+    #page div div#footer div.section div#connect a#rss {
+        background: url(./../images/icons.png) no-repeat 0 -84px;
+    }
+
+    #page div div#footer div.section div#connect a#rss:hover {
+        background: url(./../images/icons.png) no-repeat -18px -84px;
+    }
+        /* Splash screen*/
+        .intro {
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #f9b94b;
+            transition: 1s;
+            z-index: 1000;
+        }
+
+        .logo_header {
+            position: absolute;
+            font-size: 3rem;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #06619e;
+        }
+
+        .logo_slide {
+            position: relative;
+            display: inline-block;
+            bottom: -20px;
+            opacity: 0;
+        }
+
+            .logo_slide.active {
+                bottom: 0;
+                opacity: 1;
+                transition: ease-in-out 0.5s;
+            }
+
+            .logo_slide.fade {
+                bottom: 150px;
+                opacity: 0;
+                transition: ease-in-out 0.5s;
+            }
+    </style>
+</head>
+<body>
+    <!-- intro logo slide -->
+    <div class="intro">
+        <h1 class="logo_header">
+            <span class="logo_slide">Phúc</span><span class="logo_slide">Coffee</span>
+        </h1>
+    </div>
+    <!-- end logo slide -->
+    <div id="page">
+        <div>
+            <div id="header">
+                <a href="index.html"><img src="~/images/logo.png" alt="Image"></a>
+                <ul>
+                    <li class="current">
+                        <a href="">Home</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Blog", "Home")">Menu</a>
+                    </li>
+                </ul>
+            </div>
+            <section class="slide">
+                <div class="slide_show">
+                    <img src="~/images/hinh1.png" alt="Quảng cáo 1">
+                </div>
+                <div class="slide_show">
+                    <img src="~/images/hinh2.png" alt="Quảng cáo 2">
+                </div>
+                <div class="slide_show">
+                    <img src="~/images/hinh3.png" alt="Quảng cáo 3">
+                </div>
+                <div class="slide_show">
+                    <img src="~/images/hinh4.png" alt="Quảng cáo 4">
+                </div>
+            </section>
+            <div id="body">
+                <div id="figure">
+                    <img src="~/images/headline-home.jpg" alt="Image">
+                    <span id="home">Cà phê ngon mang cho vi thanh tao <a href="index.html">Find out why.</a></span>
+                </div>
+                <div id="featured">
+                    <span class="whatshot"><a href="">Find out more</a></span>
+                    <div>
+                        <a href=" @Url.Action("ThucDon", "Home")"><img src="~/images/coffee1.jpg" alt="Image"></a>
+                        <a href=" @Url.Action("ThucDon", "Home")"><img src="~/images/coffee2.jpg" alt="Image"></a>
+                        <a href=" @Url.Action("ThucDon", "Home")"><img src="~/images/coffee3.jpg" alt="Image"></a>
+                    </div>
+                </div>
+                <div class="section">
+                    <ul>
+                        <li>
+                            <a href="blog.html"><img src="~/images/coffee-ingredients.jpg" alt="Image"></a>
+                            <h2><a href="blog.html">Where to Buy Coffee</a></h2>
+                            <p>
+                                Hãy ghé đến mua cà phê của chúng tôi.
+                            </p>
+                            <a href="blog.html" class="readmore">Read More</a>
+                        </li>
+                        <li>
+                            <a href="blog.html"><img src="~/images/black-coffee.jpg" alt="Image"></a>
+                            <h2><a href="blog.html">Coffee Beans</a></h2>
+                            <p>
+                                Pure, cleaned coffee beans, safe ingredients, high-quality coffee beans.
+                            </p>
+                            <a href="blog.html" class="readmore">Read More</a>
+                        </li>
+                        <li>
+                            <a href="blog.html"><img src="~/images/chocolate.jpg" alt="Image"></a>
+                            <h2><a href="blog.html">Delicious Coffee</a></h2>
+                            <p>
+                                Coffee brewed by professional staff, extremely delicious, customers trust Coffee Shop.
+                            </p>
+                            <a href="blog.html" class="readmore">Read More</a>
+                        </li>
+                    </ul>
+                    <div>
+                        <ul>
+                            <li>
+                                <h3><a href="blog.html">Coffee Shop</a></h3>
+                                <span>28 May 2024</span>
+                                <p>
+                                    Facilities are always fully equipped, please come to us
+                                </p>
+                                <a href="blog.html" class="readmore">Read more</a>
+                            </li>
+                            <li>
+                                <h3><a href="blog.html">Delicous Coffee</a></h3>
+                                <span>25 May 2024</span>
+                                <p>
+                                    Delicious, worth trying our coffee
+                                </p>
+                                <a href="blog.html" class="readmore">Read more</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Thêm phần hiển thị bản đồ -->
+                <div id="map" style="height: 400px; width: 100%;">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3920.764168539956!2d106.68809457480339!3d10.675404689467294!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31753100099ce9ed%3A0xdb6079801f0735ea!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBN4bufIFRQLiBI4buTIENow60gTWluaCAoY8ahIHPhu58gMyk!5e0!3m2!1svi!2s!4v1717041776395!5m2!1svi!2s" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+            <div id="footer">
+                <div>
+                    <a href="index.html"><img src="~/images/logo.png" alt="Image" style="height: 46px;"></a>
+                    <p class="footnote">
+                        &copy; Phuc Coffee&#33;Coffee 2024.<br>All Rights Reserved.
+                    </p>
+                </div>
+                <div class="section">
+                    <ul>
+                        <li class="current">
+                            <a href="index.html">Home</a>
+                        </li>
+                        <li>
+                            <a href="blog.html">Blog</a>
+                        </li>
+
+                    </ul>
+                    <div id="connect">
+                        <a href="" target="_blank" id="facebook">Facebook</a>
+                        <a href="" target="_blank" id="twitter">Twitter</a>
+                        <a href="" target="_blank" id="googleplus">Google+</a>
+                        <a href="index.html" id="rss">RSS</a>
+                    </div>
+                    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+                    <df-messenger intent="WELCOME"
+                                  chat-title="CSKH-PPK-Coffee"
+                                  agent-id="66dfadc2-e7dc-4761-9ada-f796b9eabad2"
+                                  language-code="vi"></df-messenger>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.js"></script>
+    <script src="~/js/JavaScript.js"></script>
+</body>
+</html>

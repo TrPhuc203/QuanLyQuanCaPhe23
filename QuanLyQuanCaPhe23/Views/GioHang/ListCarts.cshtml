@@ -1,0 +1,175 @@
+﻿@model IEnumerable<QuanLyQuanCaPhe23.Models.GioHang>
+
+@{
+    ViewData["Title"] = "Danh sách đơn hàng";
+    Layout = "_NewLayout";
+}
+
+<div class="container mt-5">
+    <h1 class="text-center my-4">CHÀO MỪNG @ViewData["FullName"] ĐẾN VỚI TRANG GIỎ HÀNG</h1>
+    <table class="table table-hover table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Ảnh</th>
+                <th>Mã</th>
+                <th>Tên cà phê</th>
+                <th>Size</th>
+                <th>Giá tiền</th>
+                <th>Số lượng</th>
+                <th>Tổng tiền</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><img width="100px" src="@Html.DisplayFor(modelItem => item.Anh)" class="img-fluid rounded" /></td>
+                    <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Ten)</td>
+                    <td>@Html.DisplayFor(modelItem => item.TenSize)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Tien)</td>
+                    <td>@Html.DisplayFor(modelItem => item.SoLuong)</td>
+                    <td>@Html.DisplayFor(modelItem => item.TongTien)</td>
+                    <td>
+                        @Html.ActionLink("Xóa", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-sm" }) |
+                        @Html.ActionLink("Thêm Cà phê", "ListCaPhe", "NguoiDung", null, new { @class = "btn btn-info btn-sm" })
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="3"><strong>Số lượng sản phẩm:</strong> @ViewBag.CountProduct</td>
+                <td colspan="2"><strong>Thành tiền:</strong> @ViewBag.Total</td>
+                <td colspan="3">
+                    <div class="btn-group" role="group">
+                        @Html.ActionLink("Thanh toán tại chỗ", "Order", null, new { @class = "btn btn-pay-on-site btn-sm" })
+                        <span class="space">||</span>
+                        @Html.ActionLink("Thanh toán online", "ThanhToanOnline", null, new { @class = "btn btn-pay-online btn-sm" })
+                        <span class="space">||</span>
+                        @Html.ActionLink("Thanh toán PayPal", "ThanhToanPayPal", null, new { @class = "btn btn-pay-paypal btn-sm" })
+                        <span class="space">||</span>
+                        @Html.ActionLink("Trở về danh sách cà phê", "ListCaPhe", "NguoiDung", null, new { @class = "btn btn-info btn-sm" })
+                    </div>
+                </td>
+        </tbody>
+    </table>
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger intent="WELCOME"
+                  chat-title="CSKH-PPK-Coffee"
+                  agent-id="66dfadc2-e7dc-4761-9ada-f796b9eabad2"
+                  language-code="vi"></df-messenger>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa !important;
+        color: #343a40 !important;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .space {
+        margin-right: 10px !important;
+        margin-left: 10px !important; /* Điều chỉnh khoảng cách theo ý muốn */
+    }
+
+    .container {
+        background-color: #ffffff !important;
+        padding: 30px !important;
+        border-radius: 10px !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f5f5f5 !important;
+    }
+
+    .thead-dark th {
+        background-color: #343a40 !important;
+        color: #ffffff !important;
+    }
+
+    .btn {
+        margin: 2px !important;
+    }
+
+    .btn-primary {
+        background-color: #007bff !important;
+        border-color: #007bff !important;
+    }
+
+    .btn-warning {
+        background-color: #ffc107 !important;
+        border-color: #ffc107 !important;
+    }
+
+    .btn-success {
+        background-color: #28a745 !important;
+        border-color: #28a745 !important;
+    }
+
+    .btn-danger {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+    }
+
+    .pagination .page-item .page-link {
+        color: #007bff !important;
+    }
+
+        .pagination .page-item .page-link:hover {
+            color: #0056b3 !important;
+        }
+
+    .pagination .page-item.active .page-link {
+        background-color: #007bff !important;
+        border-color: #007bff !important;
+        color: #ffffff !important;
+    }
+
+    h1 {
+        color: #343a40 !important;
+    }
+
+    table {
+        font-size: 1rem !important;
+    }
+
+    td, th {
+        vertical-align: middle !important;
+        text-align: center !important;
+    }
+
+    th {
+        font-weight: bold !important;
+    }
+
+    .btn-group a {
+        margin-right: 5px !important;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        color: #fff !important;
+        background-color: #17a2b8 !important;
+        border-color: #17a2b8 !important;
+    }
+
+    .btn-pay-on-site {
+        background-color: #ffc107 !important;
+        border: 2px solid #ffc107 !important;
+        color: #ffffff !important;
+        border-radius: 5px !important;
+    }
+
+    .btn-pay-online {
+        background-color: #28a745 !important;
+        border: 2px solid #28a745 !important;
+        color: #ffffff !important;
+        border-radius: 5px !important;
+    }
+
+    .btn-pay-paypal {
+        background-color: #007bff !important;
+        border: 2px solid #007bff !important;
+        color: #ffffff !important;
+        border-radius: 5px !important;
+    }
+</style>

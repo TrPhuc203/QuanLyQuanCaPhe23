@@ -1,0 +1,104 @@
+﻿@model QuanLyQuanCaPhe23.Models.CaPhe
+
+@{
+    ViewData["Title"] = "Sửa thông tin";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+        <div class="card-body">
+            <h1 class="text-center mb-4">CHÀO MỪNG ĐẾN VỚI TRANG SỬA THÔNG TIN MÓN CÀ PHÊ</h1>
+            <hr />
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <div class="form-group">
+                            <label asp-for="Anh" class="control-label">Ảnh</label>
+                            <div class="mb-3">
+                                <img src="@Model.Anh" alt="Ảnh" class="img-fluid rounded shadow-sm" width="200px" />
+                            </div>
+                            <input type="file" name="Anh" asp-for="Anh" class="form-control" />
+                            <span asp-validation-for="Anh" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Ten" class="control-label">Tên</label>
+                            <input asp-for="Ten" class="form-control" />
+                            <span asp-validation-for="Ten" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="MieuTa" class="control-label">Miêu tả</label>
+                            <textarea asp-for="MieuTa" class="form-control"></textarea>
+                            <span asp-validation-for="MieuTa" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SizeId" class="control-label">Size</label>
+                            <select asp-for="SizeId" class="form-control" asp-items="@(ViewData["Sizes"] as SelectList)"></select>
+                            <span asp-validation-for="SizeId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Tien" class="control-label">Giá tiền</label>
+                            <input asp-for="Tien" class="form-control" />
+                            <span asp-validation-for="Tien" class="text-danger"></span>
+                        </div>
+                        <div class="form-group text-center">
+                            <input type="submit" value="Lưu" class="btn btn-primary btn-lg" />
+                            <a asp-action="ListCaPhe" class="btn btn-secondary btn-lg ml-2">Trở về danh sách</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<style>
+    body {
+        background-color: #f8f9fa !important;
+        color: #343a40 !important;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .container {
+        max-width: 800px !important;
+    }
+
+    .card {
+        border: none !important;
+    }
+
+    .card-body {
+        padding: 2rem !important;
+    }
+
+    .img-fluid {
+        border-radius: 0.25rem !important;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .btn-lg {
+        font-size: 1.25rem !important;
+    }
+
+    .btn-primary {
+        background-color: #007bff !important;
+        border-color: #007bff !important;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+</style>

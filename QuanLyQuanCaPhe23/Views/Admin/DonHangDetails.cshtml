@@ -1,0 +1,57 @@
+﻿@model QuanLyQuanCaPhe23.ViewModels.DonHangDetailsViewModel
+
+@{
+    ViewData["Title"] = "Chi Tiết Đơn Hàng";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Chi Tiết Đơn Hàng</h2>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4 class="card-title">Đơn Hàng @Model.DonHangId</h4>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-3">Ngày Tạo:</dt>
+                <dd class="col-sm-9">@Model.NgayTao</dd>
+                <dt class="col-sm-3">PayPal Key:</dt>
+                <dd class="col-sm-9">@Model.PayPalKey</dd>
+                <dt class="col-sm-3">Khách Hàng:</dt>
+                <dd class="col-sm-9">@Model.KhachHang.HoKh @Model.KhachHang.TenKh  </dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Chi Tiết Đơn Hàng</h4>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Cà Phê</th>
+                            <th>Số Lượng</th>
+                            <th>Khuyến Mãi</th>
+                            <th>Tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ChiTietDonHangs)
+                        {
+                            <tr>
+                                <td>@item.CaPhe.Ten</td>
+                                <td>@item.SoLuong</td>
+                                <td>@item.KhuyenMai.Ten</td>
+                                <td>@item.Tien</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-action="ListDonHang" class="btn btn-primary">Quay lại danh sách đơn hàng</a>
+    </div>
+</div>

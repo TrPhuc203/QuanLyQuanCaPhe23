@@ -1,0 +1,55 @@
+﻿@model IEnumerable<QuanLyQuanCaPhe23.Models.DonHang>
+
+@{
+    ViewData["Title"] = "Danh sách đơn hàng";
+}
+
+<div class="container mt-4">
+    <h1 class="text-center">DANH SÁCH CÁC ĐƠN HÀNG MÀ KHÁCH HÀNG ĐÃ ĐẶT</h1>
+    <ul class="pagination justify-content-center">
+        <li class="page-item"><a class="page-link" href="/Admin/ListDonHang?page=1">1</a></li>
+        <li class="page-item"><a class="page-link" href="/Admin/ListDonHang?page=2">2</a></li>
+        <li class="page-item"><a class="page-link" href="/Admin/ListDonHang?page=3">3</a></li>
+        <li class="page-item"><a class="page-link" href="/Admin/ListDonHang?page=4">4</a></li>
+        <li class="page-item"><a class="page-link" href="/Admin/ListDonHang?page=5">5</a></li>
+        <li class="page-item"><a class="page-link" href="/Admin/ListDonHang?page=6">6</a></li>
+        <li class="page-item"><a class="page-link" href="/Admin/ListDonHang?page=7">7</a></li>
+    </ul>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col" style="width: 20%">Mã đơn hàng</th>
+                    <th scope="col" style="width: 20%">Mã khách hàng</th>
+                    <th scope="col" style="width: 20%">Ngày tạo đơn</th>
+                    <th scope="col" style="width: 20%">Mã PayPal (nếu có)</th>
+                    <th scope="col" style="width: 20%"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td style="text-align: center;">@Html.DisplayFor(modelItem => item.Id)</td>
+                    <td style="text-align: center;">@Html.DisplayFor(modelItem => item.KhachHangId)</td>
+                    <td style="text-align: center;">@Html.DisplayFor(modelItem => item.NgayTao)</td>
+                    <td style="text-align: center;">@Html.DisplayFor(modelItem => item.PayPalKey)</td>
+                    <td>
+                        <a href="@Url.Action("DonHangDetails", "Admin", new { id = item.Id })" class="btn btn-primary btn-sm">Chi tiết</a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("DeleteDonHang", "Admin", new { id = item.Id })" class="btn btn-primary btn-sm">Xóa</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<style>
+    .table-responsive {
+        overflow-x: auto;
+    }
+</style>

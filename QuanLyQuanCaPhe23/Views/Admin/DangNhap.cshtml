@@ -1,0 +1,75 @@
+﻿@model QuanLyQuanCaPhe23.Models.QuanLy
+
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+<body style="background: url(./../images/adminct.jpg) no-repeat !important; margin: 0 !important; padding: 0 !important; background-position: center !important; background-size: 100% 83% !important; background-attachment: fixed !important; height: 100vh !important ">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card mt-5">
+                    <div class="card-body">
+                        <h1 class="card-title text-center">Đăng Nhập Quản lý</h1>
+                        <hr />
+                        <form asp-action="DangNhap">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="UserName" class="control-label">Tên đăng nhập</label>
+                                <input asp-for="UserName" placeholder="Nhập tên đăng nhập..." class="form-control" />
+                                <span asp-validation-for="UserName" class="text-danger"></span>
+                                <span class="text-danger">@ViewData["Loil"]</span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Pass" class="control-label">Mật khẩu</label>
+                                <input asp-for="Pass" type="password" placeholder="Nhập mật khẩu..." class="form-control" />
+                                <span asp-validation-for="Pass" class="text-danger"></span>
+                                <span class="text-danger">@ViewData["Loi2"]</span>
+                            </div>
+                            <div class="form-group text-center">
+                                <input type="submit" value="Đăng Nhập" class="btn btn-primary btn-block" />
+                            </div>
+                            @if (ViewData["SuccessMessage"] != null)
+                            {
+                                <div class="alert alert-success" role="alert">
+                                    @ViewData["SuccessMessage"]
+                                </div>
+                            }
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #004085;
+            }
+
+        .alert {
+            margin-top: 1rem;
+        }
+    </style>
+</body>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

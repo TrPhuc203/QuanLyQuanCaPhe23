@@ -1,0 +1,101 @@
+﻿@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - QuanLyQuanCaPhe23</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        .menu-item {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+            .menu-item::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 2px;
+                bottom: 0;
+                left: 0;
+                background-color: #007bff;
+                visibility: hidden;
+                transform: scaleX(0);
+                transition: all 0.3s ease-in-out;
+            }
+
+            .menu-item:hover::after,
+            .menu-item.active::after {
+                visibility: visible;
+                transform: scaleX(1);
+            }
+
+            .menu-item.active {
+                color: #007bff !important;
+                font-weight: bold;
+            }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Quản Lý Phuc Coffee</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1">
+                        @if (Context.Session.GetString("IsLoggedIn") == "true")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "ListCaPhe" ? "active" : "")"
+                                   asp-area="" asp-controller="Admin" asp-action="ListCaPhe">Quản lý cà phê</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "ListDonHang" ? "active" : "")"
+                                   asp-area="" asp-controller="Admin" asp-action="ListDonHang">Quản lý đơn hàng</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "ThongKeTheoDoanhThu" ? "active" : "")"
+                                asp-area="" asp-controller="Admin" asp-action="ThongKeTheoDoanhThu">Thống kê theo doanh thu</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark menu-item  @(ViewContext.RouteData.Values["Action"].ToString() == "ThongKeTheoSoLuongSanPham" ? "active" : "")"
+                                   style="padding-right: 20px" asp-area="" asp-controller="Admin" asp-action="ThongKeTheoSoLuongSanPham">Thống kê theo sản phẩm</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " style="font-weight:500 !important">Xin chào,@Context.Session.GetString("FullName")</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="DangNhap">Đăng nhập</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - Phuc Coffee - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,113 @@
+﻿@model QuanLyQuanCaPhe23.Models.CaPhe
+
+@{
+    ViewData["Title"] = "Chi tiết cà phê";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+        <div class="card-body">
+            <h1 class="text-center mb-4">CHI TIẾT THÔNG TIN MÓN CÀ PHÊ</h1>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-3 font-weight-bold">
+                    Ảnh
+                </dt>
+                <dd class="col-sm-9">
+                    <img width="200px" src="@Html.DisplayFor(model => model.Anh)" class="img-fluid rounded" />
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    Mã cà phê
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Id)
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    Tên cà phê
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Ten)
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    Miêu tả
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.MieuTa)
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    Size
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Size.Ten)
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    Giá tiền
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Tien)
+                </dd>
+            </dl>
+            <div class="text-center">
+                @Html.ActionLink("Chỉnh sửa", "Edit", new { id = Model.Id }, new { @class = "btn btn-warning btn-lg mr-2" })
+                <a asp-action="ListCaPhe" class="btn btn-primary btn-lg">Trở về danh sách</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa !important;
+        color: #343a40 !important;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .card {
+        border: none !important;
+    }
+
+    .card-body {
+        padding: 2rem !important;
+    }
+
+    .img-fluid {
+        border-radius: 0.25rem !important;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+    }
+
+    .font-weight-bold {
+        font-weight: 700 !important;
+    }
+
+    .btn {
+        border-radius: 0.25rem !important;
+        padding: 0.75rem 1.25rem !important;
+        margin-top: 1rem !important;
+    }
+
+    .btn-lg {
+        font-size: 1.25rem !important;
+    }
+
+    .btn-primary {
+        background-color: #007bff !important;
+        border-color: #007bff !important;
+    }
+
+    .btn-warning {
+        background-color: #ffc107 !important;
+        border-color: #ffc107 !important;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .container {
+        max-width: 700px !important;
+    }
+
+    .shadow-lg {
+        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+    }
+</style>

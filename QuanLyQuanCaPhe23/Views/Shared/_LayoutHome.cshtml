@@ -1,0 +1,95 @@
+﻿@using Microsoft.AspNetCore.Http
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .auth-button {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 0 5px;
+            border: 2px solid #8B4513; /* Màu nâu đậm */
+            border-radius: 20px;
+            background-color: #FFDAB9; /* Màu đào nhạt */
+            color: #8B4513 !important; /* Màu nâu đậm */
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+            .auth-button:hover {
+                background-color: #8B4513; /* Màu nâu đậm */
+                color: #FFDAB9 !important; /* Màu đào nhạt */
+            }
+
+        .auth-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Khoảng cách giữa các nút */
+        }
+
+        .navbar {
+            background-color: #F5F1E6 !important;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #8B4513 !important; /* Màu nâu đậm */
+        }
+
+        .nav-link {
+            white-space: nowrap; /* Ngăn chặn việc ngắt dòng */
+        }
+
+        .container {
+            color: black; /* Đảm bảo màu chữ chính xác */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="TrangChu">Phuc Coffee</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <div class="auth-buttons">
+                        @if (Context.Session.GetString("IsLoggedInKH") == "true")
+                        {
+                            <a class="nav-link text-dark auth-button" asp-area="" asp-controller="NguoiDung" asp-action="ListCaphe">Vào đặt hàng</a>
+                            <a class="nav-link text-dark" style="font-weight:500 !important">Xin chào, @Context.Session.GetString("HoKh") @Context.Session.GetString("TenKh")</a>
+                            <a class="nav-link text-dark auth-button" asp-area="" asp-controller="NguoiDung" asp-action="DangXuat">Đăng xuất</a>
+                        }
+                        else
+                        {
+                            <a class="nav-link text-dark auth-button" asp-area="" asp-controller="NguoiDung" asp-action="DangNhap">Đăng nhập</a>
+                            <a class="nav-link text-dark auth-button" asp-area="" asp-controller="NguoiDung" asp-action="Dangky">Đăng ký</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
+

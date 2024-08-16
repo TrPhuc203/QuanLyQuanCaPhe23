@@ -1,0 +1,59 @@
+﻿@model QuanLyQuanCaPhe23.Models.CaPhe
+
+@{
+    ViewData["Title"] = "Thêm món cà phê";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+        <div class="card-body">
+            <h1 class="text-center mb-4">Thêm món cà phê mới</h1>
+            <hr />
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="Anh" class="control-label">Ảnh</label>
+                            <input type="file" name="Anh" asp-for="Anh" class="form-control" />
+                            <span asp-validation-for="Anh" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Ten" class="control-label">Tên</label>
+                            <input asp-for="Ten" class="form-control" />
+                            <span asp-validation-for="Ten" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="MieuTa" class="control-label">Miêu tả</label>
+                            <textarea asp-for="MieuTa" class="form-control"></textarea>
+                            <span asp-validation-for="MieuTa" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SizeId" class="control-label">Size</label>
+                            <select asp-for="SizeId" class="form-control" asp-items="@(ViewData["Sizes"] as SelectList)"></select>
+                            <span asp-validation-for="SizeId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Tien" class="control-label">Giá tiền</label>
+                            <input asp-for="Tien" class="form-control" />
+                            <span asp-validation-for="Tien" class="text-danger"></span>
+                        </div>
+                        <div class="form-group text-center">
+                            <input type="submit" value="Thêm Mới" class="btn btn-success btn-lg" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <a asp-action="ListCaPhe" class="btn btn-primary">Trở về danh sách</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

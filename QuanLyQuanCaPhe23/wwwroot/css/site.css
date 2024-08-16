@@ -1,0 +1,159 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+.custom-background {
+    background-color: #F5F1E6;
+}
+
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+/* slide show auto */
+.slide {
+    margin-top: 4px;
+    display: flex;
+    position: relative;
+}
+
+.slick-arrows {
+    position: absolute;
+    width: 40px;
+    height: 50px;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    background: rgba(0, 0,0,0.6);
+    color: #fff;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+    .slick-arrows:hover {
+        background: rgba(255, 255,255,0.6);
+        color: #000;
+    }
+
+.slick-prev {
+    left: 0;
+}
+
+.slick-next {
+    right: 0;
+}
+
+.slick-dots {
+    position: absolute;
+    list-style: none;
+    display: flex !important;
+    z-index: 2;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -30px;
+}
+
+    .slick-dots button {
+        background-color: rgb(207, 204, 204);
+        font-size: 0;
+        border-radius: 50%;
+        border: none;
+        outline: none;
+        width: 15px;
+        margin: 5px;
+        height: 15px;
+    }
+
+        .slick-dots .slick-active button,
+        .slick-dots button:hover {
+            background: #0a5e98;
+        }
+/*end auto slide*/
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  font-size: 14px;
+}
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px; /* Vertically center the text there */
+}
+@media (min-width: 1200px) {
+    .container{
+    max-width: 1150px;
+}
+}
+@media (max-width: 880px) {
+    .footer-distributed .footer-left, .footer-distributed .footer-center, .footer-distributed .footer-right {
+        display: block;
+        width: 100%;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+        .footer-distributed .footer-center i {
+            margin-left: 0;
+        }
+}
+@media (max-height:800px) {
+    footer {
+        position: static;
+    }
+
+    header {
+        padding-top: 40px;
+    }
+}

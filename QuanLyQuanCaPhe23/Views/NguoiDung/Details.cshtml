@@ -1,0 +1,75 @@
+﻿@model QuanLyQuanCaPhe23.Models.CaPhe
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "_NewLayout";
+}
+
+<h1 class="text-center mt-3 mb-4">CHI TIẾT SẢN PHẨM</h1>
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Thông tin sản phẩm</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Ảnh</dt>
+                <dd class="col-sm-9">
+                    <img src="@Html.DisplayFor(model => model.Anh)" class="img-fluid rounded" alt="Ảnh sản phẩm" />
+                </dd>
+                <dt class="col-sm-3">Mã sản phẩm</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Id)</dd>
+                <dt class="col-sm-3">Tên sản phẩm</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Ten)</dd>
+                <dt class="col-sm-3">Miêu tả</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.MieuTa)</dd>
+                <dt class="col-sm-3">Size</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Size.Ten)</dd>
+                <dt class="col-sm-3">Giá tiền</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Tien)</dd>
+            </dl>
+        </div>
+        <div class="card-footer">
+            <form asp-action="Delete" class="float-right">
+                <button type="submit" class="btn btn-danger">Xóa</button>
+            </form>
+            <a asp-action="ListCaPhe" class="btn btn-secondary">Trở về danh sách</a>
+        </div>
+    </div>
+</div>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger intent="WELCOME"
+              chat-title="CSKH-PPK-Coffee"
+              agent-id="66dfadc2-e7dc-4761-9ada-f796b9eabad2"
+              language-code="vi"></df-messenger>
+<style>
+    body {
+        background-color: #f8f9fa;
+        color: #343a40;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .container {
+        max-width: 800px;
+    }
+
+    .card {
+        border: none;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+        background-color: #007bff;
+        border-radius: 0.25rem 0.25rem 0 0;
+    }
+
+    .card-footer {
+        background-color: #f8f9fa;
+        border-top: none;
+    }
+
+        .card-footer .btn {
+            margin-top: 10px;
+        }
+</style>

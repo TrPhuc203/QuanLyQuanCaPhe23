@@ -1,0 +1,23 @@
+﻿@model QuanLyQuanCaPhe23.OTP.VerifyOtpViewModel
+
+@{ ViewData["Title"] = "Xác Thực OTP"; }
+
+<h2>Xác Thực OTP</h2>
+
+<form asp-action="VerifyOtp" method="post">
+    <div class="form-group">
+        <label for="otp">OTP</label>
+        <input type="text" class="form-control" name="otp" />
+        <span asp-validation-for="Otp" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Xác Thực</button>
+</form>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger intent="WELCOME"
+              chat-title="CSKH-PPK-Coffee"
+              agent-id="66dfadc2-e7dc-4761-9ada-f796b9eabad2"
+              language-code="vi"></df-messenger>
+<div class="text-danger">
+    @Html.ValidationSummary(true)
+</div>
+

@@ -1,0 +1,27 @@
+﻿@model QuanLyQuanCaPhe23.Models.DonHang
+
+@{
+    ViewData["Title"] = "Xóa đơn hàng";
+}
+
+<div class="container mt-4">
+    <h1 class="text-center">CHÀO MỪNG BẠN ĐẾN VỚI TRANG XÓA ĐƠN HÀNG</h1>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Mã Đơn Hàng:</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Id)</dd>
+        <dt class="col-sm-3">Mã Khách Hàng:</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.KhachHangId)</dd>
+        <dt class="col-sm-3">Ngày tạo đơn:</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.NgayTao)</dd>
+        <dt class="col-sm-3">PayPal Key (nếu có):</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.PayPalKey)</dd>
+    </dl>
+
+    <div class="text-center">
+        <form asp-action="DeleteDonHang">
+            <input type="submit" value="Xóa" class="btn btn-danger" />
+            <a asp-action="ListDonHang" class="btn btn-secondary">Trở về danh sách</a>
+        </form>
+    </div>
+</div>

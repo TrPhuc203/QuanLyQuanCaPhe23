@@ -1,0 +1,82 @@
+﻿@model QuanLyQuanCaPhe23.Models.CaPhe
+
+@{
+    ViewData["Title"] = "Xóa cà phê";
+}
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">TRANG XÓA SẢN PHẨM CÀ PHÊ</h1>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4>Thông tin sản phẩm</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-2">
+                    Ảnh
+                </dt>
+                <dd class="col-sm-10">
+                    <img width="200px" src="@Html.DisplayFor(model => model.Anh)" class="img-fluid rounded" />
+                </dd>
+                <dt class="col-sm-2">
+                    Tên cà phê
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Ten)
+                </dd>
+                <dt class="col-sm-2">
+                    Miêu tả
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.MieuTa)
+                </dd>
+                <dt class="col-sm-2">
+                    Size
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Size.Ten)
+                </dd>
+                <dt class="col-sm-2">
+                    Giá tiền
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Tien)
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer text-center">
+            <form asp-action="Delete" class="d-inline">
+                <button type="submit" class="btn btn-danger">Xóa</button>
+            </form>
+            <a asp-action="ListCaPhe" class="btn btn-secondary ml-2">Trở về danh sách</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+        color: #343a40;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .container {
+        max-width: 800px;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .card-header {
+        background-color: #007bff;
+        color: white;
+    }
+</style>

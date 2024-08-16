@@ -1,0 +1,151 @@
+﻿@model QuanLyQuanCaPhe23.Models.KhachHang
+
+@{
+    ViewData["Title"] = "Đăng nhập";
+    Layout = "_NewLayout";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/colorful-login.css" />
+</head>
+<body class="colorful-bg">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="login-card mt-5">
+                    <div class="login-body">
+                        <h1 class="login-title text-center">Đăng Nhập</h1>
+                        <form asp-action="DangNhap">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="UserName" class="control-label">Tên đăng nhập</label>
+                                <input asp-for="UserName" placeholder="Nhập tên đăng nhập..." class="form-control" />
+                                <span asp-validation-for="UserName" class="text-danger"></span>
+                                <span class="text-danger">@ViewData["Loil"]</span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Pass" class="control-label">Mật khẩu</label>
+                                <input asp-for="Pass" type="password" placeholder="Nhập mật khẩu..." class="form-control" />
+                                <span asp-validation-for="Pass" class="text-danger"></span>
+                                <span class="text-danger">@ViewData["Loi2"]</span>
+                            </div>
+                            <div class="form-group text-center">
+                                <input type="submit" value="Đăng Nhập" class="btn btn-primary btn-block" />
+                            </div>
+                            @if (ViewData["SuccessMessage"] != null)
+                            {
+                                <div class="alert alert-success" role="alert">
+                                    @ViewData["SuccessMessage"]
+                                </div>
+                            }
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger intent="WELCOME"
+                  chat-title="CSKH-PPK-Coffee"
+                  agent-id="66dfadc2-e7dc-4761-9ada-f796b9eabad2"
+                  language-code="vi"></df-messenger>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <style>
+        .colorful-bg {
+            background: linear-gradient(45deg, #FF9A8B, #FF6B95, #FF8E53, #FFA647, #FFD700);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        .login-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            border: 5px solid #FFD700;
+        }
+
+        .login-body {
+            padding: 40px;
+        }
+
+        .login-title {
+            color: #FF6B95;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-control {
+            border: none;
+            border-bottom: 3px solid #FF8E53;
+            border-radius: 0;
+            padding: 10px 5px;
+            background-color: transparent;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #FF6B95;
+        }
+
+        .control-label {
+            color: #FF6B95;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #FF6B95, #FF8E53);
+            border: none;
+            border-radius: 30px;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #FF8E53, #FF6B95);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(255, 107, 149, 0.4);
+        }
+
+        .text-danger {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            color: #FF6B95;
+        }
+
+        .alert {
+            border-radius: 10px;
+            margin-top: 20px;
+            background-color: #FFD700;
+            color: #333;
+            border: none;
+        }
+
+        df-messenger {
+            --df-messenger-bot-message: #FF6B95;
+            --df-messenger-button-titlebar-color: #FF8E53;
+            --df-messenger-chat-background-color: #FFF5E6;
+            --df-messenger-font-color: white;
+            --df-messenger-send-icon: #FF6B95;
+            --df-messenger-user-message: #FF8E53;
+        }
+    </style>
+</body>

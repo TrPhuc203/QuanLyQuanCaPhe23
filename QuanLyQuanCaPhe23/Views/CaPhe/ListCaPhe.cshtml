@@ -1,0 +1,95 @@
+﻿
+@model IEnumerable<QuanLyQuanCaPhe23.Models.CaPhe>
+@{
+
+    ViewData["Title"] = "ListCaPhe";
+}
+
+<h1>ListCaPhe</h1>
+<form class="mb-2" asp-action="ListCaPhe" method="get">
+    <div class="form-row align-items-end">
+        <div class="col-md-3">
+            <label for="filter1">Lọc theo tên:</label>
+            <input type="text" id="filter1" name="kw" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label for="filter2">Lọc theo size:</label>
+            <select id="filter2" name="size" class="form-control">
+                <option value="1">Nhỏ</option>
+                <option value="2">Vừa</option>
+                <option value="3">Lớn</option>
+                <option value="4">Nóng</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="filter3">Lọc theo giá:</label>
+            <input type="number" id="filter3" name="gia" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary">Lọc</button>
+        </div>
+    </div>
+</form>
+<ul class="pagination">
+    <li class="page-item"><a class="page-link" href="/CaPhe/ListCaPhe?page=1">1</a></li>
+    <li class="page-item"><a class="page-link" href="/CaPhe/ListCaPhe?page=2">2</a></li>
+    <li class="page-item"><a class="page-link" href="/CaPhe/ListCaPhe?page=3">3</a></li>
+    <li class="page-item"><a class="page-link" href="/CaPhe/ListCaPhe?page=4">4</a></li>
+    <li class="page-item"><a class="page-link" href="/CaPhe/ListCaPhe?page=5">5</a></li>
+    <li class="page-item"><a class="page-link" href="/CaPhe/ListCaPhe?page=6">6</a></li>
+    <li class="page-item"><a class="page-link" href="/CaPhe/ListCaPhe?page=7">7</a></li>
+</ul>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Anh)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ten)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MieuTa)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.SizeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tien)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img width="200px" src=" @Html.DisplayFor(modelItem => item.Anh)" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ten)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MieuTa)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Size.Ten)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tien)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

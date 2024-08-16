@@ -1,0 +1,90 @@
+﻿@model DonHangViewModel
+
+@{
+    Layout = "_NewLayout";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết đơn hàng</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #343a40;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+        }
+
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+        }
+
+        .product {
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1 class="text-center text-primary mb-4">Chi Tiết Đơn Hàng</h1>
+            <h2>Chi tiết đơn hàng</h2>
+            <p>ID đơn hàng: @Model.DonHangId</p>
+            @if (Model.SanPhams != null && Model.SanPhams.Any())
+            {
+                <h3>Sản phẩm trong đơn hàng</h3>
+                @foreach (var sp in Model.SanPhams)
+                {
+                    <div class="product">
+                        <h4>Sản phẩm</h4>
+                        <p><strong>Tên Cà Phê:</strong> @sp.CaPhe.Ten</p>
+                        @if (sp.CaPhe.Size != null)
+                        {
+                            <p><strong>Size:</strong> @sp.CaPhe.Size.Ten</p>
+                        }
+                        <p><strong>Số lượng:</strong> @sp.SoLuong</p>
+                        <p><strong>Tiền:</strong> @sp.Tien</p>
+                    </div>
+                }
+            }
+            <p><strong>Khuyến mãi:</strong> @Model.KhuyenMaiId.Ten</p>
+            <p><strong>Tổng tiền:</strong> @ViewBag.TongTien</p>
+            <p>
+                <a asp-controller="NguoiDung" asp-action="ListCaPhe" class="btn btn-primary btn-lg">Quay lại trang chủ</a>
+            </p>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger intent="WELCOME"
+                  chat-title="CSKH-PPK-Coffee"
+                  agent-id="66dfadc2-e7dc-4761-9ada-f796b9eabad2"
+                  language-code="vi"></df-messenger>
+</body>
+</html>
