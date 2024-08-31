@@ -11,7 +11,7 @@
         <div class="form-row align-items-end">
             <div class="col-md-3">
                 <label for="filter">Lọc theo ngày:</label>
-                <input type="date" id="filter" name="kw" class="form-control" />
+                <input type="date" id="filter" name="kw" class="form-control" value="@ViewBag.SelectedDate.ToString("yyyy-MM-dd")" />
             </div>
             <div class="col-md-3">
                 <button type="submit" class="btn btn-primary">Gửi</button>
@@ -24,7 +24,6 @@
             <tr>
                 <th>Tên cà phê</th>
                 <th>Doanh thu</th>
-                <th>Hành động</th>
             </tr>
         </thead>
         <tbody>
@@ -32,7 +31,7 @@
             {
                 <tr>
                     <td>@Html.DisplayFor(modelItem => item.Ten)</td>
-                    <td>@Html.DisplayFor(modelItem => item.DoanhThu)</td>         
+                    <td>@string.Format("{0:N0} VNĐ", item.DoanhThu)</td> <!-- Định dạng doanh thu -->
                 </tr>
             }
         </tbody>
@@ -53,14 +52,14 @@
     @foreach (var item in Model)
     {
         <text>
-            labels.push("@item.Ten");
-            data.push(@item.DoanhThu);
+            labels.push("@Html.Raw(@item.Ten)");
+        data.push(@item.DoanhThu);
         </text>
     }
-    window.onload = function () {
-        let ctx1 = document.getElementById("myChart").getContext('2d');
-        drawChartTheoSoLuong(ctx1, labels, data, "THỐNG KÊ DOANH THU SẢN PHẨM BÁN");
-    }
+        window.onload = function () {
+            let ctx1 = document.getElementById("myChart").getContext('2d');
+            drawChartTheoSoLuong(ctx1, labels, data, "THỐNG KÊ DOANH THU SẢN PHẨM BÁN");
+        }
 </script>
 
 <style>

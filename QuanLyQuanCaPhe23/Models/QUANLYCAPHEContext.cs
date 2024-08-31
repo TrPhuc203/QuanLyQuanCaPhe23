@@ -17,6 +17,7 @@ namespace QuanLyQuanCaPhe23.Models
         {
         }
 
+
         public virtual DbSet<CaPhe> CaPhes { get; set; }
         public virtual DbSet<ChiTietDonHang> ChiTietDonHangs { get; set; }
         public virtual DbSet<DonHang> DonHangs { get; set; }
@@ -126,7 +127,10 @@ namespace QuanLyQuanCaPhe23.Models
 
                 entity.Property(e => e.DiaChi).HasMaxLength(50);
 
-                entity.Property(e => e.Gmail).HasMaxLength(50);
+
+                entity.Property(e => e.Gmail)
+                    .HasMaxLength(50)
+                    .IsRequired();
 
                 entity.Property(e => e.HoKh)
                     .HasMaxLength(50)

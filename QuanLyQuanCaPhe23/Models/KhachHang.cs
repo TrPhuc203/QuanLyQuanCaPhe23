@@ -19,7 +19,9 @@ namespace QuanLyQuanCaPhe23.Models
         public string Pass { get; set; }
         public string DiaChi { get; set; }
         public string SoDienThoai { get; set; }
+
         public string Gmail { get; set; }
+        public string ResetCode { get; set; }
 
         public virtual ICollection<DonHang> DonHangs { get; set; }
     }

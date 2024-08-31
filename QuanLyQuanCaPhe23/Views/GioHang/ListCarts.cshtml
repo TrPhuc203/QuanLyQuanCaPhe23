@@ -1,175 +1,255 @@
 ﻿@model IEnumerable<QuanLyQuanCaPhe23.Models.GioHang>
 
 @{
-    ViewData["Title"] = "Danh sách đơn hàng";
+    ViewData["Title"] = "Giỏ hàng của bạn";
     Layout = "_NewLayout";
 }
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <div class="container mt-5">
-    <h1 class="text-center my-4">CHÀO MỪNG @ViewData["FullName"] ĐẾN VỚI TRANG GIỎ HÀNG</h1>
-    <table class="table table-hover table-striped">
-        <thead class="thead-dark">
-            <tr>
-                <th>Ảnh</th>
-                <th>Mã</th>
-                <th>Tên cà phê</th>
-                <th>Size</th>
-                <th>Giá tiền</th>
-                <th>Số lượng</th>
-                <th>Tổng tiền</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td><img width="100px" src="@Html.DisplayFor(modelItem => item.Anh)" class="img-fluid rounded" /></td>
-                    <td>@Html.DisplayFor(modelItem => item.Id)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Ten)</td>
-                    <td>@Html.DisplayFor(modelItem => item.TenSize)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Tien)</td>
-                    <td>@Html.DisplayFor(modelItem => item.SoLuong)</td>
-                    <td>@Html.DisplayFor(modelItem => item.TongTien)</td>
-                    <td>
-                        @Html.ActionLink("Xóa", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-sm" }) |
-                        @Html.ActionLink("Thêm Cà phê", "ListCaPhe", "NguoiDung", null, new { @class = "btn btn-info btn-sm" })
-                    </td>
-                </tr>
-            }
-            <tr>
-                <td colspan="3"><strong>Số lượng sản phẩm:</strong> @ViewBag.CountProduct</td>
-                <td colspan="2"><strong>Thành tiền:</strong> @ViewBag.Total</td>
-                <td colspan="3">
-                    <div class="btn-group" role="group">
-                        @Html.ActionLink("Thanh toán tại chỗ", "Order", null, new { @class = "btn btn-pay-on-site btn-sm" })
-                        <span class="space">||</span>
-                        @Html.ActionLink("Thanh toán online", "ThanhToanOnline", null, new { @class = "btn btn-pay-online btn-sm" })
-                        <span class="space">||</span>
-                        @Html.ActionLink("Thanh toán PayPal", "ThanhToanPayPal", null, new { @class = "btn btn-pay-paypal btn-sm" })
-                        <span class="space">||</span>
-                        @Html.ActionLink("Trở về danh sách cà phê", "ListCaPhe", "NguoiDung", null, new { @class = "btn btn-info btn-sm" })
+    <h1 class="text-center my-4">Giỏ hàng của bạn</h1>
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">Sản phẩm đã chọn</h2>
+                @Html.ActionLink("Thêm Cà phê", "ListCaPhe", "NguoiDung", null, new { @class = "btn btn-primary" })
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Hình ảnh</th>
+                            <th>Mã SP</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Size</th>
+                            <th>Đơn giá</th>
+                            <th>Số lượng</th>
+                            <th>Tổng tiền</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td><img width="80" src="@item.Anh" class="img-thumbnail" alt="@item.Ten" /></td>
+                                <td>@item.Id</td>
+                                <td>@item.Ten</td>
+                                <td>@item.TenSize</td>
+                                <td>@(item.Tien.HasValue ? string.Format("{0:N0} VNĐ", item.Tien.Value) : "N/A")</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="@Url.Action("DecreaseQuantity", "GioHang", new { id = item.Id })" class="btn btn-outline-secondary btn-sm">-</a>
+                                        <span class="btn btn-light btn-sm" style="margin-top: 9px;">@item.SoLuong</span>
+                                        <a href="@Url.Action("IncreaseQuantity", "GioHang", new { id = item.Id })" class="btn btn-outline-secondary btn-sm">+</a>
+                                    </div>
+                                </td>
+                                <td>@(item.TongTien.HasValue ? string.Format("{0:N0} VNĐ", item.TongTien.Value) : "N/A")</td>
+                                <td>
+                                    @Html.ActionLink("Xóa", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-sm" })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h5 class="card-title">Tổng quan đơn hàng</h5>
+                            <p class="card-text"><strong>Số lượng sản phẩm:</strong> @ViewBag.CountProduct</p>
+                            <p class="card-text"><strong>Thành tiền:</strong> @(ViewBag.Total != null ? string.Format("{0:N0} VNĐ", ViewBag.Total) : "N/A")</p>
+                        </div>
                     </div>
-                </td>
-        </tbody>
-    </table>
-    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-    <df-messenger intent="WELCOME"
-                  chat-title="CSKH-PPK-Coffee"
-                  agent-id="66dfadc2-e7dc-4761-9ada-f796b9eabad2"
-                  language-code="vi"></df-messenger>
+                </div>
+                <div class="col-md-6">
+                    <div class="payment-buttons">
+                        <a href="@Url.Action("Order", "GioHang")" class="payment-button order">
+                            <i class="fas fa-store"></i> Thanh toán tại chỗ
+                        </a>
+                        <a href="@Url.Action("ThanhToanOnline", "GioHang")" class="payment-button online">
+                            <i class="fas fa-credit-card"></i> Thanh toán online
+                        </a>
+                        <a href="@Url.Action("ThanhToanPayPal", "GioHang")" class="payment-button paypal">
+                            <i class="fab fa-paypal"></i> Thanh toán PayPal
+                        </a>
+                    </div>
+                        @Html.ActionLink("Trở về danh sách cà phê", "ListCaPhe", "NguoiDung", null, new { @class = "btn btn-outline-secondary btn-lg" })
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger intent="WELCOME"
+              chat-title="CSKH-PPK-Coffee"
+              agent-id="66dfadc2-e7dc-4761-9ada-f796b9eabad2"
+              language-code="vi"></df-messenger>
 
 <style>
     body {
-        background-color: #f8f9fa !important;
-        color: #343a40 !important;
-        font-family: 'Arial', sans-serif;
-    }
-
-    .space {
-        margin-right: 10px !important;
-        margin-left: 10px !important; /* Điều chỉnh khoảng cách theo ý muốn */
+        background-color: #f0f2f5;
+        font-family: 'Roboto', sans-serif;
     }
 
     .container {
-        background-color: #ffffff !important;
-        padding: 30px !important;
-        border-radius: 10px !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-    }
-
-    .table-hover tbody tr:hover {
-        background-color: #f5f5f5 !important;
-    }
-
-    .thead-dark th {
-        background-color: #343a40 !important;
-        color: #ffffff !important;
-    }
-
-    .btn {
-        margin: 2px !important;
-    }
-
-    .btn-primary {
-        background-color: #007bff !important;
-        border-color: #007bff !important;
-    }
-
-    .btn-warning {
-        background-color: #ffc107 !important;
-        border-color: #ffc107 !important;
-    }
-
-    .btn-success {
-        background-color: #28a745 !important;
-        border-color: #28a745 !important;
-    }
-
-    .btn-danger {
-        background-color: #dc3545 !important;
-        border-color: #dc3545 !important;
-    }
-
-    .pagination .page-item .page-link {
-        color: #007bff !important;
-    }
-
-        .pagination .page-item .page-link:hover {
-            color: #0056b3 !important;
-        }
-
-    .pagination .page-item.active .page-link {
-        background-color: #007bff !important;
-        border-color: #007bff !important;
-        color: #ffffff !important;
+        max-width: 1200px;
     }
 
     h1 {
-        color: #343a40 !important;
+        color: #2c3e50;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     }
 
-    table {
-        font-size: 1rem !important;
+    .card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
 
-    td, th {
-        vertical-align: middle !important;
-        text-align: center !important;
+    .card-body {
+        padding: 30px;
     }
 
-    th {
-        font-weight: bold !important;
+    .table {
+        margin-bottom: 0;
     }
 
-    .btn-group a {
-        margin-right: 5px !important;
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-        color: #fff !important;
-        background-color: #17a2b8 !important;
-        border-color: #17a2b8 !important;
+        .table thead th {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            padding: 15px;
+        }
+
+        .table td {
+            vertical-align: middle;
+            padding: 15px;
+        }
+
+    .img-thumbnail {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
     }
 
-    .btn-pay-on-site {
-        background-color: #ffc107 !important;
-        border: 2px solid #ffc107 !important;
-        color: #ffffff !important;
-        border-radius: 5px !important;
+        .img-thumbnail:hover {
+            transform: scale(1.05);
+        }
+
+    .btn-group .btn {
+        padding: 5px 10px;
     }
 
-    .btn-pay-online {
-        background-color: #28a745 !important;
-        border: 2px solid #28a745 !important;
-        color: #ffffff !important;
-        border-radius: 5px !important;
+    .btn-primary, .btn-success, .btn-info, .btn-danger {
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 12px 20px;
+        transition: all 0.3s ease;
+        border: none;
     }
 
-    .btn-pay-paypal {
-        background-color: #007bff !important;
-        border: 2px solid #007bff !important;
-        color: #ffffff !important;
-        border-radius: 5px !important;
+    .btn-primary {
+        background-color: #3498db;
+    }
+
+    .btn-success {
+        background-color: #2ecc71;
+    }
+
+    .btn-info {
+        background-color: #f39c12;
+    }
+
+    .btn-danger {
+        background-color: #e74c3c;
+    }
+
+        .btn-primary:hover, .btn-success:hover, .btn-info:hover, .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+    .btn-outline-secondary {
+        margin-left: 100px;
+        margin-top: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: 2px solid #7f8c8d;
+        color: #7f8c8d;
+    }
+
+        .btn-outline-secondary:hover {
+            background-color: #7f8c8d;
+            color: white;
+        }
+
+    .payment-buttons {
+        display: flex;
+        flex-direction: column; /* Hiển thị các nút theo cột */
+        gap: 10px; /* Khoảng cách giữa các nút */
+        margin-top: 20px;
+    }
+
+    .payment-button {
+        display: block;
+        font-weight: 600;
+        text-transform: uppercase;
+        text-align: center;
+        padding: 12px 20px;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        width: 100%;
+        border: 2px solid transparent; /* Thêm border để giữ định dạng khi hover */
+    }
+
+        .payment-button.order {
+            background-color: #2ecc71; /* Màu xanh lá */
+            border-color: #27ae60;
+        }
+
+        .payment-button.online {
+            background-color: #f39c12; /* Màu cam */
+            border-color: #e67e22;
+        }
+
+        .payment-button.paypal {
+            background-color: #0070ba; /* Màu xanh dương */
+            border-color: #005a9e;
+        }
+
+        .payment-button i {
+            margin-right: 8px; /* Khoảng cách giữa biểu tượng và văn bản */
+        }
+
+        .payment-button:hover {
+            /* Không thay đổi màu nền khi hover */
+            background-color: inherit; /* Giữ màu nền như cũ */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Giữ hiệu ứng bóng */
+            border-color: inherit; /* Giữ màu border như cũ */
+            text-decoration: none;
+        }
+    df-messenger {
+        --df-messenger-bot-message: #3498db;
+        --df-messenger-button-titlebar-color: #2980b9;
+        --df-messenger-chat-background-color: #ecf0f1;
+        --df-messenger-font-color: white;
+        --df-messenger-send-icon: #2980b9;
+        --df-messenger-user-message: #2ecc71;
     }
 </style>

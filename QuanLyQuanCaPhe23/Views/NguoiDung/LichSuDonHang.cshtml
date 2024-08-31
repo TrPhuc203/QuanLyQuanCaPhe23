@@ -1,0 +1,53 @@
+﻿@model IEnumerable<QuanLyQuanCaPhe23.Models.DonHang>
+
+@{
+    ViewData["Title"] = "Lịch sử đơn hàng";
+    Layout = "_NewLayout";
+}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+</style>
+<div class="container mt-5">
+    <h2>Lịch sử đơn hàng của bạn</h2>
+    <hr />
+    @if (Model.Any())
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Mã đơn hàng</th>
+                    <th>Ngày đặt hàng</th>
+                    <th>Tổng tiền</th>
+                    <th>Chi tiết</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var donHang in Model)
+                {
+                    <tr>
+                        <td>@donHang.Id</td>
+                        <td>@donHang.NgayTao?.ToString("dd/MM/yyyy")</td>
+                        <td>@donHang.ChiTietDonHangs.Sum(ctdh => ctdh.Tien)?.ToString("N0") VNĐ</td>
+                        <td>
+                            <ul>
+                                @foreach (var chiTiet in donHang.ChiTietDonHangs)
+                                {
+                                    <li>@chiTiet.CaPhe.Ten - Số lượng: @chiTiet.SoLuong - Giá: @chiTiet.Tien?.ToString("N0") VNĐ</li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        @if (ViewBag.Message != null)
+        {
+            <p>@ViewBag.Message</p>
+        }
+    }
+</div>

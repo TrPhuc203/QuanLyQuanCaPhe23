@@ -16,6 +16,7 @@ using QuanLyQuanCaPhe23.VNPAY;
 using Microsoft.Extensions.Configuration;
 using QuanLyQuanCaPhe23.PAYPAL;
 using Microsoft.Extensions.Logging;
+using QuanLyQuanCaPhe23.ViewModels;
 
 namespace QuanLyQuanCaPhe23.Controllers
 {
@@ -55,6 +56,62 @@ namespace QuanLyQuanCaPhe23.Controllers
             _httpContextAccessor.HttpContext.Session.SetObjectAsJson("GioHang", gh);
             return RedirectToAction("ListCarts");
 
+        }
+        public IActionResult IncreaseQuantity(int id)
+        {
+            List<GioHang> gh = GetListCarts();
+            var c = gh.Find(s => s.Id == id);
+            if (c != null)
+            {
+                if (c.Tien.HasValue) // Ensure Tien is not null
+                {
+                    c.SoLuong++;
+                    // TongTien will be recalculated automatically
+                }
+                else
+                {
+                    // Log or handle the case where Tien is null
+                    _logger.LogWarning($"Price (Tien) is null for item ID {id}");
+                }
+            }
+            else
+            {
+                _logger.LogWarning($"Item with ID {id} not found in cart.");
+            }
+            _httpContextAccessor.HttpContext.Session.SetObjectAsJson("GioHang", gh);
+            return RedirectToAction("ListCarts");
+        }
+
+        public IActionResult DecreaseQuantity(int id)
+        {
+            List<GioHang> gh = GetListCarts();
+            var c = gh.Find(s => s.Id == id);
+            if (c != null)
+            {
+                if (c.Tien.HasValue) // Ensure Tien is not null
+                {
+                    if (c.SoLuong > 1)
+                    {
+                        c.SoLuong--;
+                        // TongTien will be recalculated automatically
+                    }
+                    else
+                    {
+                        gh.Remove(c); // Remove item if quantity is 1 and decreased
+                    }
+                }
+                else
+                {
+                    // Log or handle the case where Tien is null
+                    _logger.LogWarning($"Price (Tien) is null for item ID {id}");
+                }
+            }
+            else
+            {
+                _logger.LogWarning($"Item with ID {id} not found in cart.");
+            }
+            _httpContextAccessor.HttpContext.Session.SetObjectAsJson("GioHang", gh);
+            return RedirectToAction("ListCarts");
         }
         public List<GioHang> GetListCarts()
         {
@@ -160,29 +217,36 @@ namespace QuanLyQuanCaPhe23.Controllers
         }
         public ActionResult ChiTietDonHangList(int orID)
         {
+            // Lấy chi tiết đơn hàng từ cơ sở dữ liệu
             var chitietdonghang = da.ChiTietDonHangs
                                         .Include(ct => ct.CaPhe) // Nạp thông tin về CaPhe
                                             .ThenInclude(cp => cp.Size) // Nạp thông tin về Size của CaPhe
                                         .Include(ct => ct.KhuyenMai) // Nạp thông tin về KhuyenMai
                                         .Where(s => s.DonHangId == orID)
                                         .ToList();
-            var tongTienString = _httpContextAccessor.HttpContext.Session.GetString("TongTien");
+
+            // Tính tổng tiền
+            var tongTien = chitietdonghang.Sum(ct => ct.SoLuong * ct.Tien);
+
+            // Tạo view model
             var viewModel = new DonHangViewModel
             {
                 DonHangId = orID,
                 KhuyenMaiId = chitietdonghang.FirstOrDefault()?.KhuyenMai,
                 SanPhams = chitietdonghang.Select(ct => new SanPhamViewModel
                 {
-
                     CaPhe = ct.CaPhe,
                     SoLuong = ct.SoLuong,
                     Tien = ct.Tien
                 }).ToList()
             };
-            ViewBag.TongTien = tongTienString;
+
+            // Gán tổng tiền cho ViewBag
+            ViewBag.TongTien = tongTien;
 
             return View(viewModel);
         }
+
         public IActionResult ThanhToanOnline(int orID)
         {
             var chitietdonghang = da.ChiTietDonHangs
@@ -267,7 +331,6 @@ namespace QuanLyQuanCaPhe23.Controllers
         {
             var paymentInfo = _payPalService.PaymentExecute(Request.Query);
 
-            // Trích xuất các giá trị từ kết quả trả về
             string payment_method = paymentInfo.PaymentMethod;
             string success = paymentInfo.Success.ToString();
             string orderId = paymentInfo.OrderId;
@@ -294,28 +357,44 @@ namespace QuanLyQuanCaPhe23.Controllers
                     da.SaveChanges();
                     int id = o.Id;
 
-                    // Thêm
                     List<GioHang> gh = GetListCarts();
-                    // Duyệt giỏ hàng thêm vào db
+
+                    var orderDetailsViewModel = new DonHangDetailsViewModel
+                    {
+                        DonHangId = o.Id,
+                        NgayTao = o.NgayTao,
+                        PayPalKey = o.PayPalKey,
+                        KhachHang = o.KhachHang,
+                        ChiTietDonHangs = new List<ChiTietDonHang>()
+                    };
+
+                    decimal tongTien = 0; // Khởi tạo tổng tiền
+
                     foreach (var item in gh)
                     {
-                        // Tạo mới ChiTietDonHang
-                        ChiTietDonHang odd = new ChiTietDonHang();
-                        // Thiết lập các thuộc tính
-                        odd.DonHangId = o.Id;
-                        odd.CaPheId = item.Id;
-                        odd.SoLuong = item.SoLuong;
-                        odd.Tien = item.Tien;
-                        odd.KhuyenMaiId = 1;
+                        var caPhe = da.CaPhes.Find(item.Id);
+
+                        ChiTietDonHang odd = new ChiTietDonHang
+                        {
+                            DonHangId = o.Id,
+                            CaPheId = item.Id,
+                            SoLuong = item.SoLuong,
+                            Tien = item.Tien,
+                            KhuyenMaiId = 1,
+                            CaPhe = caPhe
+                        };
                         da.ChiTietDonHangs.Add(odd);
+                        orderDetailsViewModel.ChiTietDonHangs.Add(odd);
+
+                        tongTien += (decimal)item.Tien * item.SoLuong; // Tính tổng tiền
                     }
                     da.SaveChanges();
-                    _httpContextAccessor.HttpContext.Session.SetObjectAsJson("GioHang", gh);
-                    // Làm rỗng giỏ hàng
+
                     HttpContext.Session.Remove("GioHang");
-                    ViewBag.OrderId = id;
-                    ViewBag.TongTien = _httpContextAccessor.HttpContext.Session.GetString("TongTien");
-                    return View("PaymentSuccess");
+
+                    ViewBag.TongTien = tongTien; // Truyền tổng tiền vào ViewBag
+
+                    return View("PaymentSuccess", orderDetailsViewModel);
                 }
                 else
                 {
@@ -330,7 +409,6 @@ namespace QuanLyQuanCaPhe23.Controllers
             }
         }
 
-
         public IActionResult PaymentSuccess()
         {
             return View();
@@ -340,15 +418,6 @@ namespace QuanLyQuanCaPhe23.Controllers
         {
             return View();
         }
-
-
-
-
-
-
-
-
-
 
     }   
 }

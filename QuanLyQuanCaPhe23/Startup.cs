@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using QuanLyQuanCaPhe23.Models;
 using QuanLyQuanCaPhe23.OTP;
 using QuanLyQuanCaPhe23.PAYPAL;
 using QuanLyQuanCaPhe23.VNPAY;
@@ -27,6 +32,9 @@ namespace QuanLyQuanCaPhe23
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<QUANLYCAPHEContext>(options =>
+                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian chờ của session
@@ -39,16 +47,29 @@ namespace QuanLyQuanCaPhe23
             services.AddSingleton<IVnPayService, VnPayService>();
             services.AddSingleton<IPayPalService, PayPalService>();
             services.AddLogging(); // Thêm dịch vụ logging
-                                   //services.AddScoped<IOtpService, OtpService>();
             services.AddScoped<ESMSHelper>();
             services.Configure<ESMSOptions>(Configuration.GetSection("ESMS"));
+
             // Add framework services.
             services.AddMvc();
 
             // Add HttpClientFactory
             services.AddHttpClient();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            })
+            .AddCookie()
+            .AddGoogle(options =>
+            {
+                IConfigurationSection googleAuthNSection =
+                    Configuration.GetSection("Authentication:Google");
 
-
+                options.ClientId = googleAuthNSection["ClientId"];
+                options.ClientSecret = googleAuthNSection["ClientSecret"];
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,14 +82,15 @@ namespace QuanLyQuanCaPhe23
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSession();
             app.UseRouting();
 
+            app.UseAuthentication(); // Thêm dòng này để bật xác thực
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -82,9 +104,8 @@ namespace QuanLyQuanCaPhe23
                     name: "payment",
                     pattern: "GioHang/{action=PaymentCallback}/{id?}");
             });
+
             logger.LogInformation("Application started.");
-
-
         }
     }
 }

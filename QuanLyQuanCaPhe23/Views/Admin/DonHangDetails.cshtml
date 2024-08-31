@@ -3,31 +3,43 @@
 @{
     ViewData["Title"] = "Chi Tiết Đơn Hàng";
 }
-
+<link rel="stylesheet" href="~/css/site.css">
 <div class="container mt-4">
-    <h2 class="text-center mb-4">Chi Tiết Đơn Hàng</h2>
+    <h2 class="text-center mb-4 order-title">Chi Tiết Đơn Hàng</h2>
 
-    <div class="card mb-4">
+    <div class="card mb-4 order-card">
         <div class="card-body">
-            <h4 class="card-title">Đơn Hàng @Model.DonHangId</h4>
-            <hr />
-            <dl class="row">
-                <dt class="col-sm-3">Ngày Tạo:</dt>
-                <dd class="col-sm-9">@Model.NgayTao</dd>
-                <dt class="col-sm-3">PayPal Key:</dt>
-                <dd class="col-sm-9">@Model.PayPalKey</dd>
-                <dt class="col-sm-3">Khách Hàng:</dt>
-                <dd class="col-sm-9">@Model.KhachHang.HoKh @Model.KhachHang.TenKh  </dd>
-            </dl>
+            <h4 class="card-title order-subtitle">Đơn Hàng #@Model.DonHangId</h4>
+            <hr class="divider" />
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Ngày Tạo:</dt>
+                        <dd class="col-sm-8">@Model.NgayTao?.ToString("dd/MM/yyyy HH:mm")</dd>
+                        <dt class="col-sm-4">PayPal Key:</dt>
+                        <dd class="col-sm-8">@Model.PayPalKey</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Khách Hàng:</dt>
+                        <dd class="col-sm-8">@Model.KhachHang.HoKh @Model.KhachHang.TenKh</dd>
+                        <dt class="col-sm-4">Số Điện Thoại:</dt>
+                        <dd class="col-sm-8">@Model.KhachHang.SoDienThoai</dd>
+                        <dt class="col-sm-4">Địa Chỉ:</dt>
+                        <dd class="col-sm-8">@Model.KhachHang.DiaChi</dd>
+                    </dl>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="card">
+    <div class="card order-card">
         <div class="card-body">
-            <h4 class="card-title">Chi Tiết Đơn Hàng</h4>
+            <h4 class="card-title order-subtitle">Chi Tiết Sản Phẩm</h4>
             <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
+                <table class="table table-hover">
+                    <thead class="thead-light">
                         <tr>
                             <th>Cà Phê</th>
                             <th>Số Lượng</th>
@@ -41,17 +53,82 @@
                             <tr>
                                 <td>@item.CaPhe.Ten</td>
                                 <td>@item.SoLuong</td>
-                                <td>@item.KhuyenMai.Ten</td>
-                                <td>@item.Tien</td>
+                                <td>@item.KhuyenMai?.Ten</td>
+                                <td>@string.Format("{0:#,##0} VNĐ", item.SoLuong * item.Tien)</td>
                             </tr>
                         }
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-right"><strong>Tổng cộng:</strong></td>
+                            <td><strong>@string.Format("{0:#,##0} VNĐ", Model.ChiTietDonHangs.Sum(c => c.SoLuong * c.Tien))</strong></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
     </div>
 
     <div class="text-center mt-4">
-        <a asp-action="ListDonHang" class="btn btn-primary">Quay lại danh sách đơn hàng</a>
+        <a asp-action="ListDonHang" class="btn btn-primary btn-lg">Quay lại danh sách đơn hàng</a>
     </div>
 </div>
+
+<style>
+    .order-title {
+        color: #8B4513;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 30px;
+    }
+
+    .order-subtitle {
+        color: #a0522d;
+        font-weight: 600;
+    }
+
+    .order-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+        .order-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+        }
+
+    .divider {
+        border-top: 2px solid #f4e4c2;
+        margin: 20px 0;
+    }
+
+    .table {
+        color: #5a3921;
+    }
+
+        .table thead th {
+            background-color: #f4e4c2;
+            color: #8B4513;
+            border-color: #deb887;
+        }
+
+    .table-hover tbody tr:hover {
+        background-color: #fff8dc;
+    }
+
+    .btn-primary {
+        background-color: #8B4513;
+        border-color: #8B4513;
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #a0522d;
+            border-color: #a0522d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(139, 69, 19, 0.3);
+        }
+</style>

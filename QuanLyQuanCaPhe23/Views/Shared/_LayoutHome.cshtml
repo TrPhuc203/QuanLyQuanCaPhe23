@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -49,8 +49,22 @@
             white-space: nowrap; /* Ngăn chặn việc ngắt dòng */
         }
 
+            .nav-link.active,
+            .nav-link.active:hover {
+                color: #007bff !important; /* Màu xanh cho liên kết đang hoạt động */
+            }
+
         .container {
             color: black; /* Đảm bảo màu chữ chính xác */
+        }
+
+        .user-icon {
+            margin-right: 5px;
+        }
+
+        .greeting {
+            color: #8B4513; /* Màu nâu đậm cho phần "Xin chào" */
+            font-weight: bold;
         }
     </style>
 </head>
@@ -58,6 +72,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
+                <img src="~/images/logo_Phuc (2).png" alt="Logo" style="width: 4%;" />
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="TrangChu">Phuc Coffee</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -68,7 +83,10 @@
                         @if (Context.Session.GetString("IsLoggedInKH") == "true")
                         {
                             <a class="nav-link text-dark auth-button" asp-area="" asp-controller="NguoiDung" asp-action="ListCaphe">Vào đặt hàng</a>
-                            <a class="nav-link text-dark" style="font-weight:500 !important">Xin chào, @Context.Session.GetString("HoKh") @Context.Session.GetString("TenKh")</a>
+                            <a class="nav-link text-dark greeting">
+                                <i class="fas fa-user user-icon"></i>
+                                Xin chào, @Context.Session.GetString("HoKh") @Context.Session.GetString("TenKh")
+                            </a>
                             <a class="nav-link text-dark auth-button" asp-area="" asp-controller="NguoiDung" asp-action="DangXuat">Đăng xuất</a>
                         }
                         else
@@ -88,8 +106,9 @@
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>
-

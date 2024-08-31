@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/colorful-login.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body class="colorful-bg">
     <div class="container">
@@ -36,6 +37,15 @@
                             <div class="form-group text-center">
                                 <input type="submit" value="Đăng Nhập" class="btn btn-primary btn-block" />
                             </div>
+                            <div class="text-center mt-3">
+                                <span class="or-divider">Hoặc</span>
+                            </div>
+                            <a class="form-group text-center google-login" href="@Url.Action("GoogleLogin", "NguoiDung")">
+                                <i class="fab fa-google"></i> Đăng nhập bằng Google
+                            </a>
+                            <div class="text-center mt-3">
+                                <a href="@Url.Action("ForgotPassword", "NguoiDung")" class="forgot-password">Quên mật khẩu?</a>
+                            </div>
                             @if (ViewData["SuccessMessage"] != null)
                             {
                                 <div class="alert alert-success" role="alert">
@@ -54,14 +64,47 @@
                   chat-title="CSKH-PPK-Coffee"
                   agent-id="66dfadc2-e7dc-4761-9ada-f796b9eabad2"
                   language-code="vi"></df-messenger>
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 
     <style>
+        .or-divider {
+            display: inline-block;
+            position: relative;
+            color: #FF6B95;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+            .or-divider:before,
+            .or-divider:after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                width: 200%;
+                height: 1px;
+                background-color: #FF6B95;
+            }
+
+            .or-divider:before {
+                right: 100%;
+                margin-right: 10px;
+            }
+
+            .or-divider:after {
+                left: 100%;
+                margin-left: 10px;
+            }
+
         .colorful-bg {
             background: linear-gradient(45deg, #FF9A8B, #FF6B95, #FF8E53, #FFA647, #FFD700);
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
         }
+
         .login-card {
             background-color: rgba(255, 255, 255, 0.9);
             border-radius: 20px;
@@ -96,10 +139,10 @@
             color: #333;
         }
 
-        .form-control:focus {
-            box-shadow: none;
-            border-color: #FF6B95;
-        }
+            .form-control:focus {
+                box-shadow: none;
+                border-color: #FF6B95;
+            }
 
         .control-label {
             color: #FF6B95;
@@ -119,11 +162,11 @@
             letter-spacing: 1px;
         }
 
-        .btn-primary:hover {
-            background: linear-gradient(45deg, #FF8E53, #FF6B95);
-            transform: translateY(-3px);
-            box-shadow: 0 7px 20px rgba(255, 107, 149, 0.4);
-        }
+            .btn-primary:hover {
+                background: linear-gradient(45deg, #FF8E53, #FF6B95);
+                transform: translateY(-3px);
+                box-shadow: 0 7px 20px rgba(255, 107, 149, 0.4);
+            }
 
         .text-danger {
             font-size: 0.9rem;
@@ -139,6 +182,40 @@
             border: none;
         }
 
+        .google-login {
+            display: inline-block;
+            color: white;
+            background-color: #DB4437;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none; /* Loại bỏ gạch dưới */
+            transition: all 0.3s ease;
+        }
+
+            .google-login:hover {
+                background-color: #c33226;
+                transform: translateY(-3px);
+                box-shadow: 0 7px 20px rgba(219, 68, 55, 0.4);
+                text-decoration: none; /* Đảm bảo không có gạch dưới khi hover */
+            }
+
+            .google-login i {
+                margin-right: 10px;
+            }
+
+        .forgot-password {
+            color: #FF6B95;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+            .forgot-password:hover {
+                text-decoration: underline;
+            }
+
         df-messenger {
             --df-messenger-bot-message: #FF6B95;
             --df-messenger-button-titlebar-color: #FF8E53;
@@ -149,3 +226,4 @@
         }
     </style>
 </body>
+</html>

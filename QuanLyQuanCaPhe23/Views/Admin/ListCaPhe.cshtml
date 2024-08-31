@@ -5,40 +5,42 @@
 }
 
 <div class="container mt-5">
-    <form class="mb-4" asp-action="ListCaPhe" method="get">
-        <div class="form-row align-items-end">
-            <div class="col-md-3">
-                <label for="filter1">Lọc theo tên:</label>
-                <input type="text" id="filter1" name="kw" class="form-control" />
+    <form asp-action="ListCaPhe" method="get">
+        <div class="search-wrapper">
+            <div class="search-box">
+                <input type="text" id="filter1" name="kw" class="search-input" placeholder="Tìm theo tên" value="@ViewData["FilterKw"]" />
+                <i class="fas fa-search search-icon"></i>
             </div>
-            <div class="col-md-3">
-                <label for="filter2">Lọc theo size:</label>
-                <select id="filter2" name="size" class="form-control">
+            <div class="filter-box">
+                <select id="filter2" name="size" class="filter-select">
+                    <option value="">Chọn size</option>
                     <option value="1">Nhỏ</option>
                     <option value="2">Vừa</option>
                     <option value="3">Lớn</option>
                     <option value="4">Nóng</option>
                 </select>
+                <i class="fas fa-chevron-down select-icon"></i>
             </div>
-            <div class="col-md-3">
-                <label for="filter3">Lọc theo giá:</label>
-                <input type="number" id="filter3" name="gia" class="form-control" />
+            <div class="price-box">
+                <input type="number" id="filter3" name="gia" class="price-input" placeholder="Giá tối đa" value="@ViewData["FilterGia"]" />
+                <i class="fas fa-dollar-sign price-icon"></i>
             </div>
-            <div class="col-md-3">
-                <button type="submit" class="btn btn-primary btn-block">Lọc</button>
-            </div>
+            <button type="submit" class="search-btn">
+                <i class="fas fa-filter"></i> Lọc
+            </button>
         </div>
     </form>
 
-    <ul class="pagination justify-content-center mb-4">
-        <li class="page-item"><a class="page-link" href="/Admin/ListCaPhe?page=1">1</a></li>
-        <li class="page-item"><a class="page-link" href="/Admin/ListCaPhe?page=2">2</a></li>
-        <li class="page-item"><a class="page-link" href="/Admin/ListCaPhe?page=3">3</a></li>
-        <li class="page-item"><a class="page-link" href="/Admin/ListCaPhe?page=4">4</a></li>
-        <li class="page-item"><a class="page-link" href="/Admin/ListCaPhe?page=5">5</a></li>
-        <li class="page-item"><a class="page-link" href="/Admin/ListCaPhe?page=6">6</a></li>
-        <li class="page-item"><a class="page-link" href="/Admin/ListCaPhe?page=7">7</a></li>
-    </ul>
+   <nav aria-label="Page navigation" class="mt-5">
+        <ul class="pagination justify-content-center">
+            @for (int i = 1; i <= (int)ViewData["TotalPages"]; i++)
+            {
+                <li class="page-item @(i == (int)ViewData["CurrentPage"] ? "active" : "")">
+                    <a class="page-link" href="/Admin/ListCaPhe?page=@i&kw=@ViewData["FilterKw"]&size=@ViewData["FilterSize"]&gia=@ViewData["FilterGia"]">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
 
     <p>
         <a asp-action="Create" class="btn btn-success mb-4">Thêm mới cà phê</a>
@@ -65,7 +67,7 @@
                     <td>@Html.DisplayFor(modelItem => item.Ten)</td>
                     <td>@Html.DisplayFor(modelItem => item.MieuTa)</td>
                     <td>@Html.DisplayFor(modelItem => item.Size.Ten)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Tien)</td>
+                    <td>@string.Format("{0:N0} VNĐ", item.Tien)</td> <!-- Định dạng giá tiền -->
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Sửa</a>
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Chi tiết</a>
@@ -76,7 +78,21 @@
         </tbody>
     </table>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var selectedSize = "@ViewData["FilterSize"]";
+        var selectElement = document.getElementById("filter2");
+        if (selectedSize) {
+            selectElement.value = selectedSize;
+        }
 
+        var selectedGia = "@ViewData["FilterGia"]";
+        var priceElement = document.getElementById("filter3");
+        if (selectedGia) {
+            priceElement.value = selectedGia;
+        }
+    });
+</script>
 <style>
     body {
         background-color: #f8f9fa;

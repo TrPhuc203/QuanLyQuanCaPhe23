@@ -4,83 +4,113 @@
     Layout = "_NewLayout";
 }
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết đơn hàng</title>
+    <title>Chi tiết đơn hàng - PPK Coffee</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
             background-color: #f8f9fa;
-            color: #343a40;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-        }
-
-        .card {
+        .order-card {
+            background-color: #ffffff;
             border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
         }
 
-        .product {
-            border: 1px solid #dee2e6;
+        .order-header {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .product-item {
+            background-color: #f1f3f5;
             border-radius: 10px;
-            margin-bottom: 20px;
-            padding: 20px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
         }
 
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-            border-radius: 5px;
-            padding: 10px 20px;
-            font-size: 1.1rem;
-        }
-
-            .btn-primary:hover {
-                background-color: #0056b3;
-                border-color: #0056b3;
+            .product-item:hover {
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                transform: translateY(-5px);
             }
+
+        .total-section {
+            background-color: #e9ecef;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-back {
+            margin-top: 2rem;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="card">
-            <h1 class="text-center text-primary mb-4">Chi Tiết Đơn Hàng</h1>
-            <h2>Chi tiết đơn hàng</h2>
-            <p>ID đơn hàng: @Model.DonHangId</p>
+        <div class="order-card">
+            <div class="order-header">
+                <h1 class="text-center text-primary">
+                    <i class="fas fa-receipt mr-2"></i>Chi Tiết Đơn Hàng
+                </h1>
+                <p class="text-center text-muted">Mã đơn hàng: #@Model.DonHangId</p>
+            </div>
+
             @if (Model.SanPhams != null && Model.SanPhams.Any())
             {
-                <h3>Sản phẩm trong đơn hàng</h3>
+                <h3 class="mb-4"><i class="fas fa-coffee mr-2"></i>Sản phẩm trong đơn hàng</h3>
                 @foreach (var sp in Model.SanPhams)
                 {
-                    <div class="product">
-                        <h4>Sản phẩm</h4>
-                        <p><strong>Tên Cà Phê:</strong> @sp.CaPhe.Ten</p>
-                        @if (sp.CaPhe.Size != null)
-                        {
-                            <p><strong>Size:</strong> @sp.CaPhe.Size.Ten</p>
-                        }
-                        <p><strong>Số lượng:</strong> @sp.SoLuong</p>
-                        <p><strong>Tiền:</strong> @sp.Tien</p>
+                    <div class="product-item">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <h4>@sp.CaPhe.Ten</h4>
+                                @if (sp.CaPhe.Size != null)
+                                {
+                                    <p class="mb-0"><small>Size: @sp.CaPhe.Size.Ten</small></p>
+                                }
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <p class="mb-0"><strong>Số lượng:</strong> @sp.SoLuong</p>
+                            </div>
+                            <div class="col-md-4 text-right">
+                                <p class="mb-0"><strong>Thành tiền:</strong> @string.Format("{0:#,##0} VNĐ", sp.SoLuong * sp.Tien)</p>
+                            </div>
+                        </div>
                     </div>
                 }
             }
-            <p><strong>Khuyến mãi:</strong> @Model.KhuyenMaiId.Ten</p>
-            <p><strong>Tổng tiền:</strong> @ViewBag.TongTien</p>
-            <p>
-                <a asp-controller="NguoiDung" asp-action="ListCaPhe" class="btn btn-primary btn-lg">Quay lại trang chủ</a>
-            </p>
+
+            <div class="total-section">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Khuyến mãi:</strong> @Model.KhuyenMaiId?.Ten</p>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <h4><strong>Tổng tiền:</strong> @string.Format("{0:#,##0} VNĐ", ViewBag.TongTien)</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center btn-back">
+                <a asp-controller="NguoiDung" asp-action="ListCaPhe" class="btn btn-primary btn-lg">
+                    <i class="fas fa-arrow-left mr-2"></i>Quay lại trang chủ
+                </a>
+            </div>
         </div>
     </div>
+
     <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
     <df-messenger intent="WELCOME"
                   chat-title="CSKH-PPK-Coffee"

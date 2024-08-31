@@ -12,7 +12,7 @@
         <div class="form-row align-items-end">
             <div class="col-md-3">
                 <label for="filter">Lọc theo ngày:</label>
-                <input type="date" id="filter" name="kw" class="form-control" />
+                <input type="date" id="filter" name="kw" class="form-control" value="@ViewBag.SelectedDate.ToString("yyyy-MM-dd")" />
             </div>
             <div class="col-md-3">
                 <button type="submit" class="btn btn-primary">Gửi</button>
@@ -27,7 +27,7 @@
                     <tr>
                         <th scope="col">Tên cà phê</th>
                         <th scope="col">Số lượng</th>
-                        <th scope="col">Hành động</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -58,12 +58,13 @@
     @foreach (var item in Model)
     {
         <text>
-            labels.push("@item.Ten");
-            data.push(@item.SoLuong);
+            labels.push("@Html.Raw(item.Ten)"); // Đảm bảo tên không bị mã hóa
+        data.push(@item.SoLuong);
         </text>
     }
-    window.onload = function () {
-        let ctx1 = document.getElementById("myChart").getContext('2d');
-        drawChartTheoSoLuong(ctx1, labels, data, "THỐNG KÊ SỐ LƯỢNG SẢN PHẨM BÁN");
-    }
+        window.onload = function () {
+            let ctx1 = document.getElementById("myChart").getContext('2d');
+            drawChartTheoSoLuong(ctx1, labels, data, "THỐNG KÊ SỐ LƯỢNG SẢN PHẨM BÁN");
+        }
 </script>
+

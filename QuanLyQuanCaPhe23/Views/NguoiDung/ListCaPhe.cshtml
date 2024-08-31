@@ -3,137 +3,239 @@
 @{
     ViewData["Title"] = "Danh sách cà phê";
     Layout = "_NewLayout";
-    
 }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link rel="stylesheet" href="~/css/card.css">
+<div class="container coffee-list-container">
+    <h1 class="text-center mb-5">Danh sách cà phê</h1>
 
-<div class="container">
-    <form class="mb-4" asp-action="ListCaPhe" method="get">
-        <div class="form-row align-items-end">
-            <div class="col-md-3">
-                <label for="filter1">Lọc theo tên:</label>
-                <input type="text" id="filter1" name="kw" class="form-control" />
+    <div class="search-container mb-5">
+        <form asp-action="ListCaPhe" method="get">
+            <div class="search-wrapper">
+                <div class="search-box">
+                    <input type="text" id="filter1" name="kw" class="search-input" placeholder="Tìm theo tên" value="@ViewData["FilterKw"]" />
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="filter-box">
+                    <select id="filter2" name="size" class="filter-select">
+                        <option value="">Chọn size</option>
+                        <option value="1">Nhỏ</option>
+                        <option value="2">Vừa</option>
+                        <option value="3">Lớn</option>
+                        <option value="4">Nóng</option>
+                    </select>
+                    <i class="fas fa-chevron-down select-icon"></i>
+                </div>
+                <div class="price-box">
+                    <input type="number" id="filter3" name="gia" class="price-input" placeholder="Giá tối đa" value="@ViewData["FilterGia"]" />
+                    <i class="fas fa-dollar-sign price-icon"></i>
+                </div>
+                <button type="submit" class="search-btn">
+                    <i class="fas fa-filter"></i> Lọc
+                </button>
             </div>
-            <div class="col-md-3">
-                <label for="filter2">Lọc theo size:</label>
-                <select id="filter2" name="size" class="form-control">
-                    <option value="1">Nhỏ</option>
-                    <option value="2">Vừa</option>
-                    <option value="3">Lớn</option>
-                    <option value="4">Nóng</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label for="filter3">Lọc theo giá:</label>
-                <input type="number" id="filter3" name="gia" class="form-control" />
-            </div>
-            <div class="col-md-3">
-                <button type="submit" class="btn btn-primary btn-block">Lọc</button>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-            <li class="page-item"><a class="page-link" href="/NguoiDung/ListCaPhe?page=1">1</a></li>
-            <li class="page-item"><a class="page-link" href="/NguoiDung/ListCaPhe?page=2">2</a></li>
-            <li class="page-item"><a class="page-link" href="/NguoiDung/ListCaPhe?page=3">3</a></li>
-            <li class="page-item"><a class="page-link" href="/NguoiDung/ListCaPhe?page=4">4</a></li>
-            <li class="page-item"><a class="page-link" href="/NguoiDung/ListCaPhe?page=5">5</a></li>
-            <li class="page-item"><a class="page-link" href="/NguoiDung/ListCaPhe?page=6">6</a></li>
-            <li class="page-item"><a class="page-link" href="/NguoiDung/ListCaPhe?page=7">7</a></li>
-        </ul>
-    </nav>
     @if (ViewData["SuccessMessage"] != null)
     {
-        <div class="alert alert-success" role="alert">
+        <div class="alert alert-success text-center" role="alert">
             @ViewData["SuccessMessage"]
         </div>
     }
 
-    <table class="table table-hover table-striped">
-        <thead class="thead-dark">
-            <tr>
-                <th>Ảnh</th>
-                <th>Tên cà phê</th>
-                <th>Miêu tả</th>
-                <th>Size</th>
-                <th>Giá tiền</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td><img width="200px" src="@Html.DisplayFor(modelItem => item.Anh)" /></td>
-                    <td>@Html.DisplayFor(modelItem => item.Ten)</td>
-                    <td>@Html.DisplayFor(modelItem => item.MieuTa)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Size.Ten)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Tien)</td>
-                    <td>
-                        @Html.ActionLink("Thêm vào giỏ hàng", "AddToCart", "GioHang", new { id = item.Id }, new { @class = "btn btn-success btn-sm" }) |
-                        @Html.ActionLink("Chi tiết", "Details", new { id = item.Id }, new { @class = "btn btn-info btn-sm" })
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 coffee-card">
+                    <img src="@item.Anh" class="card-img-top" alt="@item.Ten" />
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Ten</h5>
+                        <p class="card-text">@item.MieuTa</p>
+                        <p class="card-text"><small class="text-muted">Size: @item.Size.Ten</small></p>
+                        <p class="card-text">
+                            <strong>Giá: @(item.Tien.HasValue ? item.Tien.Value.ToString("#,##0 VNĐ") : "N/A")</strong>
+                        </p>
+                    </div>
+                    <div class="card-footer text-center">
+                        @Html.ActionLink("Thêm vào giỏ hàng", "AddToCart", "GioHang", new { id = item.Id }, new { @class = "btn btn-success btn-sm m-1" })
+                        @Html.ActionLink("Chi tiết", "Details", new { id = item.Id }, new { @class = "btn btn-info btn-sm m-1" })
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 
-    <nav aria-label="Page navigation">
+    <nav aria-label="Page navigation" class="mt-5">
         <ul class="pagination justify-content-center">
-            <li class="page-item"><a class="page-link" href="/NguoiDung/ListCaPhe?page=1">1</a></li>
-            <li class="page-item"><a class="page-link" href="/NguoiDung/ListCaPhe?page=2">2</a></li>
-            <li class="page-item"><a class="page-link" href="/NguoiDung/ListCaPhe?page=3">3</a></li>
-            <li class="page-item"><a class="page-link" href="/NguoiDung/ListCaPhe?page=4">4</a></li>
-            <li class="page-item"><a class="page-link" href="/NguoiDung/ListCaPhe?page=5">5</a></li>
-            <li class="page-item"><a class="page-link" href="/NguoiDung/ListCaPhe?page=6">6</a></li>
-            <li class="page-item"><a class="page-link" href="/NguoiDung/ListCaPhe?page=7">7</a></li>
+            @for (int i = 1; i <= (int)ViewData["TotalPages"]; i++)
+            {
+                <li class="page-item @(i == (int)ViewData["CurrentPage"] ? "active" : "")">
+                    <a class="page-link" href="/NguoiDung/ListCaPhe?page=@i&kw=@ViewData["FilterKw"]&size=@ViewData["FilterSize"]&gia=@ViewData["FilterGia"]">@i</a>
+                </li>
+            }
         </ul>
     </nav>
 </div>
+
 <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var selectedSize = "@ViewData["FilterSize"]";
+        var selectElement = document.getElementById("filter2");
+        if (selectedSize) {
+            selectElement.value = selectedSize;
+        }
+
+        var selectedGia = "@ViewData["FilterGia"]";
+        var priceElement = document.getElementById("filter3");
+        if (selectedGia) {
+            priceElement.value = selectedGia;
+        }
+    });
+</script>
 <df-messenger intent="WELCOME"
               chat-title="CSKH-PPK-Coffee"
               agent-id="66dfadc2-e7dc-4761-9ada-f796b9eabad2"
               language-code="vi"></df-messenger>
 
 <style>
-    body {
-        background-color: #f8f9fa !important;
-        color: #343a40 !important;
+
+    .coffee-list-container {
+        background-color: #f8f9fa;
+        padding: 3rem 0;
+        font-family: 'Poppins', sans-serif;
     }
 
-    .container {
-        background-color: #F9F9DD !important;
-        padding: 20px !important;
-        border-radius: 10px !important;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+    .search-container {
+        max-width: 100%;
+        margin: 0 auto;
     }
 
-    .table-hover tbody tr:hover {
-        background-color: #BDFDED !important;
+    .search-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
-    .thead-dark th {
-        background-color: #343a40 !important;
-        color: #ffffff !important;
+    .search-box, .filter-box, .price-box {
+        position: relative;
+        margin-bottom: 10px;
+        flex: 1 1 200px;
+        margin-right: 10px;
     }
 
-    .btn {
-        margin-right: 5px !important;
+    .search-input, .filter-select, .price-input {
+        width: 100%;
+        padding: 12px 40px 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 25px;
+        font-size: 14px;
+        transition: all 0.3s ease;
     }
 
-    .pagination .page-item .page-link {
-        color: #007bff !important;
+    .search-input:focus, .filter-select:focus, .price-input:focus {
+        outline: none;
+        border-color: #6f4e37;
+        box-shadow: 0 0 0 2px rgba(111, 78, 55, 0.2);
     }
 
-        .pagination .page-item .page-link:hover {
-            color: #0056b3 !important;
-        }
+    .search-icon, .select-icon, .price-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6f4e37;
+    }
+
+    .filter-select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        cursor: pointer;
+    }
+
+    .search-btn {
+        background-color: #6f4e37;
+        color: #fff;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        flex: 0 0 auto;
+        margin-left: auto;
+    }
+
+    .search-btn:hover {
+        background-color: #5a3d2b;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+    }
+
+    .coffee-card {
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .coffee-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .coffee-card .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .coffee-card .card-body {
+        background-color: #fff;
+    }
+
+    .coffee-card .card-footer {
+        background-color: #fff;
+        border-top: 1px solid rgba(0,0,0,.125);
+    }
+
+    .btn-primary {
+        background-color: #6f4e37;
+        border-color: #6f4e37;
+    }
+
+    .btn-primary:hover {
+        background-color: #5a3d2b;
+        border-color: #5a3d2b;
+    }
+
+    .pagination .page-link {
+        color: #6f4e37;
+    }
 
     .pagination .page-item.active .page-link {
-        background-color: #007bff !important;
-        border-color: #007bff !important;
-        color: #ffffff !important;
+        background-color: #6f4e37;
+        border-color: #6f4e37;
     }
+
+    h1 {
+        color: #6f4e37;
+        font-weight: bold;
+    }
+
+    df-messenger {
+        --df-messenger-bot-message: #6f4e37;
+        --df-messenger-button-titlebar-color: #6f4e37;
+        --df-messenger-chat-background-color: #fafafa;
+        --df-messenger-font-color: white;
+        --df-messenger-send-icon: #6f4e37;
+        --df-messenger-user-message: #5a3d2b;
+    }
+
 </style>

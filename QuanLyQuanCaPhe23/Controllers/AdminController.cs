@@ -39,14 +39,15 @@ namespace QuanLyQuanCaPhe23.Controllers
             {
                 return RedirectToAction("DangNhap");
             }
+
             string check = _httpContextAccessor.HttpContext.Session.GetString("UserName");
             if (check != null)
             {
                 TempData["IsLoggedIn"] = true;
                 DateTime dateFilter = kw ?? DateTime.Today;
 
-                var result = da.ChiTietDonHangs.
-                    Include(ct => ct.CaPhe)
+                var result = da.ChiTietDonHangs
+                    .Include(ct => ct.CaPhe)
                     .ThenInclude(cp => cp.Size)
                     .Where(ct => EF.Functions.DateDiffDay(ct.DonHang.NgayTao, dateFilter) == 0) // Lọc theo ngày tạo đơn hàng
                     .GroupBy(ct => new { CaPheTen = ct.CaPhe.Ten, SizeTen = ct.CaPhe.Size.Ten })
@@ -54,20 +55,21 @@ namespace QuanLyQuanCaPhe23.Controllers
                     {
                         CaPhe = g.Key.CaPheTen + " " + g.Key.SizeTen,
                         DoanhThu = g.Sum(ct => ct.SoLuong * ct.Tien)
-                    })
-                    .ToList();
-                List<ThongKeTheoDoanhThuModel> ds = new List<ThongKeTheoDoanhThuModel>();
-                foreach (var item in result)
+                    }).ToList();
+
+                List<ThongKeTheoDoanhThuModel> ds = result.Select(item => new ThongKeTheoDoanhThuModel
                 {
-                    ThongKeTheoDoanhThuModel a = new ThongKeTheoDoanhThuModel();
-                    a.Ten = item.CaPhe;
-                    a.DoanhThu = (decimal)item.DoanhThu;
-                    ds.Add(a);
-                }
+                    Ten = item.CaPhe,
+                    DoanhThu = (decimal)item.DoanhThu
+                }).ToList();
+
+                ViewBag.SelectedDate = dateFilter; // Truyền ngày đã chọn cho view
                 return View(ds);
             }
             else
+            {
                 return RedirectToAction("DangNhap");
+            }
         }
 
         // GET: AdminController/Details/5
@@ -77,11 +79,14 @@ namespace QuanLyQuanCaPhe23.Controllers
             {
                 return RedirectToAction("DangNhap");
             }
+
             string check = _httpContextAccessor.HttpContext.Session.GetString("UserName");
             if (check != null)
             {
                 TempData["IsLoggedIn"] = true;
                 DateTime dateFilter = kw ?? DateTime.Today;
+
+                // Lấy tổng số lượng của từng sản phẩm trong ngày được chọn
                 var result = da.ChiTietDonHangs
                     .Include(ct => ct.CaPhe)
                     .ThenInclude(cp => cp.Size)
@@ -90,22 +95,23 @@ namespace QuanLyQuanCaPhe23.Controllers
                     .Select(g => new
                     {
                         CaPhe = g.Key.CaPheTen + " " + g.Key.SizeTen,
-                        SoLuongBanDuoc = g.Count() // Sử dụng hàm Count() để đếm số lượng sản phẩm
-                }).ToList();
-                List<ThongKeSoLuongSanPhamModel> ds = new List<ThongKeSoLuongSanPhamModel>();
-                foreach (var item in result)
+                        SoLuongBanDuoc = g.Sum(ct => ct.SoLuong) // Tính tổng số lượng sản phẩm
+                    }).ToList();
+
+                // Chuyển đổi kết quả thành danh sách mô hình
+                List<ThongKeSoLuongSanPhamModel> ds = result.Select(item => new ThongKeSoLuongSanPhamModel
                 {
-                    Console.WriteLine($"CaPhe: {item.CaPhe}, SoLuongBanDuoc: {item.SoLuongBanDuoc}");
-                    ThongKeSoLuongSanPhamModel a = new ThongKeSoLuongSanPhamModel();
-                    a.Ten = item.CaPhe;
-                    a.SoLuong = (int)item.SoLuongBanDuoc;
-                    ds.Add(a);
-                }
+                    Ten = item.CaPhe,
+                    SoLuong = (int)item.SoLuongBanDuoc
+                }).ToList();
+
+                ViewBag.SelectedDate = dateFilter;
                 return View(ds);
             }
             else
                 return RedirectToAction("DangNhap");
         }
+
 
         public ActionResult ListCaPhe(string? kw, string? page, string? size, int? gia)
         {
@@ -113,6 +119,7 @@ namespace QuanLyQuanCaPhe23.Controllers
             {
                 return RedirectToAction("DangNhap");
             }
+
             string check = _httpContextAccessor.HttpContext.Session.GetString("UserName");
             if (check != null)
             {
@@ -131,42 +138,60 @@ namespace QuanLyQuanCaPhe23.Controllers
                 {
                     ViewData["FullName"] = "Quản Lý";
                 }
+
                 // Xóa thông báo từ session
-                var ds = da.CaPhes.Include(c => c.Size).ToList();
+                _httpContextAccessor.HttpContext.Session.Remove("SuccessMessage");
+
+                // Lấy danh sách sản phẩm từ cơ sở dữ liệu
+                var ds = da.CaPhes.Include(c => c.Size).AsQueryable();
+
+                // Áp dụng các điều kiện lọc
                 if (!string.IsNullOrEmpty(kw))
                 {
-                    ds = ds.Where(s => s.Ten.Contains(kw)).ToList();
+                    ds = ds.Where(s => s.Ten.Contains(kw)); // Sử dụng Contains thay vì IndexOf
                 }
                 if (!string.IsNullOrEmpty(size))
                 {
-                    int sizeid = int.Parse(size);
-                    ds = ds.Where(s => s.SizeId == sizeid).ToList();
+                    if (int.TryParse(size, out int sizeid))
+                    {
+                        ds = ds.Where(s => s.SizeId == sizeid);
+                    }
                 }
-                if (gia != null)
+                if (gia.HasValue)
                 {
-                    ds = ds.Where(s => s.Tien <= (decimal)gia).ToList();
+                    ds = ds.Where(s => s.Tien <= gia.Value);
                 }
-                int pageSize = 4;
-                if (!string.IsNullOrEmpty(page))
+
+                // Lấy tổng số sản phẩm sau khi lọc
+                var totalItems = ds.Count();
+
+                int pageSize = 6; // Sửa giá trị pageSize thành 6 sản phẩm mỗi trang
+                int pageNumber = 1; // Mặc định trang đầu tiên
+
+                if (!string.IsNullOrEmpty(page) && int.TryParse(page, out int parsedPageNumber))
                 {
-                    TempData["IsLoggedIn"] = true;
-
-                    int pageNumber = int.Parse(page);
-                    TempData["IsLoggedIn"] = true;
-
-                    ds = da.CaPhes
-                              .OrderBy(item => item.Id)
-                              .Skip((pageNumber - 1) * pageSize)//Lấy từ vị trí
-                              .Take(pageSize)//Lấy bao nhiêu
-                              .ToList();
-                    TempData["IsLoggedIn"] = true;
-
+                    pageNumber = parsedPageNumber;
                 }
 
-                return View(ds);
+                // Áp dụng phân trang
+                var pagedItems = ds.OrderBy(item => item.Id)
+                                   .Skip((pageNumber - 1) * pageSize)
+                                   .Take(pageSize)
+                                   .ToList();
+
+                // Truyền các tham số lọc vào ViewData để sử dụng trong phân trang
+                ViewData["CurrentPage"] = pageNumber;
+                ViewData["TotalPages"] = (int)Math.Ceiling(totalItems / (double)pageSize);
+                ViewData["FilterKw"] = kw; // Truyền tham số lọc từ view
+                ViewData["FilterSize"] = size;
+                ViewData["FilterGia"] = gia;
+
+                return View(pagedItems);
             }
             else
+            {
                 return RedirectToAction("DangNhap");
+            }
         }
 
         // GET: CaPheController/Details/5
@@ -420,6 +445,7 @@ namespace QuanLyQuanCaPhe23.Controllers
             {
                 return RedirectToAction("DangNhap");
             }
+
             string check = _httpContextAccessor.HttpContext.Session.GetString("UserName");
             if (check != null)
             {
@@ -439,26 +465,36 @@ namespace QuanLyQuanCaPhe23.Controllers
                     ViewData["FullName"] = "Quản Lý";
                 }
                 // Xóa thông báo từ session
-                var ds = da.DonHangs.ToList();
-                int pageSize = 4;
+
+                var pageSize = 6; // Hiển thị 6 đơn hàng mỗi trang
+                var pageNumber = 1; // Mặc định là trang 1 nếu không có tham số trang
+
                 if (!string.IsNullOrEmpty(page))
                 {
-                    TempData["IsLoggedIn"] = true;
-
-                    int pageNumber = int.Parse(page);
-                    TempData["IsLoggedIn"] = true;
-
-                    ds = da.DonHangs
-                              .OrderBy(item => item.Id)
-                              .Skip((pageNumber - 1) * pageSize)//Lấy từ vị trí
-                              .Take(pageSize)//Lấy bao nhiêu
-                              .ToList();
-                    TempData["IsLoggedIn"] = true;
+                    // Chuyển đổi tham số trang thành số nguyên
+                    int.TryParse(page, out pageNumber);
                 }
+
+                // Lấy danh sách đơn hàng và phân trang
+                var ds = da.DonHangs
+                          .OrderBy(item => item.Id)
+                          .Skip((pageNumber - 1) * pageSize) // Bỏ qua số lượng đơn hàng ở các trang trước
+                          .Take(pageSize) // Lấy số lượng đơn hàng cho trang hiện tại
+                          .ToList();
+
+                TempData["IsLoggedIn"] = true;
+
+                // Truyền dữ liệu phân trang tới view
+                ViewBag.PageNumber = pageNumber;
+                ViewBag.PageSize = pageSize;
+                ViewBag.TotalItems = da.DonHangs.Count(); // Tổng số đơn hàng
+
                 return View(ds);
             }
             else
+            {
                 return RedirectToAction("DangNhap");
+            }
         }
         public async Task<IActionResult> DonHangDetails(int? id)
         {

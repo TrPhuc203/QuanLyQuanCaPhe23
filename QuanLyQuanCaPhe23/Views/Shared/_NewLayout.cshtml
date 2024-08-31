@@ -5,17 +5,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
         }
 
         .container {
-            max-width: 1150px;
+            max-width: 1180px;
         }
+
         .navbar {
             background-color: #f4e4c2 !important;
         }
@@ -48,173 +47,192 @@
             .auth-button.active {
                 box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #8B4513;
             }
+
         footer {
-    bottom: 0;
-}
+            bottom: 0;
+        }
 
-.footer-distributed {
-     background-color: #FFFFFF;
-    box-sizing: border-box;
-    width: 100%;
-    text-align: left;
-    font: bold 16px sans-serif;
-    padding: 15px 50px 5px 50px;
-    margin-top: 80px;
-}
+        .footer-distributed {
+            background-color: #f5f1e6;
+            box-sizing: border-box;
+            width: 100%;
+            text-align: left;
+            font: bold 16px sans-serif;
+            padding: 15px 50px 5px 50px;
+            margin-top: 80px;
+        }
 
-.footer-distributed .footer-left, .footer-distributed .footer-center, .footer-distributed .footer-right {
-    display: inline-block;
-    vertical-align: top;
-}
+            .footer-distributed .footer-left, .footer-distributed .footer-center, .footer-distributed .footer-right {
+                display: inline-block;
+                vertical-align: top;
+            }
 
-/* Footer left */
+            .footer-distributed .footer-left {
+                width: 30%;
+            }
 
-.footer-distributed .footer-left {
-    width: 30%;
-}
+            .footer-distributed h3 {
+                color: black;
+                font: normal 36px 'Cookie', cursive;
+                margin: 0;
+            }
 
-.footer-distributed h3 {
-    color: black;
-    font: normal 36px 'Cookie', cursive;
-    margin: 0;
-}
+                .footer-distributed h3 span {
+                    color: #e0ac1c;
+                }
 
+            .footer-distributed .footer-links {
+                color: black;
+                margin: 20px 0 12px;
+            }
 
-.footer-distributed h3 span {
-    color: #e0ac1c;
-}
+                .footer-distributed .footer-links a {
+                    display: inline-block;
+                    line-height: 1.8;
+                    text-decoration: none;
+                    color: inherit;
+                }
 
-/* Footer links */
+            .footer-distributed .footer-company-name {
+                color: black;
+                font-size: 14px;
+                font-weight: normal;
+                margin: 0;
+            }
 
-.footer-distributed .footer-links {
-    color: black;
-    margin: 20px 0 12px;
-}
+            .footer-distributed .footer-center {
+                width: 35%;
+            }
 
-.footer-distributed .footer-links a {
-    display: inline-block;
-    line-height: 1.8;
-    text-decoration: none;
-    color: inherit;
-}
+                .footer-distributed .footer-center i {
+                    background-color: #33383b;
+                    color: #FFFFFF;
+                    font-size: 25px;
+                    width: 38px;
+                    height: 38px;
+                    border-radius: 50%;
+                    text-align: center;
+                    line-height: 42px;
+                    margin: 10px 15px;
+                    vertical-align: middle;
+                }
 
-.footer-distributed .footer-company-name {
-                color: #black;
-    font-size: 14px;
-    font-weight: normal;
-    margin: 0;
-}
+                    .footer-distributed .footer-center i.fa-envelope {
+                        font-size: 17px;
+                        line-height: 38px;
+                    }
 
-/* Footer Center */
+                .footer-distributed .footer-center p {
+                    display: inline-block;
+                    color: black;
+                    vertical-align: middle;
+                    margin: 0;
+                }
 
-.footer-distributed .footer-center {
-    width: 35%;
-}
+                    .footer-distributed .footer-center p span {
+                        display: block;
+                        font-weight: normal;
+                        font-size: 14px;
+                        line-height: 2;
+                    }
 
-.footer-distributed .footer-center i {
-    background-color: #33383b;
-    color: #FFFFFF;
-    font-size: 25px;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 42px;
-    margin: 10px 15px;
-    vertical-align: middle;
-}
+                    .footer-distributed .footer-center p a {
+                        color: #e0ac1c;
+                        text-decoration: none;
+                    }
 
-.footer-distributed .footer-center i.fa-envelope {
-    font-size: 17px;
-    line-height: 38px;
-}
+            .footer-distributed .footer-right {
+                width: 30%;
+            }
 
-.footer-distributed .footer-center p {
-    display: inline-block;
-    color: black;
-    vertical-align: middle;
-    margin: 0;
-}
+            .footer-distributed .footer-company-about {
+                line-height: 20px;
+                color: #92999f;
+                font-size: 13px;
+                font-weight: normal;
+                margin: 0;
+            }
 
-.footer-distributed .footer-center p span {
-    display: block;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 2;
-}
+                .footer-distributed .footer-company-about span {
+                    display: block;
+                    color: #ffffff;
+                    font-size: 18px;
+                    font-weight: bold;
+                    margin-bottom: 20px;
+                }
 
-.footer-distributed .footer-center p a {
-    color: #e0ac1c;
-    text-decoration: none;
-    ;
-}
+            .footer-distributed .footer-icons {
+                margin-top: 25px;
+                margin-bottom: 10px;
+            }
 
-/* Footer Right */
+                .footer-distributed .footer-icons a {
+                    display: inline-block;
+                    width: 35px;
+                    height: 35px;
+                    cursor: pointer;
+                    background-color: #33383b;
+                    border-radius: 2px;
+                    font-size: 20px;
+                    color: #ffffff;
+                    text-align: center;
+                    line-height: 35px;
+                    margin-right: 3px;
+                    margin-bottom: 5px;
+                }
 
-.footer-distributed .footer-right {
-    width: 30%;
-}
+                    .footer-distributed .footer-icons a:hover {
+                        background-color: #3F71EA;
+                    }
 
-.footer-distributed .footer-company-about {
-    line-height: 20px;
-    color: #92999f;
-    font-size: 13px;
-    font-weight: normal;
-    margin: 0;
-}
+        .footer-links a:hover {
+            color: #3F71EA;
+        }
 
-.footer-distributed .footer-company-about span {
-    display: block;
-    color: #ffffff;
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
+        .nav-link.greeting {
+            color: #8B4513 !important;
+            font-weight: 600;
+        }
 
-.footer-distributed .footer-icons {
-    margin-top: 25px;
-    margin-bottom: 10px;
-}
-
-.footer-distributed .footer-icons a {
-    display: inline-block;
-    width: 35px;
-    height: 35px;
-    cursor: pointer;
-    background-color: #33383b;
-    border-radius: 2px;
-    font-size: 20px;
-    color: #ffffff;
-    text-align: center;
-    line-height: 35px;
-    margin-right: 3px;
-    margin-bottom: 5px;
-}
-
-.footer-distributed .footer-icons a:hover {
-    background-color: #3F71EA;
-}
-
-.footer-links a:hover {
-    color: #3F71EA;
-}
-
+            .nav-link.greeting i {
+                margin-right: 5px;
+                color: #8B4513;
+            }
     </style>
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="TrangChu">Phuc Coffee </a>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
+                <img src="~/images/logo_Phuc (2).png" alt="Logo" style="width: 4%;"/>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="TrangChu">Phuc Coffee</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav mr-auto">
                         @if (Context.Session.GetString("IsLoggedInKH") == "true")
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="TrangChu" style="padding-right: 500px">Về trang chủ</a>
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="TrangChu" style="color: #8B4513 !important; font-weight: 400">Về trang chủ</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" style="font-weight:500 !important">Xin chào, @ViewData["FullName"]</a>
+                                <a class="nav-link" asp-area="" asp-controller="NguoiDung" asp-action="LichSuDonHang" style="color: #8B4513 !important; font-weight: 400">Lịch sử Đơn hàng</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="NguoiDung" asp-action="ListCaphe" style="color: #8B4513 !important; font-weight: 400">Danh sách cà phê</a>
+                            </li>
+                        }
+                    </ul>
+                    <ul class="navbar-nav ml-auto">
+                        @if (Context.Session.GetString("IsLoggedInKH") == "true")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link greeting">
+                                    <i class="fa fa-user"></i>
+                                    Xin chào, @Context.Session.GetString("FullName")
+                                </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark auth-button" asp-area="" asp-controller="NguoiDung" asp-action="DangXuat">Đăng xuất</a>
@@ -222,25 +240,21 @@
                         }
                         else
                         {
-                            <li class="nav-item ml-auto">
+                            <li class="nav-item">
                                 <a class="nav-link text-dark auth-button @(ViewContext.RouteData.Values["Action"].ToString() == "DangNhap" ? "active" : "")"
                                    asp-area="" asp-controller="NguoiDung" asp-action="DangNhap">Đăng nhập</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark auth-button @(ViewContext.RouteData.Values["Action"].ToString() == "DangKy" ? "active" : "")"
-                                   asp-area="" asp-controller="NguoiDung" asp-action="Dangky">Đăng ký</a>
+                                   asp-area="" asp-controller="NguoiDung" asp-action="DangKy">Đăng ký</a>
                             </li>
                         }
                     </ul>
                 </div>
-
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -248,18 +262,17 @@
     </div>
 
     <footer class="footer-distributed">
-
         <div class="footer-left">
-            <h3>Sagar<span>Developer</span></h3>
+            <h3><img src="~/images/logo_Phuc (2).png" alt="Logo" style="width: 20%;" />Phuc<span>Coffee</span></h3>
             <p style="font-color:black; margin-top:40px;">
                 <span>Follow Us</span>
             </p>
             <div class="footer-icons">
-                <a href="#"><i class="fa fa-facebook"></i></a>
-                <a href="#"><i class="fa fa-instagram"></i></a>
-                <a href="#"><i class="fa fa-linkedin"></i></a>
-                <a href="#"><i class="fa fa-twitter"></i></a>
-                <a href="#"><i class="fa fa-youtube"></i></a>
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
             </div>
             <p class="footer-company-name">Copyright © 2021 <strong>SagarDeveloper</strong> All rights reserved</p>
         </div>
@@ -282,11 +295,10 @@
                 <p><a href="mailto:sagar00001.co@gmail.com">trongphuc1321@gmail.com</a></p>
             </div>
         </div>
-        <div class="footer-right"> 
+        <div class="footer-right">
             <div id="map" style="height: 276px; width: 124%;">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3920.764168539956!2d106.68809457480339!3d10.675404689467294!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31753100099ce9ed%3A0xdb6079801f0735ea!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBN4bufIFRQLiBI4buTIENow60gTWluaCAoY8ahIHPhu58gMyk!5e0!3m2!1svi!2s!4v1717041776395!5m2!1svi!2s" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
-          
         </div>
     </footer>
 

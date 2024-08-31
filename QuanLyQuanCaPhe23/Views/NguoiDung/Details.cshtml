@@ -1,75 +1,149 @@
 ﻿@model QuanLyQuanCaPhe23.Models.CaPhe
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Chi tiết sản phẩm";
     Layout = "_NewLayout";
 }
-
-<h1 class="text-center mt-3 mb-4">CHI TIẾT SẢN PHẨM</h1>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link rel="stylesheet" href="~/css/card.css">
 <div class="container mt-5">
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">Thông tin sản phẩm</h4>
+    <div class="product-details-container">
+        <div class="product-image-container">
+            <img src="@Model.Anh" class="product-image" alt="@Model.Ten" />
         </div>
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Ảnh</dt>
-                <dd class="col-sm-9">
-                    <img src="@Html.DisplayFor(model => model.Anh)" class="img-fluid rounded" alt="Ảnh sản phẩm" />
-                </dd>
-                <dt class="col-sm-3">Mã sản phẩm</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Id)</dd>
-                <dt class="col-sm-3">Tên sản phẩm</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Ten)</dd>
-                <dt class="col-sm-3">Miêu tả</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.MieuTa)</dd>
-                <dt class="col-sm-3">Size</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Size.Ten)</dd>
-                <dt class="col-sm-3">Giá tiền</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Tien)</dd>
-            </dl>
-        </div>
-        <div class="card-footer">
-            <form asp-action="Delete" class="float-right">
-                <button type="submit" class="btn btn-danger">Xóa</button>
-            </form>
-            <a asp-action="ListCaPhe" class="btn btn-secondary">Trở về danh sách</a>
+        <div class="product-info-container">
+            <h1 class="product-title">@Model.Ten</h1>
+            <div class="product-meta">
+                <span class="product-size">Size: @Model.Size.Ten</span>
+                <span class="product-price">@Model.Tien?.ToString("#,##0 VNĐ")</span>
+            </div>
+            <p class="product-description">@Model.MieuTa</p>
+            <div class="product-actions">
+                <a href="@Url.Action("AddToCart", "GioHang", new { id = Model.Id })" class="btn btn-primary btn-lg">
+                    <i class="fas fa-shopping-cart mr-2"></i>Thêm vào giỏ hàng
+                </a>
+                <a asp-action="ListCaPhe" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-arrow-left mr-2"></i>Trở về danh sách
+                </a>
+            </div>
         </div>
     </div>
 </div>
+
 <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
 <df-messenger intent="WELCOME"
               chat-title="CSKH-PPK-Coffee"
               agent-id="66dfadc2-e7dc-4761-9ada-f796b9eabad2"
               language-code="vi"></df-messenger>
+
 <style>
     body {
+        font-family: 'Poppins', sans-serif;
         background-color: #f8f9fa;
-        color: #343a40;
-        font-family: 'Arial', sans-serif;
     }
 
     .container {
-        max-width: 800px;
+        max-width: 1170px;
+        padding: 0 15px;
     }
 
-    .card {
-        border: none;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    .product-details-container {
+        display: flex;
+        background-color: #ffffff;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
 
-    .card-header {
+    .product-image-container {
+        flex: 1;
+        padding: 2rem;
+    }
+
+    .product-image {
+        width: 100%;
+        height: auto;
+        max-height: 400px;
+        object-fit: cover;
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+    }
+
+        .product-image:hover {
+            transform: scale(1.05);
+        }
+
+    .product-info-container {
+        flex: 1;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .product-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+    }
+
+    .product-size, .product-price {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #6c757d;
+    }
+
+    .product-price {
+        color: #28a745;
+    }
+
+    .product-description {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #6c757d;
+        margin-bottom: 2rem;
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
         background-color: #007bff;
-        border-radius: 0.25rem 0.25rem 0 0;
+        border-color: #007bff;
     }
 
-    .card-footer {
-        background-color: #f8f9fa;
-        border-top: none;
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+        }
+
+    .btn-outline-primary {
+        color: #007bff;
+        border-color: #007bff;
     }
 
-        .card-footer .btn {
-            margin-top: 10px;
+        .btn-outline-primary:hover {
+            background-color: #007bff;
+            color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
         }
 </style>

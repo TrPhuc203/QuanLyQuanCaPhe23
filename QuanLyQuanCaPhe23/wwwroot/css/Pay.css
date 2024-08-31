@@ -1,0 +1,156 @@
+﻿.product-list {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #FFF5E6;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+    .product-list h3 {
+        color: #FF6B95;
+        font-weight: bold;
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .product-list ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .product-list li {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #FF8E53;
+    }
+
+    .product-list .product-name {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .product-list .product-quantity {
+        font-weight: 600;
+        color: #FF6B95;
+    }
+
+.success-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 200px);
+    background: linear-gradient(135deg, #f4e4c2 0%, #8B4513 100%);
+    padding: 20px;
+}
+
+.success-card {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.success-icon {
+    font-size: 80px;
+    color: #4CAF50;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+}
+
+.success-title {
+    color: #8B4513;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.order-details {
+    background-color: #f4e4c2;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+}
+
+.order-id, .order-total {
+    font-size: 18px;
+    color: #8B4513;
+    margin: 10px 0;
+}
+
+.thank-you-message {
+    font-size: 20px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.btn-home {
+    display: inline-block;
+    background-color: #8B4513;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(139, 69, 19, 0.4);
+}
+
+    .btn-home:hover {
+        background-color: #a0522d;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(139, 69, 19, 0.6);
+    }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 768px) {
+    .success-card {
+        padding: 30px;
+    }
+
+    .success-title {
+        font-size: 28px;
+    }
+
+    .order-id, .order-total, .thank-you-message {
+        font-size: 16px;
+    }
+
+    .btn-home {
+        padding: 12px 25px;
+        font-size: 16px;
+    }
+}
