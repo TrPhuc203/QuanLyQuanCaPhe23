@@ -31,7 +31,6 @@
     <PackageReference Include="Sek.Module.Payment.VnPay.AspNetCore" Version="1.0.0" />
     <PackageReference Include="Sek.Module.Payment.VnPay.Common" Version="1.0.0" />
     <PackageReference Include="Sek.Module.Payment.VnPay.Core" Version="1.0.0" />
-    <PackageReference Include="SendGrid" Version="3.0.2" />
     <PackageReference Include="Twilio" Version="7.1.0" />
   </ItemGroup>
 

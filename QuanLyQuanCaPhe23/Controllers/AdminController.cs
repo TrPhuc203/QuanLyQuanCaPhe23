@@ -251,6 +251,7 @@ namespace QuanLyQuanCaPhe23.Controllers
                 cp.Anh = imageUrl;
                 cp.SizeId = sizeID;
                 cp.Tien = Decimal.Parse(collection["Tien"]);
+                cp.MaQl = null;
 
                 da.CaPhes.Add(cp);
                 da.SaveChanges();

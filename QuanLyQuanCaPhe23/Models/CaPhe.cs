@@ -18,8 +18,10 @@ namespace QuanLyQuanCaPhe23.Models
         public string Anh { get; set; }
         public int? SizeId { get; set; }
         public decimal? Tien { get; set; }
+        public int? MaQl { get; set; }
 
         public virtual Size Size { get; set; }
+        public virtual QuanLy QuanLy { get; set; }
         public virtual ICollection<ChiTietDonHang> ChiTietDonHangs { get; set; }
     }
 }

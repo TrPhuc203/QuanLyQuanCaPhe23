@@ -59,6 +59,11 @@ namespace QuanLyQuanCaPhe23.Models
                     .WithMany(p => p.CaPhes)
                     .HasForeignKey(d => d.SizeId)
                     .HasConstraintName("fk_sizeeee");
+                entity.HasOne(d => d.QuanLy)
+                .WithMany(p => p.CaPhes)
+                .HasForeignKey(d => d.MaQl)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CaPhe_QuanLy");
             });
 
             modelBuilder.Entity<ChiTietDonHang>(entity =>
