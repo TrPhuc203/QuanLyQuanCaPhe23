@@ -201,9 +201,27 @@ namespace QuanLyQuanCaPhe23.Controllers
             {
                 return RedirectToAction("DangNhap");
             }
+
             TempData["IsLoggedIn"] = true;
-            var p = da.CaPhes.Include(c => c.Size).FirstOrDefault(s => s.Id == id);
-            return View(p);
+
+            var sanPham = da.CaPhes.Include(sp => sp.Size).FirstOrDefault(sp => sp.Id == id);
+            if (sanPham == null)
+            {
+                return NotFound();
+            }
+
+            var binhLuans = da.BinhLuans
+                .Where(bl => bl.SanPhamId == id)
+                .Include(bl => bl.KhachHang)
+                .ToList();
+
+            var model = new ProductDetailsViewModel
+            {
+                SanPham = sanPham,
+                BinhLuans = binhLuans
+            };
+
+            return View(model);
         }
 
         // GET: CaPheController/Create

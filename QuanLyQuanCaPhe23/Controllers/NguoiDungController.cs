@@ -18,6 +18,10 @@ using System.Threading.Tasks;
 using static System.Net.WebRequestMethods;
 using System.Net.Mail;
 using System.Net;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Text;
 
 namespace QuanLyQuanCaPhe23.Controllers
 {
@@ -182,9 +186,50 @@ namespace QuanLyQuanCaPhe23.Controllers
         // GET: NguoiDungController/Details/5
         public ActionResult Details(int id)
         {
-            var p = da.CaPhes.Include(c => c.Size).FirstOrDefault(s => s.Id == id);
-            return View(p);
+            var sanPham = da.CaPhes.Include(sp => sp.Size).FirstOrDefault(sp => sp.Id == id);
+            if (sanPham == null)
+            {
+                return NotFound();
+            }
+
+            var binhLuans = da.BinhLuans
+                .Where(bl => bl.SanPhamId == id)
+                .Include(bl => bl.KhachHang)
+                .ToList();
+
+            var model = new ProductDetailsViewModel
+            {
+                SanPham = sanPham,
+                BinhLuans = binhLuans
+            };
+
+            return View(model);
         }
+
+        [HttpPost]
+        public ActionResult ThemBinhLuan(int sanPhamId, string noiDung, int soSao)
+        {
+            var khachHangId = HttpContext.Session.GetInt32("MaKh");
+            if (khachHangId == null)
+            {
+                return RedirectToAction("DangNhap", "NguoiDung");
+            }
+
+            var binhLuan = new BinhLuan
+            {
+                SanPhamId = sanPhamId,
+                KhachHangId = khachHangId.Value,
+                NoiDung = noiDung,
+                SoSao = soSao,
+                NgayTao = DateTime.Now
+            };
+
+            da.BinhLuans.Add(binhLuan);
+            da.SaveChanges();
+
+            return RedirectToAction("Details", new { id = sanPhamId });
+        }
+
         public ActionResult DangKy()
         {
             //KhachHang kh = new KhachHang();
@@ -240,18 +285,6 @@ namespace QuanLyQuanCaPhe23.Controllers
             }
             else
             {
-                //////Gán giá trị cho đối tượng được tạo mới (kh)
-                ////kh.HoKh = ho;
-                ////kh.TenKh = ten;
-                ////kh.Pass = pass;
-                ////kh.DiaChi = diachi;
-                ////kh.SoDienThoai = dienthoai;
-                //string internationalPhoneNumber = "+84" + SoDienThoai.Substring(1);
-                //Console.WriteLine(internationalPhoneNumber);
-                //var otpService = new OtpService(_configuration, _httpContextAccessor);
-                //otpService.SendOtp(internationalPhoneNumber); // Truyền số điện thoại cần gửi mã OTP vào hàm SendOtp
-
-                //_httpContextAccessor.HttpContext.Session.SetString("UserPhoneNumber", SoDienThoai);
                 KhachHang existingUser = da.KhachHangs.SingleOrDefault(k => k.Gmail.Equals(Gmail));
                 if (existingUser != null)
                 {
@@ -279,52 +312,6 @@ namespace QuanLyQuanCaPhe23.Controllers
             }
             return this.DangKy();
         }
-
-        //public ActionResult VerifyOtp()
-        //{
-        //    return View();
-        //}
-
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult VerifyOtp(string otp)
-        //{
-        //    var sessionOtp = _httpContextAccessor.HttpContext.Session.GetString("OTP");
-        //    var userPhoneNumber = _httpContextAccessor.HttpContext.Session.GetString("UserPhoneNumber");
-        //    Console.WriteLine("OTP khach hang nhap vao la" + otp);
-        //    Console.WriteLine("OTP tao ra la : " + sessionOtp);
-        //    if (sessionOtp == otp)
-        //    {
-        //        HoKh = _httpContextAccessor.HttpContext.Session.GetString("HoKh");
-        //        TenKh = _httpContextAccessor.HttpContext.Session.GetString("TenKh");
-        //        UserName = _httpContextAccessor.HttpContext.Session.GetString("UserName");
-        //        Pass = _httpContextAccessor.HttpContext.Session.GetString("Pass");
-        //        DiaChi = _httpContextAccessor.HttpContext.Session.GetString("DiaChi");
-        //        SoDienThoai = _httpContextAccessor.HttpContext.Session.GetString("SoDienThoai");
-        //        Console.WriteLine("OTP khach hang nhap vao la" + otp);
-        //        Console.WriteLine("OTP tao ra la : " + sessionOtp);
-        //        KhachHang kh = new KhachHang();
-        //        kh.HoKh = HoKh;
-        //        kh.TenKh = TenKh;
-        //        kh.UserName = UserName;
-        //        kh.Pass = Pass;
-        //        kh.DiaChi = DiaChi;
-        //        kh.SoDienThoai = SoDienThoai;
-        //        da.KhachHangs.Add(kh);
-        //        da.SaveChanges();
-        //        _httpContextAccessor.HttpContext.Session.Remove("OTP");
-        //        _httpContextAccessor.HttpContext.Session.Remove("UserPhoneNumber");
-
-        //        // OTP verification success, proceed with further actions (e.g., login user)
-        //        return RedirectToAction("DangNhap");
-        //    }
-        //    else
-        //    {
-        //        ModelState.AddModelError(string.Empty, "Invalid OTP. Please try again.");
-        //        return View();
-        //    }
-        //}
 
         public ActionResult DangNhap()
         {
@@ -380,13 +367,18 @@ namespace QuanLyQuanCaPhe23.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ForgotPassword(string email)
+        public async Task<IActionResult> ForgotPassword(string username)
         {
-            // Kiểm tra sự tồn tại của người dùng
-            var users = await _context.KhachHangs.Where(k => k.Gmail.Equals(email)).ToListAsync();
+            if (string.IsNullOrEmpty(username))
+            {
+                ModelState.AddModelError(string.Empty, "Tên đăng nhập không được để trống.");
+                return View();
+            }
+            // Kiểm tra sự tồn tại của người dùng dựa trên tên đăng nhập
+            var users = await _context.KhachHangs.Where(k => k.UserName.Equals(username)).ToListAsync();
             if (users.Count == 0)
             {
-                ViewData["Message"] = "Email không tồn tại trong hệ thống";
+                ViewData["Message"] = "Tên đăng nhập không tồn tại trong hệ thống";
                 return View();
             }
             else if (users.Count > 1)
@@ -400,7 +392,7 @@ namespace QuanLyQuanCaPhe23.Controllers
             _context.Update(user);
             await _context.SaveChangesAsync();
 
-            // Cấu hình email
+            // Cấu hình email (hoặc gửi mã OTP qua một phương thức khác)
             var mailMessage = new MailMessage
             {
                 From = new MailAddress("trongphuc1321@gmail.com"),
@@ -408,7 +400,7 @@ namespace QuanLyQuanCaPhe23.Controllers
                 Body = $"Mã OTP của bạn là: {otpCode}",
                 IsBodyHtml = true
             };
-            mailMessage.To.Add(email);
+            mailMessage.To.Add(user.Gmail); // Gửi mã OTP đến email người dùng đã đăng ký
 
             // Gửi email
             try
@@ -434,22 +426,22 @@ namespace QuanLyQuanCaPhe23.Controllers
                 ViewData["Message"] = $"Đã xảy ra lỗi: {ex.Message}";
             }
 
-            return RedirectToAction("ConfirmResetCode", new { email });
+            return RedirectToAction("ConfirmResetCode", new { username });
         }
 
         [HttpGet]
-        public IActionResult ConfirmResetCode(string email)
+        public IActionResult ConfirmResetCode(string username)
         {
-            // Kiểm tra email có hợp lệ không
-            if (string.IsNullOrEmpty(email))
+            // Kiểm tra tên đăng nhập có hợp lệ không
+            if (string.IsNullOrEmpty(username))
             {
-                return RedirectToAction("ForgotPassword"); // Hoặc trang khác nếu không có email
+                return RedirectToAction("ForgotPassword"); // Hoặc trang khác nếu không có tên đăng nhập
             }
 
-            // Tạo mô hình với email được truyền vào
+            // Tạo mô hình với tên đăng nhập được truyền vào
             var model = new ConfirmResetCodeViewModel
             {
-                Email = email
+                Username = username
             };
             return View(model);
         }
@@ -457,7 +449,7 @@ namespace QuanLyQuanCaPhe23.Controllers
         [HttpPost]
         public async Task<IActionResult> ConfirmResetCode(ConfirmResetCodeViewModel model)
         {
-            var user = await _context.KhachHangs.SingleOrDefaultAsync(k => k.Gmail.Equals(model.Email));
+            var user = await _context.KhachHangs.SingleOrDefaultAsync(k => k.UserName.Equals(model.Username));
             if (user == null || user.ResetCode != model.ResetCode)
             {
                 ViewData["ErrorMessage"] = "Mã xác nhận không đúng.";
@@ -475,19 +467,19 @@ namespace QuanLyQuanCaPhe23.Controllers
         }
 
         [HttpGet]
-        public IActionResult ResetPassword(string email)
+        public IActionResult ResetPassword(string username)
         {
-            ViewData["Email"] = email;
+            ViewData["Username"] = username;
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResetPassword(string email, string newPassword)
+        public async Task<IActionResult> ResetPassword(string username, string newPassword)
         {
-            var user = await _context.KhachHangs.SingleOrDefaultAsync(k => k.Gmail.Equals(email));
+            var user = await _context.KhachHangs.SingleOrDefaultAsync(k => k.UserName.Equals(username));
             if (user == null)
             {
-                ViewData["Message"] = "Email không tồn tại trong hệ thống";
+                ViewData["Message"] = "Tên đăng nhập không tồn tại trong hệ thống";
                 return View();
             }
 
@@ -498,6 +490,7 @@ namespace QuanLyQuanCaPhe23.Controllers
 
             return RedirectToAction("DangNhap");
         }
+
 
         public ActionResult DangXuat()
         {
@@ -531,16 +524,61 @@ namespace QuanLyQuanCaPhe23.Controllers
                     .Where(dh => dh.KhachHangId == maKh.Value)
                     .OrderByDescending(dh => dh.NgayTao)
                     .ToList();
+
                 if (!dsDonHang.Any())
                 {
                     ViewBag.Message = "Bạn chưa có đơn hàng nào.";
                 }
+
+                if (TempData["Message"] != null)
+                {
+                    ViewBag.Message = TempData["Message"];
+                }
+
                 return View(dsDonHang);
             }
             else
             {
                 return RedirectToAction("DangNhap");
             }
+        }
+        public IActionResult HuyDonHang(int id)
+        {
+            var donHang = _context.DonHangs.Include(d => d.ChiTietDonHangs)
+                                          .FirstOrDefault(d => d.Id == id);
+            if (donHang == null)
+            {
+                return NotFound();
+            }
+
+            if (donHang.NgayTao.HasValue)
+            {
+                // Tính khoảng thời gian giữa hiện tại và ngày tạo
+                var daysSinceCreation = (DateTime.Now - donHang.NgayTao.Value).TotalDays;
+
+                if (daysSinceCreation <= 1)
+                {
+                    // Nếu đơn hàng trong ngày, thì có thể hủy và xóa chi tiết đơn hàng
+                    _context.ChiTietDonHangs.RemoveRange(donHang.ChiTietDonHangs);
+                    _context.DonHangs.Remove(donHang);
+                }
+                else
+                {
+                    // Nếu đơn hàng quá 1 ngày, thì chỉ cập nhật trạng thái
+                    donHang.TrangThai = "Đã hủy";
+                }
+
+                _context.SaveChanges();
+            }
+            else
+            {
+                // Xử lý trường hợp NgayTao là null (nếu cần)
+                return BadRequest("Ngày tạo đơn hàng không hợp lệ.");
+            }
+
+            _context.SaveChanges();
+
+            return RedirectToAction("LichSuDonHang");
         }
 
     }

@@ -9,6 +9,7 @@ namespace QuanLyQuanCaPhe23.Models
     {
         public CaPhe()
         {
+            BinhLuans = new HashSet<BinhLuan>();
             ChiTietDonHangs = new HashSet<ChiTietDonHang>();
         }
 
@@ -20,8 +21,9 @@ namespace QuanLyQuanCaPhe23.Models
         public decimal? Tien { get; set; }
         public int? MaQl { get; set; }
 
+        public virtual QuanLy MaQlNavigation { get; set; }
         public virtual Size Size { get; set; }
-        public virtual QuanLy QuanLy { get; set; }
+        public virtual ICollection<BinhLuan> BinhLuans { get; set; }
         public virtual ICollection<ChiTietDonHang> ChiTietDonHangs { get; set; }
     }
 }

@@ -16,6 +16,7 @@ namespace QuanLyQuanCaPhe23.Models
         public int? KhachHangId { get; set; }
         public DateTime? NgayTao { get; set; }
         public string PayPalKey { get; set; }
+        public string TrangThai { get; set; }
 
         public virtual KhachHang KhachHang { get; set; }
         public virtual ICollection<ChiTietDonHang> ChiTietDonHangs { get; set; }

@@ -9,6 +9,7 @@ namespace QuanLyQuanCaPhe23.Models
     {
         public KhachHang()
         {
+            BinhLuans = new HashSet<BinhLuan>();
             DonHangs = new HashSet<DonHang>();
         }
 
@@ -19,10 +20,10 @@ namespace QuanLyQuanCaPhe23.Models
         public string Pass { get; set; }
         public string DiaChi { get; set; }
         public string SoDienThoai { get; set; }
-
         public string Gmail { get; set; }
         public string ResetCode { get; set; }
 
+        public virtual ICollection<BinhLuan> BinhLuans { get; set; }
         public virtual ICollection<DonHang> DonHangs { get; set; }
     }
 }

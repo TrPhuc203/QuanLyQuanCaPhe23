@@ -1,33 +1,98 @@
-﻿@model QuanLyQuanCaPhe23.Models.CaPhe
+﻿@using Microsoft.AspNetCore.Http
+@model QuanLyQuanCaPhe23.Models.ProductDetailsViewModel
 
 @{
     ViewData["Title"] = "Chi tiết sản phẩm";
     Layout = "_NewLayout";
 }
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link rel="stylesheet" href="~/css/card.css">
+
 <div class="container mt-5">
     <div class="product-details-container">
         <div class="product-image-container">
-            <img src="@Model.Anh" class="product-image" alt="@Model.Ten" />
+            <img src="@Model.SanPham.Anh" class="product-image" alt="@Model.SanPham.Ten" />
         </div>
         <div class="product-info-container">
-            <h1 class="product-title">@Model.Ten</h1>
+            <h1 class="product-title">@Model.SanPham.Ten</h1>
             <div class="product-meta">
-                <span class="product-size">Size: @Model.Size.Ten</span>
-                <span class="product-price">@Model.Tien?.ToString("#,##0 VNĐ")</span>
+                <span class="product-size">Size: @Model.SanPham.Size.Ten</span>
+                <span class="product-price">@Model.SanPham.Tien?.ToString("#,##0 VNĐ")</span>
             </div>
-            <p class="product-description">@Model.MieuTa</p>
+            <p class="product-description">@Model.SanPham.MieuTa</p>
             <div class="product-actions">
-                <a href="@Url.Action("AddToCart", "GioHang", new { id = Model.Id })" class="btn btn-primary btn-lg">
+                <a href="@Url.Action("AddToCart", "GioHang", new { id = Model.SanPham.Id })" class="btn btn-primary btn-lg">
                     <i class="fas fa-shopping-cart mr-2"></i>Thêm vào giỏ hàng
                 </a>
-                <a asp-action="ListCaPhe" class="btn btn-outline-primary btn-lg">
+                <a href="@Url.Action("ListCaPhe", "NguoiDung")" class="btn btn-outline-primary btn-lg">
                     <i class="fas fa-arrow-left mr-2"></i>Trở về danh sách
                 </a>
             </div>
         </div>
     </div>
+
+    <hr />
+
+    <!-- Hiển thị bình luận -->
+    <div class="comments-section mt-5">
+        <h3>Bình luận về sản phẩm</h3>
+
+        @if (Model.BinhLuans != null && Model.BinhLuans.Any())
+        {
+            foreach (var comment in Model.BinhLuans)
+            {
+                <div class="comment">
+                    <strong>@comment.KhachHang?.HoKh @comment.KhachHang?.TenKh</strong> - @(comment.NgayTao?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa có ngày tạo")
+                    <div class="rating">
+                        @if (comment.SoSao.HasValue)
+                        {
+                            @for (int i = 0; i < comment.SoSao.Value; i++)
+                            {
+                                <i class="fas fa-star text-warning"></i>
+                            }
+                            @for (int i = comment.SoSao.Value; i < 5; i++)
+                            {
+                                <i class="far fa-star text-warning"></i>
+                            }
+                        }
+                        else
+                        {
+                            <p>Chưa có đánh giá</p>
+                        }
+                    </div>
+                    <p>@comment.NoiDung</p>
+                </div>
+                <hr />
+            }
+        }
+        else
+        {
+            <p>Chưa có bình luận nào cho sản phẩm này.</p>
+        }
+    </div>
+
+    <!-- Thêm bình luận -->
+    @if (Context.Session.GetString("IsLoggedInKH") == "true")
+    {
+        <form asp-action="ThemBinhLuan" method="post">
+            <input type="hidden" name="sanPhamId" value="@Model.SanPham.Id" />
+            <textarea name="noiDung" placeholder="Viết bình luận..." required></textarea>
+            <select name="soSao" required>
+                <option value="" disabled selected>Chọn số sao</option>
+                <option value="1">1 sao</option>
+                <option value="2">2 sao</option>
+                <option value="3">3 sao</option>
+                <option value="4">4 sao</option>
+                <option value="5">5 sao</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Gửi bình luận</button>
+        </form>
+    }
+    else
+    {
+        <p>Bạn cần <a asp-action="DangNhap" asp-controller="NguoiDung">đăng nhập</a> để bình luận.</p>
+    }
 </div>
 
 <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
@@ -146,4 +211,59 @@
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
         }
+
+    .comments-section {
+        margin-top: 30px;
+    }
+
+    .comment {
+        margin-bottom: 20px;
+    }
+
+        .comment strong {
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .comment p {
+            font-size: 1rem;
+            color: #555;
+            margin-top: 5px;
+        }
+
+    .rating {
+        color: #ffc107;
+        margin-bottom: 10px;
+    }
+
+    /* Thêm bình luận */
+    form {
+        margin-top: 30px;
+    }
+
+    textarea {
+        width: 100%;
+        height: 100px;
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        resize: vertical;
+    }
+
+    select {
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-weight: 600;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
 </style>

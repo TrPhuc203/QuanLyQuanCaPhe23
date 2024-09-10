@@ -7,8 +7,9 @@ namespace QuanLyQuanCaPhe23.Models
 {
     public class ConfirmResetCodeViewModel
     {
-        public string Email { get; set; }
+        public string Username { get; set; }
         public string ResetCode { get; set; }
         public string NewPassword { get; set; }
+        public string ConfirmPassword { get; set; }
     }
 }

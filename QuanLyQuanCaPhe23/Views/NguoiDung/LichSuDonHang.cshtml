@@ -4,50 +4,124 @@
     ViewData["Title"] = "Lịch sử đơn hàng";
     Layout = "_NewLayout";
 }
-<style>
-    body {
-        font-family: 'Poppins', sans-serif;
-    }
-</style>
-<div class="container mt-5">
-    <h2>Lịch sử đơn hàng của bạn</h2>
-    <hr />
-    @if (Model.Any())
-    {
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Mã đơn hàng</th>
-                    <th>Ngày đặt hàng</th>
-                    <th>Tổng tiền</th>
-                    <th>Chi tiết</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var donHang in Model)
-                {
-                    <tr>
-                        <td>@donHang.Id</td>
-                        <td>@donHang.NgayTao?.ToString("dd/MM/yyyy")</td>
-                        <td>@donHang.ChiTietDonHangs.Sum(ctdh => ctdh.Tien)?.ToString("N0") VNĐ</td>
-                        <td>
-                            <ul>
-                                @foreach (var chiTiet in donHang.ChiTietDonHangs)
-                                {
-                                    <li>@chiTiet.CaPhe.Ten - Số lượng: @chiTiet.SoLuong - Giá: @chiTiet.Tien?.ToString("N0") VNĐ</li>
-                                }
-                            </ul>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        @if (ViewBag.Message != null)
-        {
-            <p>@ViewBag.Message</p>
+
+<
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        /* Các style tùy chỉnh của bạn */
+        body {
+            font-family: 'Poppins', sans-serif;
         }
-    }
-</div>
+
+        .table img {
+            max-width: 100px;
+            max-height: 100px;
+        }
+
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+        }
+
+            .btn-danger:hover {
+                background-color: #c82333;
+                border-color: #bd2130;
+            }
+
+        .order-details {
+            list-style-type: none;
+            padding: 0;
+        }
+
+            .order-details li {
+                margin-bottom: 10px;
+            }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Lịch sử đơn hàng của bạn</h2>
+        <hr />
+        @if (Model.Any())
+        {
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Mã đơn hàng</th>
+                        <th>Ngày đặt hàng</th>
+                        <th>Trạng thái</th>
+                        <th>Chi tiết</th>
+                        <th>Hủy đơn</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var donHang in Model)
+                    {
+                        var daysSinceOrder = donHang.NgayTao.HasValue ? (DateTime.Now - donHang.NgayTao.Value).TotalDays : double.MaxValue;
+                        <tr>
+                            <td>@donHang.Id</td>
+                            <td>@donHang.NgayTao?.ToString("dd/MM/yyyy")</td>
+                            <td>@donHang.TrangThai</td>
+                            <td>
+                                <ul class="order-details">
+                                    @foreach (var chiTiet in donHang.ChiTietDonHangs)
+                                    {
+                                        <li>
+                                            <img src="@chiTiet.CaPhe.Anh" alt="Ảnh cà phê" />
+                                            @chiTiet.CaPhe.Ten - Số lượng: @chiTiet.SoLuong - Giá: @chiTiet.Tien?.ToString("N0") VNĐ
+                                        </li>
+                                    }
+                                </ul>
+                            </td>
+                            <td>
+                                @if (daysSinceOrder <= 1 && donHang.TrangThai != "Đã hủy")
+                                {
+                                    <a href="#" class="btn btn-danger" onclick="return confirmDelete(@donHang.Id);">Hủy đơn</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Hiện tại bạn chưa có đơn hàng nào.</p>
+        }
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmDelete(id) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Bạn có chắc chắn muốn hủy đơn hàng này?',
+                text: "Bạn sẽ không thể phục hồi đơn hàng này sau khi hủy!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Có, hủy đơn',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '@Url.Action("HuyDonHang", "NguoiDung")' + '?id=' + id;
+                }
+            });
+            return false;
+        }
+    </script>
+</body>
+</html>

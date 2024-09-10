@@ -17,7 +17,7 @@ namespace QuanLyQuanCaPhe23.Models
         {
         }
 
-
+        public virtual DbSet<BinhLuan> BinhLuans { get; set; }
         public virtual DbSet<CaPhe> CaPhes { get; set; }
         public virtual DbSet<ChiTietDonHang> ChiTietDonHangs { get; set; }
         public virtual DbSet<DonHang> DonHangs { get; set; }
@@ -31,13 +31,32 @@ namespace QuanLyQuanCaPhe23.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=QUANLYCAPHE;Integrated Security=True;TrustServerCertificate=True");
+                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=QUANLYCAPHE;Integrated Security=True");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<BinhLuan>(entity =>
+            {
+                entity.ToTable("BinhLuan");
+
+                entity.Property(e => e.NgayTao)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.KhachHang)
+                    .WithMany(p => p.BinhLuans)
+                    .HasForeignKey(d => d.KhachHangId)
+                    .HasConstraintName("FK__BinhLuan__KhachH__19DFD96B");
+
+                entity.HasOne(d => d.SanPham)
+                    .WithMany(p => p.BinhLuans)
+                    .HasForeignKey(d => d.SanPhamId)
+                    .HasConstraintName("FK__BinhLuan__SanPha__18EBB532");
+            });
 
             modelBuilder.Entity<CaPhe>(entity =>
             {
@@ -47,6 +66,8 @@ namespace QuanLyQuanCaPhe23.Models
 
                 entity.Property(e => e.Anh).HasMaxLength(200);
 
+                entity.Property(e => e.MaQl).HasColumnName("MaQL");
+
                 entity.Property(e => e.MieuTa).HasMaxLength(100);
 
                 entity.Property(e => e.SizeId).HasColumnName("SizeID");
@@ -55,15 +76,15 @@ namespace QuanLyQuanCaPhe23.Models
 
                 entity.Property(e => e.Tien).HasColumnType("decimal(18, 0)");
 
+                entity.HasOne(d => d.MaQlNavigation)
+                    .WithMany(p => p.CaPhes)
+                    .HasForeignKey(d => d.MaQl)
+                    .HasConstraintName("FK__CaPhe__MaQL__14270015");
+
                 entity.HasOne(d => d.Size)
                     .WithMany(p => p.CaPhes)
                     .HasForeignKey(d => d.SizeId)
                     .HasConstraintName("fk_sizeeee");
-                entity.HasOne(d => d.QuanLy)
-                .WithMany(p => p.CaPhes)
-                .HasForeignKey(d => d.MaQl)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CaPhe_QuanLy");
             });
 
             modelBuilder.Entity<ChiTietDonHang>(entity =>
@@ -115,6 +136,10 @@ namespace QuanLyQuanCaPhe23.Models
                     .HasMaxLength(500)
                     .IsFixedLength(true);
 
+                entity.Property(e => e.TrangThai)
+                    .HasMaxLength(50)
+                    .HasDefaultValueSql("('Ðang ch?')");
+
                 entity.HasOne(d => d.KhachHang)
                     .WithMany(p => p.DonHangs)
                     .HasForeignKey(d => d.KhachHangId)
@@ -130,18 +155,17 @@ namespace QuanLyQuanCaPhe23.Models
 
                 entity.Property(e => e.MaKh).HasColumnName("MaKH");
 
-                entity.Property(e => e.DiaChi).HasMaxLength(50);
+                entity.Property(e => e.DiaChi).HasMaxLength(100);
 
-
-                entity.Property(e => e.Gmail)
-                    .HasMaxLength(50)
-                    .IsRequired();
+                entity.Property(e => e.Gmail).HasMaxLength(50);
 
                 entity.Property(e => e.HoKh)
                     .HasMaxLength(50)
                     .HasColumnName("HoKH");
 
                 entity.Property(e => e.Pass).HasMaxLength(50);
+
+                entity.Property(e => e.ResetCode).HasMaxLength(100);
 
                 entity.Property(e => e.SoDienThoai).HasMaxLength(50);
 
@@ -170,7 +194,7 @@ namespace QuanLyQuanCaPhe23.Models
 
                 entity.Property(e => e.MaQl).HasColumnName("MaQL");
 
-                entity.Property(e => e.DiaChi).HasMaxLength(50);
+                entity.Property(e => e.DiaChi).HasMaxLength(100);
 
                 entity.Property(e => e.HoQl)
                     .HasMaxLength(50)
