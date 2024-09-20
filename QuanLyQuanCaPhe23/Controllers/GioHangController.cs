@@ -17,22 +17,32 @@ using Microsoft.Extensions.Configuration;
 using QuanLyQuanCaPhe23.PAYPAL;
 using Microsoft.Extensions.Logging;
 using QuanLyQuanCaPhe23.ViewModels;
+using System.Drawing;
+using PdfSharpCore.Pdf;
+using PdfSharpCore.Drawing;
+using Microsoft.AspNetCore.SignalR;
+using System.Net.Mail;
+using System.Net;
+using System.Text;
+using TimeZoneConverter;
 
 namespace QuanLyQuanCaPhe23.Controllers
 {
     public class GioHangController : Controller
     {
+        private readonly IHubContext<NotificationHub> _hubContext;
         private readonly IConfiguration _configuration;
         private readonly IVnPayService _vnPayService;
         private readonly IPayPalService _payPalService;
         private readonly ILogger<GioHangController> _logger;
-        public GioHangController(IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IVnPayService vnPayService, IPayPalService payPalService, ILogger<GioHangController> logger)
+        public GioHangController(IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IVnPayService vnPayService, IPayPalService payPalService, ILogger<GioHangController> logger, IHubContext<NotificationHub> hubContext)
         {
             _vnPayService = vnPayService;
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
             _payPalService = payPalService;
             _logger = logger;
+            _hubContext = hubContext;
         }
 
 
@@ -180,7 +190,7 @@ namespace QuanLyQuanCaPhe23.Controllers
 
             return View(gh);
         }
-        public ActionResult Order()
+        public async Task<ActionResult> OrderAsync()
         {
             //Tạo mới 1 đơn hàng lưu trong DonHangs: chỉ thêm ngày đặt hàng(NgayTao)
             DonHang o = new DonHang();
@@ -190,6 +200,11 @@ namespace QuanLyQuanCaPhe23.Controllers
             o.KhachHangId = MaKH;
             da.DonHangs.Add(o);
             da.SaveChanges();
+            var hubContext = (IHubContext<NotificationHub>)HttpContext.RequestServices.GetService(typeof(IHubContext<NotificationHub>));
+            await hubContext.Clients.All.SendAsync("ReceiveNotification", o.Id);
+
+            // Lấy thông tin người mua
+           
             // Có bao nhiêu sp tạo mới bấy nhiêu dòng trong
             // Lấy dssp trong giỏ hàng
             List<GioHang> gh = GetListCarts();
@@ -208,6 +223,50 @@ namespace QuanLyQuanCaPhe23.Controllers
                 da.ChiTietDonHangs.Add(odd);
             }
             da.SaveChanges();
+            var productDetails = new StringBuilder();
+            foreach (var item in gh)
+            {
+                productDetails.AppendLine($"Sản phẩm: {item.Ten}, Số lượng: {item.SoLuong}. ");
+            }
+            var khachHang = da.KhachHangs.Find(MaKH);
+            string userName = khachHang.HoKh + " " + khachHang.TenKh;
+
+            string adminEmail = "trongphucnguyen14703@gmail.com";
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress("trongphuc1321@gmail.com"),
+                Subject = "Thông báo thanh toán đơn hàng",
+                Body = $"Đơn hàng #{o.Id} đã được thanh toán thành công." +
+               $"<br/>Người mua: {userName}" +
+               $"<br/><br/>Chi tiết sản phẩm:<br/>{productDetails.ToString()}",
+                IsBodyHtml = true
+            };
+            mailMessage.To.Add(adminEmail); // Gửi mã OTP đến email người dùng đã đăng ký
+
+            // Gửi email
+            try
+            {
+                using (var smtpClient = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    smtpClient.Credentials = new NetworkCredential("trongphuc1321@gmail.com", "wpwz qkyu pgju oaug");
+                    smtpClient.EnableSsl = true;
+                    await smtpClient.SendMailAsync(mailMessage);
+                }
+
+                // Thông báo thành công
+                ViewData["Message"] = "Đơn hàng thanh toán đã gửi đến gmail của Admin";
+            }
+            catch (SmtpException ex)
+            {
+                // Xử lý lỗi gửi email
+                ViewData["Message"] = $"Lỗi khi gửi email: {ex.Message}";
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi chung
+                ViewData["Message"] = $"Đã xảy ra lỗi: {ex.Message}";
+            }
+
             _httpContextAccessor.HttpContext.Session.SetObjectAsJson("GioHang", gh);
             // Làm rỗng giỏ hàng
             HttpContext.Session.Remove("GioHang");
@@ -247,68 +306,8 @@ namespace QuanLyQuanCaPhe23.Controllers
             return View(viewModel);
         }
 
-        public IActionResult ThanhToanOnline(int orID)
-        {
-            var chitietdonghang = da.ChiTietDonHangs
-                                            .Include(ct => ct.CaPhe) // Nạp thông tin về CaPhe
-                                                .ThenInclude(cp => cp.Size) // Nạp thông tin về Size của CaPhe
-                                            .Include(ct => ct.KhuyenMai) // Nạp thông tin về KhuyenMai
-                                            .Where(s => s.DonHangId == orID)
-                                            .ToList();
-            var tongTienString = _httpContextAccessor.HttpContext.Session.GetString("TongTien");
-            var model = new DonHangViewModel
-            {
-                DonHangId = orID,
-                KhuyenMaiId = chitietdonghang.FirstOrDefault()?.KhuyenMai,
-                SanPhams = chitietdonghang.Select(ct => new SanPhamViewModel
-                {
-
-                    CaPhe = ct.CaPhe,
-                    SoLuong = ct.SoLuong,
-                    Tien = ct.Tien
-                }).ToList()
-            };
-            ViewBag.TongTien = tongTienString;
-
-            var vnPayModel = new VnPaymentRequestModel
-            {
-                Amout = 100000,
-                CreatedDate = DateTime.Now,
-                Description = "Thanh toán online",
-                FullName = "Duong Van Khanh",
-                OrderId = orID
-
-
-            };
-
-            return Redirect(_vnPayService.CreatePaymentURL(HttpContext, vnPayModel));
-
-        }
-
-        //public IActionResult PaymentCalLBack()
-        //{
-        //    var response = _vnPayService.PaymentExecute(Request.Query);
-        //    if (response == null || response.VnPayResponseCode != "00")
-        //    {
-        //        TempData["Message"] = $"Lỗi thanh toán VNPAY { response.VnPayResponseCode} ";
-        //    }
-        //    //Lưu đơn hàng vào db
-        //    TempData["Message"] = "Thanh toán VNPAY thành công";
-        //    return RedirectToAction("PaymentSuccess");
-        //}
-        //public IActionResult PaymentSuccess()
-        //{
-        //    return View();
-        //}
-        //public IActionResult PaymentFail()
-        //{
-        //    return View();
-        //}
-
-
         public async Task<IActionResult> ThanhToanPayPal(int orID)
         {
-
             var tongTienString = _httpContextAccessor.HttpContext.Session.GetString("TongTien");
             double tongTien = Double.Parse(tongTienString);
 
@@ -357,6 +356,11 @@ namespace QuanLyQuanCaPhe23.Controllers
                     da.SaveChanges();
                     int id = o.Id;
 
+                    var notificationMessage = "Đơn hàng #" + paymentInfo.OrderId + " đã được thanh toán thành công.";
+                    var hubContext = (IHubContext<NotificationHub>)HttpContext.RequestServices.GetService(typeof(IHubContext<NotificationHub>));
+                    await hubContext.Clients.All.SendAsync("ReceiveNotification", o.Id);
+
+                  
                     List<GioHang> gh = GetListCarts();
 
                     var orderDetailsViewModel = new DonHangDetailsViewModel
@@ -390,6 +394,50 @@ namespace QuanLyQuanCaPhe23.Controllers
                     }
                     da.SaveChanges();
 
+                    var productDetails = new StringBuilder();
+                    foreach (var item in gh)
+                    {
+                        productDetails.AppendLine($"Sản phẩm: {item.Ten}, Số lượng: {item.SoLuong}. ");
+                    }
+                    var khachHang = da.KhachHangs.Find(MaKH);
+                    string userName = khachHang.HoKh + " " + khachHang.TenKh;
+
+                    string adminEmail = "trongphucnguyen14703@gmail.com";
+                    var mailMessage = new MailMessage
+                    {
+                        From = new MailAddress("trongphuc1321@gmail.com"),
+                        Subject = "Thông báo thanh toán đơn hàng",
+                        Body = $"Đơn hàng #{o.Id} đã được thanh toán thành công." +
+                       $"<br/>Người mua: {userName}" +
+                       $"<br/><br/>Chi tiết sản phẩm:<br/>{productDetails.ToString()}",
+                        IsBodyHtml = true
+                    };
+                    mailMessage.To.Add(adminEmail); // Gửi mã OTP đến email người dùng đã đăng ký
+
+                    // Gửi email
+                    try
+                    {
+                        using (var smtpClient = new SmtpClient("smtp.gmail.com", 587))
+                        {
+                            smtpClient.Credentials = new NetworkCredential("trongphuc1321@gmail.com", "wpwz qkyu pgju oaug");
+                            smtpClient.EnableSsl = true;
+                            await smtpClient.SendMailAsync(mailMessage);
+                        }
+
+                        // Thông báo thành công
+                        ViewData["Message"] = "Đơn hàng thanh toán đã gửi đến gmail của Admin";
+                    }
+                    catch (SmtpException ex)
+                    {
+                        // Xử lý lỗi gửi email
+                        ViewData["Message"] = $"Lỗi khi gửi email: {ex.Message}";
+                    }
+                    catch (Exception ex)
+                    {
+                        // Xử lý lỗi chung
+                        ViewData["Message"] = $"Đã xảy ra lỗi: {ex.Message}";
+                    }
+
                     HttpContext.Session.Remove("GioHang");
 
                     ViewBag.TongTien = tongTien; // Truyền tổng tiền vào ViewBag
@@ -418,7 +466,7 @@ namespace QuanLyQuanCaPhe23.Controllers
         {
             return View();
         }
-
+        
 
     }   
 }

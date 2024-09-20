@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using PdfSharpCore.Pdf;
+using PdfSharpCore.Drawing;
 
 namespace QuanLyQuanCaPhe23.Controllers
 {
@@ -43,7 +45,7 @@ namespace QuanLyQuanCaPhe23.Controllers
             string check = _httpContextAccessor.HttpContext.Session.GetString("UserName");
             if (check != null)
             {
-                TempData["IsLoggedIn"] = true;
+                TempData["IsLoggedInAd"] = true;
                 DateTime dateFilter = kw ?? DateTime.Today;
 
                 var result = da.ChiTietDonHangs
@@ -83,7 +85,7 @@ namespace QuanLyQuanCaPhe23.Controllers
             string check = _httpContextAccessor.HttpContext.Session.GetString("UserName");
             if (check != null)
             {
-                TempData["IsLoggedIn"] = true;
+                TempData["IsLoggedInAd"] = true;
                 DateTime dateFilter = kw ?? DateTime.Today;
 
                 // Lấy tổng số lượng của từng sản phẩm trong ngày được chọn
@@ -123,7 +125,7 @@ namespace QuanLyQuanCaPhe23.Controllers
             string check = _httpContextAccessor.HttpContext.Session.GetString("UserName");
             if (check != null)
             {
-                TempData["IsLoggedIn"] = true;
+                TempData["IsLoggedInAd"] = true;
                 ViewData["SuccessMessage"] = _httpContextAccessor.HttpContext.Session.GetString("SuccessMessage");
 
                 // Lấy tên người dùng từ session
@@ -202,7 +204,7 @@ namespace QuanLyQuanCaPhe23.Controllers
                 return RedirectToAction("DangNhap");
             }
 
-            TempData["IsLoggedIn"] = true;
+            TempData["IsLoggedInAd"] = true;
 
             var sanPham = da.CaPhes.Include(sp => sp.Size).FirstOrDefault(sp => sp.Id == id);
             if (sanPham == null)
@@ -231,7 +233,7 @@ namespace QuanLyQuanCaPhe23.Controllers
             {
                 return RedirectToAction("DangNhap");
             }
-            TempData["IsLoggedIn"] = true;
+            TempData["IsLoggedInAd"] = true;
             ViewData["Sizes"] = new SelectList(da.Sizes, "Id", "Ten");
             return View();
         }
@@ -247,7 +249,7 @@ namespace QuanLyQuanCaPhe23.Controllers
                 {
                     return RedirectToAction("DangNhap");
                 }
-                TempData["IsLoggedIn"] = true;
+                TempData["IsLoggedInAd"] = true;
                 string imageUrl = "";
                 if (Anh != null && Anh.Length > 0)
                 {
@@ -324,7 +326,7 @@ namespace QuanLyQuanCaPhe23.Controllers
             {
                 return RedirectToAction("DangNhap");
             }
-            TempData["IsLoggedIn"] = true;
+            TempData["IsLoggedInAd"] = true;
             ViewData["Sizes"] = new SelectList(da.Sizes, "Id", "Ten");
 
             var p = da.CaPhes.Include(c => c.Size).FirstOrDefault(s => s.Id == id);
@@ -343,7 +345,7 @@ namespace QuanLyQuanCaPhe23.Controllers
                 {
                     return RedirectToAction("DangNhap");
                 }
-                TempData["IsLoggedIn"] = true;
+                TempData["IsLoggedInAd"] = true;
                 var cp = da.CaPhes.Include(c => c.Size).FirstOrDefault(s => s.Id == id);
                 string anh = cp.Anh;
                 int sizeID = int.Parse(collection["SizeId"]);
@@ -386,7 +388,7 @@ namespace QuanLyQuanCaPhe23.Controllers
             {
                 return RedirectToAction("DangNhap");
             }
-            TempData["IsLoggedIn"] = true;
+            TempData["IsLoggedInAd"] = true;
             var p = da.CaPhes.Include(c => c.Size).FirstOrDefault(s => s.Id == id);
             return View(p);
         }
@@ -402,7 +404,7 @@ namespace QuanLyQuanCaPhe23.Controllers
                 {
                     return RedirectToAction("DangNhap");
                 }
-                TempData["IsLoggedIn"] = true;
+                TempData["IsLoggedInAd"] = true;
                 var p = da.CaPhes.Include(c => c.Size).FirstOrDefault(s => s.Id == id);
                 da.CaPhes.Remove(p);
                 da.SaveChanges();
@@ -442,9 +444,9 @@ namespace QuanLyQuanCaPhe23.Controllers
                     _httpContextAccessor.HttpContext.Session.SetString("UserName", ql.UserName);
                     _httpContextAccessor.HttpContext.Session.SetString("HoQl", ql.HoQl); // Lưu họ vào session
                     _httpContextAccessor.HttpContext.Session.SetString("TenQl", ql.TenQl); // Lưu tên vào session
-                    TempData["IsLoggedIn"] = true;
-                    _httpContextAccessor.HttpContext.Session.SetString("IsLoggedIn", "true");
-                    _httpContextAccessor.HttpContext.Session.SetString("FullName", ql.HoQl + " " + ql.TenQl);
+                    TempData["IsLoggedInAd"] = true;
+                    _httpContextAccessor.HttpContext.Session.SetString("IsLoggedInAd", "true");
+                    _httpContextAccessor.HttpContext.Session.SetString("FullNameAd", ql.HoQl + " " + ql.TenQl);
 
                     _httpContextAccessor.HttpContext.Session.SetString("SuccessMessage", "Chúc mừng đăng nhập thành công");
                     return RedirectToAction("ListCaPhe");
@@ -468,7 +470,7 @@ namespace QuanLyQuanCaPhe23.Controllers
             string check = _httpContextAccessor.HttpContext.Session.GetString("UserName");
             if (check != null)
             {
-                TempData["IsLoggedIn"] = true;
+                TempData["IsLoggedInAd"] = true;
                 ViewData["SuccessMessage"] = _httpContextAccessor.HttpContext.Session.GetString("SuccessMessage");
 
                 // Lấy tên người dùng từ session
@@ -501,7 +503,7 @@ namespace QuanLyQuanCaPhe23.Controllers
                           .Take(pageSize) // Lấy số lượng đơn hàng cho trang hiện tại
                           .ToList();
 
-                TempData["IsLoggedIn"] = true;
+                TempData["IsLoggedInAd"] = true;
 
                 // Truyền dữ liệu phân trang tới view
                 ViewBag.PageNumber = pageNumber;
@@ -521,7 +523,7 @@ namespace QuanLyQuanCaPhe23.Controllers
             {
                 return RedirectToAction("DangNhap");
             }
-            TempData["IsLoggedIn"] = true;
+            TempData["IsLoggedInAd"] = true;
 
             if (id == null)
             {
@@ -540,7 +542,7 @@ namespace QuanLyQuanCaPhe23.Controllers
             {
                 return NotFound();
             }
-            TempData["IsLoggedIn"] = true;
+            TempData["IsLoggedInAd"] = true;
 
             var viewModel = new DonHangDetailsViewModel
             {
@@ -560,7 +562,7 @@ namespace QuanLyQuanCaPhe23.Controllers
             {
                 return RedirectToAction("DangNhap");
             }
-            TempData["IsLoggedIn"] = true;
+            TempData["IsLoggedInAd"] = true;
             var p = da.DonHangs.FirstOrDefault(s => s.Id == id);
             return View(p);
         }
@@ -577,7 +579,7 @@ namespace QuanLyQuanCaPhe23.Controllers
                 {
                     return RedirectToAction("DangNhap");
                 }
-                TempData["IsLoggedIn"] = true;
+                TempData["IsLoggedInAd"] = true;
 
                 // Xóa tất cả các ChiTietDonHang liên quan đến DonHang
                 var chiTietDonHangs = da.ChiTietDonHangs.Where(ct => ct.DonHangId == id);
@@ -595,6 +597,131 @@ namespace QuanLyQuanCaPhe23.Controllers
             {
                 return View();
             }
-        }   
+        }
+
+        [HttpGet]
+        public IActionResult PrintInvoice(int donHangId)
+        {
+            // Lấy đơn hàng và các chi tiết đơn hàng liên quan
+            var donHang = da.DonHangs
+                            .Include(dh => dh.KhachHang)
+                            .Include(dh => dh.ChiTietDonHangs)
+                                .ThenInclude(ct => ct.CaPhe)
+                                .ThenInclude(cp => cp.Size)
+                            .FirstOrDefault(dh => dh.Id == donHangId);
+
+            if (donHang == null)
+            {
+                return NotFound();
+            }
+
+            // Tạo PDF invoice ở đây
+            var pdfFileBytes = CreatePdfInvoice(donHang);
+
+            // Trả về file PDF và mở trực tiếp trên trình duyệt với Content-Disposition inline
+            Response.Headers.Add("Content-Disposition", "inline; filename=HoaDon.pdf");
+            return File(pdfFileBytes, "application/pdf");
+        }
+        private byte[] CreatePdfInvoice(DonHang donHang)
+        {
+            // Tạo tài liệu PDF với kích thước nhỏ hơn (A6)
+            var pdfDocument = new PdfDocument();
+            var pdfPage = pdfDocument.AddPage();
+            pdfPage.Width = XUnit.FromMillimeter(105); // Độ rộng A6
+            pdfPage.Height = XUnit.FromMillimeter(148); // Độ cao A6
+            var gfx = XGraphics.FromPdfPage(pdfPage);
+
+            // Đặt font chữ
+            var titleFont = new XFont("Courier New", 12, XFontStyle.Bold);
+            var regularFont = new XFont("Courier New", 8, XFontStyle.Regular);
+            var smallFont = new XFont("Courier New", 7, XFontStyle.Regular);
+
+            // Thiết lập margin và vị trí bắt đầu vẽ
+            double pageWidth = pdfPage.Width.Point;
+            double leftMargin = 10;
+            double rightMargin = 210; // Tạo khoảng trống bên phải rộng hơn
+            double yPoint = 10;
+
+            // Hàm vẽ đường gạch "===="
+            Action<double> drawDashedLine = (y) =>
+            {
+                string dashes = new string('=', (int)((rightMargin - leftMargin) / 3));
+                gfx.DrawString(dashes, smallFont, XBrushes.Black, new XPoint(leftMargin, y));
+            };
+
+            // Tiêu đề hóa đơn
+            gfx.DrawString("PHUC COFFEE", titleFont, XBrushes.Black, new XPoint(leftMargin, yPoint));
+            yPoint += 15;
+
+            // Thông tin cửa hàng
+            gfx.DrawString("Dia chi: Abc, Huyen Nha Be, TP.HCM", smallFont, XBrushes.Black, new XPoint(leftMargin, yPoint));
+            yPoint += 10;
+            gfx.DrawString("SDT: 0328877290", smallFont, XBrushes.Black, new XPoint(leftMargin, yPoint));
+            yPoint += 10;
+
+            drawDashedLine(yPoint);
+            yPoint += 10;
+
+            // Thông tin đơn hàng
+            gfx.DrawString($"Ngay: {DateTime.Now:dd/MM/yyyy HH:mm}", smallFont, XBrushes.Black, new XPoint(leftMargin, yPoint));
+            yPoint += 10;
+            gfx.DrawString($"Ma don hang: {donHang.Id}", smallFont, XBrushes.Black, new XPoint(leftMargin, yPoint));
+            yPoint += 10;
+
+            drawDashedLine(yPoint);
+            yPoint += 10;
+
+            // Thêm thông tin khách hàng (tên, địa chỉ, số điện thoại)
+            gfx.DrawString($"Khach hang: {donHang.KhachHang.HoKh} {donHang.KhachHang.TenKh}", smallFont, XBrushes.Black, new XPoint(leftMargin, yPoint));
+            yPoint += 10;
+            gfx.DrawString($"Dia chi: {donHang.KhachHang.DiaChi}", smallFont, XBrushes.Black, new XPoint(leftMargin, yPoint));
+            yPoint += 10;
+            gfx.DrawString($"SDT: {donHang.KhachHang.SoDienThoai}", smallFont, XBrushes.Black, new XPoint(leftMargin, yPoint)); // Thêm số điện thoại khách hàng
+            yPoint += 10;
+
+            drawDashedLine(yPoint);
+            yPoint += 10;
+
+            // Tiêu đề cột
+            gfx.DrawString("San pham", regularFont, XBrushes.Black, new XPoint(leftMargin, yPoint));
+            gfx.DrawString("SL", regularFont, XBrushes.Black, new XPoint(rightMargin - 80, yPoint));
+            gfx.DrawString("Gia", regularFont, XBrushes.Black, new XPoint(rightMargin - 40, yPoint));
+            yPoint += 10;
+
+            drawDashedLine(yPoint);
+            yPoint += 10;
+
+            // Thêm chi tiết đơn hàng
+            foreach (var chiTiet in donHang.ChiTietDonHangs)
+            {
+                string tenSanPham = $"{chiTiet.CaPhe.Ten} ({chiTiet.CaPhe.Size?.Ten ?? "N/A"})";
+                gfx.DrawString(tenSanPham, regularFont, XBrushes.Black, new XPoint(leftMargin, yPoint));
+                gfx.DrawString(chiTiet.SoLuong.ToString(), regularFont, XBrushes.Black, new XPoint(rightMargin - 80, yPoint));
+                gfx.DrawString($"{(chiTiet.CaPhe.Tien * chiTiet.SoLuong):N0}", regularFont, XBrushes.Black, new XPoint(rightMargin - 40, yPoint));
+                yPoint += 10;
+            }
+
+            drawDashedLine(yPoint);
+            yPoint += 10;
+
+            // Tổng tiền
+            var tongTien = donHang.ChiTietDonHangs.Sum(ct => ct.CaPhe.Tien * ct.SoLuong);
+            gfx.DrawString("Tong cong:", regularFont, XBrushes.Black, new XPoint(leftMargin, yPoint));
+            gfx.DrawString($"{tongTien:N0} VND", regularFont, XBrushes.Black, new XPoint(rightMargin - 40, yPoint));
+            yPoint += 15;
+
+            drawDashedLine(yPoint);
+            yPoint += 10;
+
+            // Lời cảm ơn
+            gfx.DrawString("Cam on quy khach!", smallFont, XBrushes.Black, new XPoint((pageWidth - gfx.MeasureString("Cam on quy khach!", smallFont).Width) / 2, yPoint));
+
+            // Lưu tài liệu PDF vào MemoryStream
+            using (MemoryStream stream = new MemoryStream())
+            {
+                pdfDocument.Save(stream, false);
+                return stream.ToArray();
+            }
+        }
     }
 }

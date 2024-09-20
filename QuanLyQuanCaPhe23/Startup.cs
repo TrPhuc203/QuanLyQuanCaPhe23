@@ -51,6 +51,7 @@ namespace QuanLyQuanCaPhe23
             services.AddScoped<ESMSHelper>();
             services.Configure<ESMSOptions>(Configuration.GetSection("ESMS"));
 
+            services.AddSignalR();
             // Add framework services.
             services.AddMvc();
 
@@ -104,6 +105,8 @@ namespace QuanLyQuanCaPhe23
                 endpoints.MapControllerRoute(
                     name: "payment",
                     pattern: "GioHang/{action=PaymentCallback}/{id?}");
+
+                endpoints.MapHub<NotificationHub>("/notificationHub");
             });
 
             logger.LogInformation("Application started.");

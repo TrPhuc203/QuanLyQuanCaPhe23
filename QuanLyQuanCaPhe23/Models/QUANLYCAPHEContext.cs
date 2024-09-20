@@ -138,7 +138,7 @@ namespace QuanLyQuanCaPhe23.Models
 
                 entity.Property(e => e.TrangThai)
                     .HasMaxLength(50)
-                    .HasDefaultValueSql("('Ðang ch?')");
+                    .HasDefaultValueSql("(N'Đang chờ')");
 
                 entity.HasOne(d => d.KhachHang)
                     .WithMany(p => p.DonHangs)
@@ -195,6 +195,8 @@ namespace QuanLyQuanCaPhe23.Models
                 entity.Property(e => e.MaQl).HasColumnName("MaQL");
 
                 entity.Property(e => e.DiaChi).HasMaxLength(100);
+
+                entity.Property(e => e.Email).HasMaxLength(255);
 
                 entity.Property(e => e.HoQl)
                     .HasMaxLength(50)

@@ -49,7 +49,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (Context.Session.GetString("IsLoggedIn") == "true")
+                        @if (Context.Session.GetString("IsLoggedInAd") == "true")
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "ListCaPhe" ? "active" : "")"
@@ -68,7 +68,7 @@
                                    style="padding-right: 20px" asp-area="" asp-controller="Admin" asp-action="ThongKeTheoSoLuongSanPham">Thống kê theo sản phẩm</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link " style="font-weight:500 !important">Xin chào,@Context.Session.GetString("FullName")</a>
+                                <a class="nav-link " style="font-weight:500 !important">Xin chào,@Context.Session.GetString("FullNameAd")</a>
                             </li>
                         }
                         else

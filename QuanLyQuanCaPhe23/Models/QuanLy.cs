@@ -19,6 +19,7 @@ namespace QuanLyQuanCaPhe23.Models
         public string Pass { get; set; }
         public string DiaChi { get; set; }
         public string SoDienThoai { get; set; }
+        public string Email { get; set; }
 
         public virtual ICollection<CaPhe> CaPhes { get; set; }
     }

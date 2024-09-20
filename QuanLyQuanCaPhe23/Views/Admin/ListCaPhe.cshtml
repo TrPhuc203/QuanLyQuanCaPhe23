@@ -3,8 +3,96 @@
 @{
     ViewData["Title"] = "Danh sách cà phê";
 }
+<style>
+    body {
+        background-color: #f8f9fa;
+        color: #343a40;
+        font-family: 'Arial', sans-serif;
+    }
 
+    .container {
+        max-width: 1200px;
+    }
+
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .btn-block {
+        display: block;
+        width: 100%;
+    }
+
+    .table {
+        font-size: 1rem;
+    }
+
+    th, td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .thead-dark th {
+        background-color: #343a40;
+        color: #ffffff;
+    }
+
+    .btn-group .btn {
+        margin-right: 5px;
+    }
+
+    .pagination {
+        margin-bottom: 20px;
+    }
+
+        .pagination .page-link {
+            color: #007bff;
+        }
+
+            .pagination .page-link:hover {
+                color: #0056b3;
+            }
+
+        .pagination .page-item.active .page-link {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #ffffff;
+        }
+</style>
 <div class="container mt-5">
+    @section Scripts {
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                // Kết nối đến SignalR Hub
+                const connection = new signalR.HubConnectionBuilder()
+                    .withUrl("/notificationHub")
+                    .build();
+
+                // Nhận thông báo từ server
+                connection.on("ReceiveNotification", function (orderId) {
+                    // Tạo thông báo xịn với Toastr
+                    toastr.options = {
+                        "closeButton": true,
+                        "progressBar": true,
+                        "positionClass": "toast-top-right",
+                        "timeOut": "10000",  // Thời gian hiển thị thông báo
+                    };
+
+                    // Hiển thị thông báo
+                    toastr.success(`Bạn có đơn hàng mới. Mã đơn hàng: ${orderId}`, 'Thông báo Đơn hàng');
+                });
+
+                // Bắt đầu kết nối
+                connection.start().catch(function (err) {
+                    return console.error(err.toString());
+                });
+            });
+        </script>
+    }
     <form asp-action="ListCaPhe" method="get">
         <div class="search-wrapper">
             <div class="search-box">
@@ -77,8 +165,7 @@
             }
         </tbody>
     </table>
-</div>
-<script>
+    <script>
     document.addEventListener("DOMContentLoaded", function () {
         var selectedSize = "@ViewData["FilterSize"]";
         var selectElement = document.getElementById("filter2");
@@ -92,60 +179,6 @@
             priceElement.value = selectedGia;
         }
     });
-</script>
-<style>
-    body {
-        background-color: #f8f9fa;
-        color: #343a40;
-        font-family: 'Arial', sans-serif;
-    }
+    </script>
+</div>
 
-    .container {
-        max-width: 1200px;
-    }
-
-    .card {
-        margin-bottom: 20px;
-    }
-
-    .btn-block {
-        display: block;
-        width: 100%;
-    }
-
-    .table {
-        font-size: 1rem;
-    }
-
-    th, td {
-        text-align: center;
-        vertical-align: middle;
-    }
-
-    .thead-dark th {
-        background-color: #343a40;
-        color: #ffffff;
-    }
-
-    .btn-group .btn {
-        margin-right: 5px;
-    }
-
-    .pagination {
-        margin-bottom: 20px;
-    }
-
-        .pagination .page-link {
-            color: #007bff;
-        }
-
-            .pagination .page-link:hover {
-                color: #0056b3;
-            }
-
-        .pagination .page-item.active .page-link {
-            background-color: #007bff;
-            border-color: #007bff;
-            color: #ffffff;
-        }
-</style>

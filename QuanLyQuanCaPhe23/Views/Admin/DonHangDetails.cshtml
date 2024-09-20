@@ -4,6 +4,78 @@
     ViewData["Title"] = "Chi Tiết Đơn Hàng";
 }
 <link rel="stylesheet" href="~/css/site.css">
+<style>
+    .order-title {
+        color: #8B4513;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 30px;
+    }
+
+    .order-subtitle {
+        color: #a0522d;
+        font-weight: 600;
+    }
+
+    .order-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+        .order-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+        }
+
+    .divider {
+        border-top: 2px solid #f4e4c2;
+        margin: 20px 0;
+    }
+
+    .table {
+        color: #5a3921;
+    }
+
+        .table thead th {
+            background-color: #f4e4c2;
+            color: #8B4513;
+            border-color: #deb887;
+        }
+
+    .table-hover tbody tr:hover {
+        background-color: #fff8dc;
+    }
+
+    .btn-primary {
+        background-color: #8B4513;
+        border-color: #8B4513;
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #a0522d;
+            border-color: #a0522d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(139, 69, 19, 0.3);
+        }
+
+    .btn-secondary {
+        background-color: #5a3921;
+        border-color: #5a3921;
+        transition: all 0.3s ease;
+    }
+
+        .btn-secondary:hover {
+            background-color: #8B4513;
+            border-color: #8B4513;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(90, 57, 33, 0.3);
+        }
+</style>
+
 <div class="container mt-4">
     <h2 class="text-center mb-4 order-title">Chi Tiết Đơn Hàng</h2>
 
@@ -71,64 +143,27 @@
 
     <div class="text-center mt-4">
         <a asp-action="ListDonHang" class="btn btn-primary btn-lg">Quay lại danh sách đơn hàng</a>
+        <a href="javascript:void(0);" class="btn btn-primary" onclick="openPrintInvoice(@Model.DonHangId)">In hóa đơn</a>
     </div>
+    <script>
+        function openPrintInvoice(donHangId) {
+            // Tạo URL để gọi đến action PrintInvoice
+            var url = '@Url.Action("PrintInvoice", "Admin")' + '?donHangId=' + donHangId;
+
+            // Tạo một iframe ẩn để tải PDF
+            var iframe = document.createElement('iframe');
+            iframe.style.display = 'none'; // Ẩn iframe
+            iframe.src = url;
+
+            // Thêm iframe vào body
+            document.body.appendChild(iframe);
+
+            // Khi PDF đã tải xong, tự động gọi hàm in
+            iframe.onload = function () {
+                iframe.contentWindow.print();
+            };
+        }
+    </script>
 </div>
 
-<style>
-    .order-title {
-        color: #8B4513;
-        font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 30px;
-    }
 
-    .order-subtitle {
-        color: #a0522d;
-        font-weight: 600;
-    }
-
-    .order-card {
-        border: none;
-        border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-    }
-
-        .order-card:hover {
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            transform: translateY(-5px);
-        }
-
-    .divider {
-        border-top: 2px solid #f4e4c2;
-        margin: 20px 0;
-    }
-
-    .table {
-        color: #5a3921;
-    }
-
-        .table thead th {
-            background-color: #f4e4c2;
-            color: #8B4513;
-            border-color: #deb887;
-        }
-
-    .table-hover tbody tr:hover {
-        background-color: #fff8dc;
-    }
-
-    .btn-primary {
-        background-color: #8B4513;
-        border-color: #8B4513;
-        transition: all 0.3s ease;
-    }
-
-        .btn-primary:hover {
-            background-color: #a0522d;
-            border-color: #a0522d;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(139, 69, 19, 0.3);
-        }
-</style>
