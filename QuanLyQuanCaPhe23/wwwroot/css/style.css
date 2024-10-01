@@ -1,4 +1,5 @@
 ﻿body {
+    margin-top: 75px !important;
 background: url(./../images/bg-body.jpg) repeat center top;
 color: #d5b084;
 font-family: 'open_sansregular';

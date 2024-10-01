@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Blog";
+    ViewData["Title"] = "Menu";
     Layout = "_LayoutHome";
 }
 <!DOCTYPE html>
@@ -9,6 +9,11 @@
     <meta charset="UTF-8">
     <title>Menu - Phuc&#33;Coffee </title>
     <link rel="stylesheet" href="~/css/style.css">
+	<style>
+		.pb-3 {
+			margin-top: 75px !important;
+		}
+	</style>
 </head>
 <body>
     <div id="page">
@@ -149,7 +154,12 @@
 						<a href="http://freewebsitetemplates.com/go/twitter/" target="_blank" id="twitter">Twitter</a>
 						<a href="http://freewebsitetemplates.com/go/googleplus/" target="_blank" id="googleplus">Google+</a>
 						<a href="index.html" id="rss">RSS</a>
-					</div>			
+					</div>	
+					<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+					<df-messenger intent="WELCOME"
+								  chat-title="CoffeeChatBot"
+								  agent-id="42d11d89-b9c8-440b-b546-e581580578cf"
+								  language-code="vi"></df-messenger>
 				</div>
 			</div>
 		</div>

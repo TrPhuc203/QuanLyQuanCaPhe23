@@ -580,6 +580,72 @@ namespace QuanLyQuanCaPhe23.Controllers
 
             return RedirectToAction("LichSuDonHang");
         }
+        // GET: NguoiDungController/DoiDiaChi
+        public IActionResult DoiDiaChi()
+        {
+            // Lấy địa chỉ hiện tại từ session
+            var diaChiHienTai = _httpContextAccessor.HttpContext.Session.GetString("DiaChi");
 
+            // Kiểm tra nếu địa chỉ không có trong session
+            if (string.IsNullOrEmpty(diaChiHienTai))
+            {
+                // Bạn có thể lấy từ cơ sở dữ liệu nếu session không có
+                var maKh = _httpContextAccessor.HttpContext.Session.GetInt32("MaKh");
+                if (maKh != null)
+                {
+                    var khachHang = da.KhachHangs.FirstOrDefault(k => k.MaKh == maKh);
+                    if (khachHang != null)
+                    {
+                        diaChiHienTai = khachHang.DiaChi;
+                        _httpContextAccessor.HttpContext.Session.SetString("DiaChi", diaChiHienTai); // Cập nhật lại vào session
+                    }
+                }
+            }
+
+            var model = new DoiDiaChiViewModel
+            {
+                DiaChiHienTai = diaChiHienTai
+            };
+
+            return View(model);
+        }
+
+        // POST: NguoiDungController/DoiDiaChi
+        [HttpPost]
+        public IActionResult DoiDiaChi(string diaChiMoi)
+        {
+            // Lấy mã khách hàng từ session
+            var maKh = _httpContextAccessor.HttpContext.Session.GetInt32("MaKh");
+            if (maKh == null)
+            {
+                return RedirectToAction("DangNhap", "NguoiDung");
+            }
+
+            // Lấy thông tin khách hàng từ cơ sở dữ liệu
+            var khachHang = da.KhachHangs.FirstOrDefault(k => k.MaKh == maKh);
+            if (khachHang == null)
+            {
+                return RedirectToAction("DangNhap", "NguoiDung");
+            }
+
+            // Cập nhật địa chỉ mới
+            khachHang.DiaChi = diaChiMoi;
+            da.SaveChanges();
+
+            // Cập nhật địa chỉ mới trong session
+            _httpContextAccessor.HttpContext.Session.SetString("DiaChi", diaChiMoi);
+
+            // Tạo model để truyền lại view
+            var model = new DoiDiaChiViewModel
+            {
+                DiaChiHienTai = diaChiMoi
+            };
+
+            // Gửi thông báo thành công
+            ViewData["SuccessMessage"] = "Đã cập nhật địa chỉ thành công.";
+
+            // Trả về view với model đã cập nhật
+            return View(model);
+        }
     }
 }

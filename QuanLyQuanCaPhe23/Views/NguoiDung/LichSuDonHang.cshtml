@@ -5,7 +5,6 @@
     Layout = "_NewLayout";
 }
 
-<
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -13,32 +12,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <style>
-        /* Các style tùy chỉnh của bạn */
         body {
+            margin-top: 75px;
             font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
         }
 
-        .table img {
-            max-width: 100px;
-            max-height: 100px;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0rem;
         }
 
-        .table th, .table td {
+        h2 {
+            color: #2c3e50;
             text-align: center;
-            vertical-align: middle;
+            margin-bottom: 2rem;
+            font-weight: 600;
         }
 
-        .btn-danger {
-            background-color: #dc3545;
-            border-color: #dc3545;
-            color: #fff;
+        .order-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
 
-            .btn-danger:hover {
-                background-color: #c82333;
-                border-color: #bd2130;
+            .order-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
             }
+
+        .order-header {
+            background-color: #3498db;
+            color: #fff;
+            padding: 1rem;
+            font-weight: 500;
+        }
+
+        .order-body {
+            padding: 1.5rem;
+        }
 
         .order-details {
             list-style-type: none;
@@ -46,59 +66,134 @@
         }
 
             .order-details li {
-                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+                margin-bottom: 1rem;
+                padding-bottom: 1rem;
+                border-bottom: 1px solid #eee;
+            }
+
+                .order-details li:last-child {
+                    border-bottom: none;
+                }
+
+            .order-details img {
+                width: 60px;
+                height: 60px;
+                object-fit: cover;
+                border-radius: 5px;
+                margin-right: 1rem;
+            }
+
+        .order-status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background-color: #ffeaa7;
+            color: #d35400;
+        }
+
+        .status-completed {
+            background-color: #55efc4;
+            color: #00b894;
+        }
+
+        .status-cancelled {
+            background-color: #fab1a0;
+            color: #d63031;
+        }
+
+        .btn-cancel {
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-cancel:hover {
+                background-color: #c0392b;
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+            .empty-state i {
+                font-size: 4rem;
+                color: #3498db;
+                margin-bottom: 1rem;
+            }
+
+            .empty-state p {
+                font-size: 1.25rem;
+                color: #7f8c8d;
             }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h2>Lịch sử đơn hàng của bạn</h2>
-        <hr />
+    <div class="container">
+        <h2><i class="fas fa-history"></i> Lịch sử đơn hàng của bạn</h2>
+
         @if (Model.Any())
         {
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Mã đơn hàng</th>
-                        <th>Ngày đặt hàng</th>
-                        <th>Trạng thái</th>
-                        <th>Chi tiết</th>
-                        <th>Hủy đơn</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var donHang in Model)
-                    {
-                        var daysSinceOrder = donHang.NgayTao.HasValue ? (DateTime.Now - donHang.NgayTao.Value).TotalDays : double.MaxValue;
-                        <tr>
-                            <td>@donHang.Id</td>
-                            <td>@donHang.NgayTao?.ToString("dd/MM/yyyy")</td>
-                            <td>@donHang.TrangThai</td>
-                            <td>
-                                <ul class="order-details">
-                                    @foreach (var chiTiet in donHang.ChiTietDonHangs)
-                                    {
-                                        <li>
-                                            <img src="@chiTiet.CaPhe.Anh" alt="Ảnh cà phê" />
-                                            @chiTiet.CaPhe.Ten - Số lượng: @chiTiet.SoLuong - Giá: @chiTiet.Tien?.ToString("N0") VNĐ
-                                        </li>
-                                    }
-                                </ul>
-                            </td>
-                            <td>
-                                @if (daysSinceOrder <= 1 && donHang.TrangThai != "Đã hủy")
-                                {
-                                    <a href="#" class="btn btn-danger" onclick="return confirmDelete(@donHang.Id);">Hủy đơn</a>
-                                }
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            foreach (var donHang in Model)
+            {
+                var daysSinceOrder = donHang.NgayTao.HasValue ? (DateTime.Now - donHang.NgayTao.Value).TotalDays : double.MaxValue;
+                <div class="order-card">
+                    <div class="order-header">
+                        <span>Mã đơn hàng: #@donHang.Id</span>
+                        <span class="float-right">@donHang.NgayTao?.ToString("dd/MM/yyyy HH:mm")</span>
+                    </div>
+                    <div class="order-body">
+                        <p>
+                            Trạng thái:
+                            <span class="order-status @(donHang.TrangThai == "Đang xử lý" ? "status-pending" :
+                                                        donHang.TrangThai == "Đã hoàn thành" ? "status-completed" :
+                                                        "status-cancelled")">
+                                @donHang.TrangThai
+                            </span>
+                        </p>
+                        <ul class="order-details">
+                            @foreach (var chiTiet in donHang.ChiTietDonHangs)
+                            {
+                                <li>
+                                    <img src="@chiTiet.CaPhe.Anh" alt="@chiTiet.CaPhe.Ten" />
+                                    <div>
+                                        <strong>@chiTiet.CaPhe.Ten</strong>
+                                        <br />
+                                        Số lượng: @chiTiet.SoLuong - Giá: @chiTiet.Tien?.ToString("N0") VNĐ
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                        @if (daysSinceOrder <= 1 && donHang.TrangThai != "Đã hủy")
+                        {
+                            <button class="btn-cancel" onclick="return confirmDelete(@donHang.Id);">
+                                <i class="fas fa-times-circle"></i> Hủy đơn
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
         }
         else
         {
-            <p>Hiện tại bạn chưa có đơn hàng nào.</p>
+            <div class="empty-state">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Hiện tại bạn chưa có đơn hàng nào.</p>
+            </div>
         }
     </div>
 

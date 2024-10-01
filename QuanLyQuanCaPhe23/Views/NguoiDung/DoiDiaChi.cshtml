@@ -1,0 +1,75 @@
+﻿@model DoiDiaChiViewModel
+@{
+    ViewData["Title"] = "Đổi địa chỉ";
+    Layout = "_NewLayout";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="mb-0">Đổi Địa Chỉ</h2>
+                </div>
+                <div class="card-body p-4">
+                    @if (!string.IsNullOrEmpty(ViewData["SuccessMessage"] as string))
+                    {
+                        <div class="alert alert-success text-center" role="alert">
+                            @ViewData["SuccessMessage"]
+                        </div>
+                    }
+
+                    <form asp-action="DoiDiaChi" method="post">
+                        <div class="form-group">
+                            <label for="DiaChiHienTai" class="font-weight-bold">
+                                <i class="fas fa-map-marker-alt"></i> Địa chỉ hiện tại:
+                            </label>
+                            <input type="text" id="DiaChiHienTai" name="DiaChiHienTai" value="@Model.DiaChiHienTai" class="form-control bg-light" readonly />
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="DiaChiMoi" class="font-weight-bold">
+                                <i class="fas fa-edit"></i> Địa chỉ mới:
+                            </label>
+                            <input type="text" id="DiaChiMoi" name="diaChiMoi" class="form-control" placeholder="Nhập địa chỉ mới" required />
+                        </div>
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success btn-lg shadow">
+                                <i class="fas fa-save"></i> Cập nhật
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Thêm các lớp tuỳ chỉnh -->
+<style>
+    body {
+        margin-top: 75px;
+    }
+    .card {
+        border-radius: 10px;
+    }
+
+    .form-control {
+        border-radius: 5px;
+        padding: 12px;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+    .form-group label {
+        color: #495057;
+        font-size: 16px;
+    }
+</style>

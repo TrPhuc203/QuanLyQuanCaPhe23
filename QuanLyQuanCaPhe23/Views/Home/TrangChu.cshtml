@@ -21,6 +21,7 @@
     <style>
     <style>
         body {
+            margin-top: 75px !important;
 background: url(./../images/bg-body.jpg) repeat center top;
 color: #d5b084;
 font-family: 'open_sansregular';
@@ -31,7 +32,9 @@ padding: 0;
 font-weight: normal;
 font-style: normal;
 }
-
+.pb-3 {
+            margin-top: 75px !important;
+}
 a {
 outline: none;
 }
@@ -59,6 +62,7 @@ color: #bfcb75;
         .slider {
             width: 100%;
             margin: 20px auto;
+            
         }
 
         .slick-slide img {
@@ -855,7 +859,8 @@ width: 18px;
             height: 100vh;
             background-color: #f9b94b;
             transition: 1s;
-            z-index: 1000;
+            z-index: 20000;
+            ;
         }
 
         .logo_header {
@@ -1002,7 +1007,7 @@ width: 18px;
                             <a href="index.html">Home</a>
                         </li>
                         <li>
-                            <a href="blog.html">Blog</a>
+                            <a href="blog.html">Menu</a>
                         </li>
 
                     </ul>
@@ -1014,8 +1019,8 @@ width: 18px;
                     </div>
                     <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
                     <df-messenger intent="WELCOME"
-                                  chat-title="CSKH-PPK-Coffee"
-                                  agent-id="66dfadc2-e7dc-4761-9ada-f796b9eabad2"
+                                  chat-title="CoffeeChatBot"
+                                  agent-id="42d11d89-b9c8-440b-b546-e581580578cf"
                                   language-code="vi"></df-messenger>
                 </div>
             </div>

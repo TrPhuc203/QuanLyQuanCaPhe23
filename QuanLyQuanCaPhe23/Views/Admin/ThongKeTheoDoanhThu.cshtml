@@ -3,7 +3,11 @@
 @{
     ViewData["Title"] = "Thống kê theo doanh thu";
 }
-
+<style>
+    body {
+        margin-top: 75px !important;
+    }
+</style>
 <div class="container mt-5">
     <h1 class="text-center mb-4">Thống kê theo doanh thu</h1>
 
@@ -14,7 +18,7 @@
                 <input type="date" id="filter" name="kw" class="form-control" value="@ViewBag.SelectedDate.ToString("yyyy-MM-dd")" />
             </div>
             <div class="col-md-3">
-                <button type="submit" class="btn btn-primary">Gửi</button>
+                <button type="submit" class="btn btn-primary">Thống kê</button>
             </div>
         </div>
     </form>

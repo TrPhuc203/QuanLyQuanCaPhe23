@@ -460,6 +460,12 @@ namespace QuanLyQuanCaPhe23.Controllers
             }
             return View();
         }
+        public ActionResult DangXuat()
+        {
+            // Xóa session khi người dùng đăng xuất
+            _httpContextAccessor.HttpContext.Session.Clear();
+            return RedirectToAction("DangNhap", "Admin");
+        }
         public ActionResult ListDonHang(string? page)
         {
             if (!IsAdminLoggedIn())

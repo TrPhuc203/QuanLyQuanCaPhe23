@@ -200,8 +200,12 @@ namespace QuanLyQuanCaPhe23.Controllers
             o.KhachHangId = MaKH;
             da.DonHangs.Add(o);
             da.SaveChanges();
+
+            var khachHang = da.KhachHangs.Find(MaKH);
+            string userName = khachHang.HoKh + " " + khachHang.TenKh;
+
             var hubContext = (IHubContext<NotificationHub>)HttpContext.RequestServices.GetService(typeof(IHubContext<NotificationHub>));
-            await hubContext.Clients.All.SendAsync("ReceiveNotification", o.Id);
+            await hubContext.Clients.All.SendAsync("ReceiveNotification", o.Id, userName);
 
             // Lấy thông tin người mua
            
@@ -228,8 +232,7 @@ namespace QuanLyQuanCaPhe23.Controllers
             {
                 productDetails.AppendLine($"Sản phẩm: {item.Ten}, Số lượng: {item.SoLuong}. ");
             }
-            var khachHang = da.KhachHangs.Find(MaKH);
-            string userName = khachHang.HoKh + " " + khachHang.TenKh;
+            
 
             string adminEmail = "trongphucnguyen14703@gmail.com";
             var mailMessage = new MailMessage
@@ -356,11 +359,13 @@ namespace QuanLyQuanCaPhe23.Controllers
                     da.SaveChanges();
                     int id = o.Id;
 
-                    var notificationMessage = "Đơn hàng #" + paymentInfo.OrderId + " đã được thanh toán thành công.";
-                    var hubContext = (IHubContext<NotificationHub>)HttpContext.RequestServices.GetService(typeof(IHubContext<NotificationHub>));
-                    await hubContext.Clients.All.SendAsync("ReceiveNotification", o.Id);
+                    var khachHang = da.KhachHangs.Find(MaKH);
+                    string userName = khachHang.HoKh + " " + khachHang.TenKh;
 
-                  
+                    var hubContext = (IHubContext<NotificationHub>)HttpContext.RequestServices.GetService(typeof(IHubContext<NotificationHub>));
+                    await hubContext.Clients.All.SendAsync("ReceiveNotification", o.Id, userName);
+
+
                     List<GioHang> gh = GetListCarts();
 
                     var orderDetailsViewModel = new DonHangDetailsViewModel
@@ -399,8 +404,7 @@ namespace QuanLyQuanCaPhe23.Controllers
                     {
                         productDetails.AppendLine($"Sản phẩm: {item.Ten}, Số lượng: {item.SoLuong}. ");
                     }
-                    var khachHang = da.KhachHangs.Find(MaKH);
-                    string userName = khachHang.HoKh + " " + khachHang.TenKh;
+                    
 
                     string adminEmail = "trongphucnguyen14703@gmail.com";
                     var mailMessage = new MailMessage

@@ -36,6 +36,14 @@
                 color: #007bff !important;
                 font-weight: bold;
             }
+            .navbar {
+            display: block;
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 10000;
+            }
     </style>
 </head>
 <body>
@@ -67,8 +75,13 @@
                                 <a class="nav-link text-dark menu-item  @(ViewContext.RouteData.Values["Action"].ToString() == "ThongKeTheoSoLuongSanPham" ? "active" : "")"
                                    style="padding-right: 20px" asp-area="" asp-controller="Admin" asp-action="ThongKeTheoSoLuongSanPham">Thống kê theo sản phẩm</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link " style="font-weight:500 !important">Xin chào,@Context.Session.GetString("FullNameAd")</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Xin chào, @Context.Session.GetString("FullNameAd")
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="DangXuat">Đăng xuất</a>
+                                </div>
                             </li>
                         }
                         else

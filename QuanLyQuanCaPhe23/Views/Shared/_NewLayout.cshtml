@@ -8,15 +8,53 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
+            
             font-family: 'Poppins', sans-serif;
         }
 
+        .menu-item {
+            position: relative;
+            text-decoration: none;
+        }
+
+            .menu-item::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 2px;
+                bottom: 0;
+                left: 0;
+                background-color: #8B4513;
+                transform: scaleX(0);
+                transform-origin: bottom right;
+                transition: transform 0.3s ease-out;
+            }
+
+            .menu-item:hover::after {
+                transform: scaleX(1);
+                transform-origin: bottom left;
+            }
         .container {
             max-width: 1180px;
         }
 
+        .dropdown-menu {
+            background-color: #f5f1e6; /* Màu nền của menu */
+        }
+
+        .dropdown-item:hover {
+            background-color: #8B4513;
+            color: white;
+        }
+
         .navbar {
             background-color: #f4e4c2 !important;
+            display: block !important;
+            position: fixed !important;
+            top: 0 !important;
+            right: 0 !important;
+            left: 0 !important;
+            z-index: 10000 !important;
         }
 
         .navbar-brand {
@@ -215,24 +253,26 @@
                         @if (Context.Session.GetString("IsLoggedInKH") == "true")
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="TrangChu" style="color: #8B4513 !important; font-weight: 400">Về trang chủ</a>
+                                <a class="nav-link menu-item" asp-area="" asp-controller="Home" asp-action="TrangChu" style="color: #8B4513 !important; font-weight: 400">Về trang chủ</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="NguoiDung" asp-action="LichSuDonHang" style="color: #8B4513 !important; font-weight: 400">Lịch sử Đơn hàng</a>
+                                <a class="nav-link menu-item" asp-area="" asp-controller="NguoiDung" asp-action="LichSuDonHang" style="color: #8B4513 !important; font-weight: 400">Lịch sử Đơn hàng</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="NguoiDung" asp-action="ListCaphe" style="color: #8B4513 !important; font-weight: 400">Danh sách cà phê</a>
+                                <a class="nav-link menu-item" asp-area="" asp-controller="NguoiDung" asp-action="ListCaphe" style="color: #8B4513 !important; font-weight: 400">Danh sách cà phê</a>
                             </li>
                         }
                     </ul>
                     <ul class="navbar-nav ml-auto">
                         @if (Context.Session.GetString("IsLoggedInKH") == "true")
                         {
-                            <li class="nav-item">
-                                <a class="nav-link greeting">
-                                    <i class="fa fa-user"></i>
-                                    Xin chào, @Context.Session.GetString("FullName")
+                            <li class="nav-item dropdown">
+                                <a class="nav-link greeting dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-user"></i> Xin chào, @Context.Session.GetString("FullName")
                                 </a>
+                                <div class="dropdown-menu" aria-labelledby="userDropdown">
+                                    <a class="dropdown-item" href="@Url.Action("DoiDiaChi", "NguoiDung")">Đổi địa chỉ cá nhân</a>
+                                </div>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark auth-button" asp-area="" asp-controller="NguoiDung" asp-action="DangXuat">Đăng xuất</a>
@@ -274,7 +314,7 @@
                 <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
                 <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
             </div>
-            <p class="footer-company-name">Copyright © 2021 <strong>SagarDeveloper</strong> All rights reserved</p>
+            <p class="footer-company-name">Copyright © 2024 <strong>PhucCoffee</strong> All rights reserved</p>
         </div>
 
         <div class="footer-center">

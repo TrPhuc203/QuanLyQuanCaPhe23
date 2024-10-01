@@ -5,6 +5,7 @@
 }
 <style>
     body {
+        margin-top: 75px;
         background-color: #f8f9fa;
         color: #343a40;
         font-family: 'Arial', sans-serif;
@@ -73,17 +74,17 @@
                     .build();
 
                 // Nhận thông báo từ server
-                connection.on("ReceiveNotification", function (orderId) {
+                connection.on("ReceiveNotification", function (orderId, userName) {
                     // Tạo thông báo xịn với Toastr
                     toastr.options = {
                         "closeButton": true,
                         "progressBar": true,
                         "positionClass": "toast-top-right",
-                        "timeOut": "10000",  // Thời gian hiển thị thông báo
+                        "timeOut": "70000",  // Thời gian hiển thị thông báo
                     };
 
                     // Hiển thị thông báo
-                    toastr.success(`Bạn có đơn hàng mới. Mã đơn hàng: ${orderId}`, 'Thông báo Đơn hàng');
+                    toastr.success(`Bạn có đơn hàng mới từ khách hàng: ${userName}. Mã đơn hàng: ${orderId}`, 'Thông báo Đơn hàng');
                 });
 
                 // Bắt đầu kết nối
