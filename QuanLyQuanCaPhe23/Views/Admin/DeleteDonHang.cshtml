@@ -3,29 +3,134 @@
 @{
     ViewData["Title"] = "Xóa đơn hàng";
 }
-<style>
-    body {
-        margin-top: 75px;
-    }
-</style>
-<div class="container mt-4">
-    <h1 class="text-center">CHÀO MỪNG BẠN ĐẾN VỚI TRANG XÓA ĐƠN HÀNG</h1>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-3">Mã Đơn Hàng:</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.Id)</dd>
-        <dt class="col-sm-3">Mã Khách Hàng:</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.KhachHangId)</dd>
-        <dt class="col-sm-3">Ngày tạo đơn:</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.NgayTao)</dd>
-        <dt class="col-sm-3">PayPal Key (nếu có):</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.PayPalKey)</dd>
-    </dl>
 
-    <div class="text-center">
-        <form asp-action="DeleteDonHang">
-            <input type="submit" value="Xóa" class="btn btn-danger" />
-            <a asp-action="ListDonHang" class="btn btn-secondary">Trở về danh sách</a>
-        </form>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-danger text-white">
+                    <h2 class="text-center mb-0">Xác nhận xóa đơn hàng</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        Bạn có chắc chắn muốn xóa đơn hàng này? Hành động này không thể hoàn tác.
+                    </div>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th scope="row" class="bg-light">Mã Đơn Hàng</th>
+                                <td>@Html.DisplayFor(model => model.Id)</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="bg-light">Mã Khách Hàng</th>
+                                <td>@Html.DisplayFor(model => model.KhachHangId)</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="bg-light">Ngày tạo đơn</th>
+                                <td>@Html.DisplayFor(model => model.NgayTao)</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="bg-light">PayPal Key</th>
+                                <td>
+                                    @if (string.IsNullOrEmpty(Model.PayPalKey))
+                                    {
+                                    <td>Không có</td>
+                                    }
+                                    else
+                                    {
+                                    <td>@Html.DisplayFor(model => model.PayPalKey)</td>
+                                    }
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer bg-light">
+                    <form asp-action="DeleteDonHang" class="text-center">
+                        <button type="submit" class="btn btn-danger btn-lg mr-2">
+                            <i class="fas fa-trash-alt mr-2"></i>Xác nhận xóa
+                        </button>
+                        <a asp-action="ListDonHang" class="btn btn-secondary btn-lg">
+                            <i class="fas fa-arrow-left mr-2"></i>Trở về danh sách
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Roboto', sans-serif;
+        margin-top: 75px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        background-color: #dc3545;
+        color: white;
+        padding: 1.5rem;
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+        .table th {
+            width: 40%;
+            vertical-align: middle;
+        }
+
+    .btn {
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+    .alert-warning {
+        background-color: #fff3cd;
+        border-color: #ffeeba;
+        color: #856404;
+    }
+
+    .shadow-lg {
+        box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;
+    }
+</style>

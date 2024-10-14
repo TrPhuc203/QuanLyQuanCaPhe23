@@ -8,51 +8,60 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    <title>Đăng nhập </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/colorful-login.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body class="colorful-bg">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-4">
+            <div class="col-md-8">
                 <div class="login-card mt-5">
-                    <div class="login-body">
-                        <h1 class="login-title text-center">Đăng Nhập</h1>
-                        <form asp-action="DangNhap">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="form-group">
-                                <label asp-for="UserName" class="control-label">Tên đăng nhập</label>
-                                <input asp-for="UserName" placeholder="Nhập tên đăng nhập..." class="form-control" />
-                                <span asp-validation-for="UserName" class="text-danger"></span>
-                                <span class="text-danger">@ViewData["Loil"]</span>
+                    <div class="row no-gutters">
+                        <div class="col-md-6">
+                            <div class="login-body">
+                                <h1 class="login-title text-center">Đăng Nhập</h1>
+                                <form asp-action="DangNhap">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <div class="form-group">
+                                        <label asp-for="UserName" class="control-label">Tên đăng nhập</label>
+                                        <input asp-for="UserName" placeholder="Nhập tên đăng nhập..." class="form-control" />
+                                        <span asp-validation-for="UserName" class="text-danger"></span>
+                                        <span class="text-danger">@ViewData["Loil"]</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Pass" class="control-label">Mật khẩu</label>
+                                        <input asp-for="Pass" type="password" placeholder="Nhập mật khẩu..." class="form-control" />
+                                        <span asp-validation-for="Pass" class="text-danger"></span>
+                                        <span class="text-danger">@ViewData["Loi2"]</span>
+                                    </div>
+                                    <div class="form-group text-center">
+                                        <input type="submit" value="Đăng Nhập" class="btn btn-primary btn-block" />
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <span class="or-divider">Hoặc</span>
+                                    </div>
+                                    <a class="form-group text-center google-login" href="@Url.Action("GoogleLogin", "NguoiDung")">
+                                        <i class="fab fa-google"></i> Đăng nhập bằng Google
+                                    </a>
+                                    <div class="text-center mt-3">
+                                        <a href="@Url.Action("ForgotPassword", "NguoiDung")" class="forgot-password">Quên mật khẩu?</a>
+                                    </div>
+                                    @if (ViewData["SuccessMessage"] != null)
+                                    {
+                                        <div class="alert alert-success" role="alert">
+                                            @ViewData["SuccessMessage"]
+                                        </div>
+                                    }
+                                </form>
                             </div>
-                            <div class="form-group">
-                                <label asp-for="Pass" class="control-label">Mật khẩu</label>
-                                <input asp-for="Pass" type="password" placeholder="Nhập mật khẩu..." class="form-control" />
-                                <span asp-validation-for="Pass" class="text-danger"></span>
-                                <span class="text-danger">@ViewData["Loi2"]</span>
+                        </div>
+                        <div class="col-md-6 coffee-image-container">
+                            <div class="coffee-image">
+                                <img src="~/images/hinhdai.jpg" alt="Alternate Text" style="width: 100%; height: 100%" />    
                             </div>
-                            <div class="form-group text-center">
-                                <input type="submit" value="Đăng Nhập" class="btn btn-primary btn-block" />
-                            </div>
-                            <div class="text-center mt-3">
-                                <span class="or-divider">Hoặc</span>
-                            </div>
-                            <a class="form-group text-center google-login" href="@Url.Action("GoogleLogin", "NguoiDung")">
-                                <i class="fab fa-google"></i> Đăng nhập bằng Google
-                            </a>
-                            <div class="text-center mt-3">
-                                <a href="@Url.Action("ForgotPassword", "NguoiDung")" class="forgot-password">Quên mật khẩu?</a>
-                            </div>
-                            @if (ViewData["SuccessMessage"] != null)
-                            {
-                                <div class="alert alert-success" role="alert">
-                                    @ViewData["SuccessMessage"]
-                                </div>
-                            }
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -72,35 +81,6 @@
         body {
             margin-top: 75px;
         }
-        .or-divider {
-            display: inline-block;
-            position: relative;
-            color: #FF6B95;
-            font-size: 1.2rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-            .or-divider:before,
-            .or-divider:after {
-                content: "";
-                position: absolute;
-                top: 50%;
-                width: 200%;
-                height: 1px;
-                background-color: #FF6B95;
-            }
-
-            .or-divider:before {
-                right: 100%;
-                margin-right: 10px;
-            }
-
-            .or-divider:after {
-                left: 100%;
-                margin-left: 10px;
-            }
 
         .colorful-bg {
             background: linear-gradient(45deg, #FF9A8B, #FF6B95, #FF8E53, #FFA647, #FFD700);
@@ -117,7 +97,7 @@
         }
 
         .login-body {
-            padding: 21px;
+            padding: 30px;
         }
 
         .login-title {
@@ -193,7 +173,7 @@
             border-radius: 30px;
             font-size: 1.2rem;
             font-weight: 600;
-            text-decoration: none; /* Loại bỏ gạch dưới */
+            text-decoration: none;
             transition: all 0.3s ease;
         }
 
@@ -201,7 +181,7 @@
                 background-color: #c33226;
                 transform: translateY(-3px);
                 box-shadow: 0 7px 20px rgba(219, 68, 55, 0.4);
-                text-decoration: none; /* Đảm bảo không có gạch dưới khi hover */
+                text-decoration: none;
             }
 
             .google-login i {
@@ -217,6 +197,57 @@
 
             .forgot-password:hover {
                 text-decoration: underline;
+            }
+
+        .coffee-image-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .coffee-image {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-image: url('path/to/your/coffee-image.jpg');
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.3s ease;
+        }
+
+            .coffee-image:hover {
+                transform: scale(1.1);
+            }
+
+        .or-divider {
+            display: inline-block;
+            position: relative;
+            color: #FF6B95;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+            .or-divider:before,
+            .or-divider:after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                width: 100%;
+                height: 1px;
+                background-color: #FF6B95;
+            }
+
+            .or-divider:before {
+                right: 100%;
+                margin-right: 10px;
+            }
+
+            .or-divider:after {
+                left: 100%;
+                margin-left: 10px;
             }
 
         df-messenger {

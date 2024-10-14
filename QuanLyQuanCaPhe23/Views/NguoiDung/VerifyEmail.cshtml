@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Xác minh Email";
+    Layout = "_NewLayout";
+}
+
+<div class="verification-container">
+    <h2>Mã xác minh</h2>
+    <div class="verification-form">
+        <form asp-action="VerifyEmail" method="post">
+            <div class="form-group">
+                <label for="verificationCode">Nhập mã xác minh:</label>
+                <input type="text" id="verificationCode" name="verificationCode" required maxlength="6" />
+            </div>
+            <button type="submit" class="btn-verify auth-button">Xác minh</button>
+        </form>
+    </div>
+    @if (ViewData["ErrorMessage"] != null)
+    {
+        <div class="error-message">@ViewData["ErrorMessage"]</div>
+    }
+</div>
+
+<style>
+    .verification-container {
+        margin-top: 75px !important;
+        max-width: 400px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background-color: #F5F1E6;
+        border-radius: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        color: #8B4513;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .verification-form {
+        margin-top: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #8B4513;
+        font-weight: bold;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+        border: 2px solid #8B4513;
+        border-radius: 20px;
+        background-color: #FFDAB9;
+        color: #8B4513;
+        transition: border-color 0.3s ease;
+    }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+    .btn-verify {
+        display: block;
+        width: 100%;
+        padding: 0.75rem;
+        margin-top: 1rem;
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    .error-message {
+        color: #ff3333;
+        margin-top: 1rem;
+        text-align: center;
+    }
+</style>
+
+<script>
+    document.getElementById('verificationCode').addEventListener('input', function (e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+</script>

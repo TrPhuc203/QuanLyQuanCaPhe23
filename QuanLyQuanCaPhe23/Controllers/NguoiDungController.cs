@@ -239,14 +239,14 @@ namespace QuanLyQuanCaPhe23.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DangKyAsync(IFormCollection collection)
         {
-            // Gán các giá tị người dùng nhập liệu cho các biến
-            HoKh = collection["HoKh"];
-            TenKh = collection["TenKh"];
-            UserName = collection["UserName"];
-            Pass = collection["Pass"];
-            DiaChi = collection["DiaChi"];
-            SoDienThoai = collection["SoDienThoai"];
-            Gmail = collection["Gmail"];
+            // Gán các giá trị người dùng nhập liệu cho các biến
+            var HoKh = collection["HoKh"];
+            var TenKh = collection["TenKh"];
+            var UserName = collection["UserName"];
+            var Pass = collection["Pass"];
+            var DiaChi = collection["DiaChi"];
+            var SoDienThoai = collection["SoDienThoai"];
+            var Gmail = collection["Gmail"];
             _httpContextAccessor.HttpContext.Session.SetString("HoKh", HoKh);
             _httpContextAccessor.HttpContext.Session.SetString("TenKh", TenKh);
             _httpContextAccessor.HttpContext.Session.SetString("UserName", UserName);
@@ -255,6 +255,7 @@ namespace QuanLyQuanCaPhe23.Controllers
             _httpContextAccessor.HttpContext.Session.SetString("SoDienThoai", SoDienThoai);
             _httpContextAccessor.HttpContext.Session.SetString("Gmail", Gmail);
 
+            // Kiểm tra các trường dữ liệu không được để trống
             if (String.IsNullOrEmpty(HoKh))
             {
                 ViewData["Loil"] = "Họ khách hàng không được để trống";
@@ -285,32 +286,114 @@ namespace QuanLyQuanCaPhe23.Controllers
             }
             else
             {
-                KhachHang existingUser = da.KhachHangs.SingleOrDefault(k => k.Gmail.Equals(Gmail));
-                if (existingUser != null)
+                // Kiểm tra tính duy nhất của số điện thoại và email trong cơ sở dữ liệu
+                var existingUserByEmail = await da.KhachHangs.SingleOrDefaultAsync(k => k.Gmail.Equals(Gmail));
+                var existingUserByPhone = await da.KhachHangs.SingleOrDefaultAsync(k => k.SoDienThoai.Equals(SoDienThoai));
+                var existingUserByUserName = await da.KhachHangs.SingleOrDefaultAsync(k => k.UserName.Equals(UserName));
+                if (existingUserByUserName != null)
+                {
+                    ModelState.AddModelError(string.Empty, "Tên đăng nhập đã được sử dụng.");
+                    return this.DangKy();
+                }
+                if (existingUserByEmail != null)
                 {
                     ModelState.AddModelError(string.Empty, "Email đã được sử dụng.");
                     return this.DangKy();
                 }
-                HoKh = _httpContextAccessor.HttpContext.Session.GetString("HoKh");
-                TenKh = _httpContextAccessor.HttpContext.Session.GetString("TenKh");
-                UserName = _httpContextAccessor.HttpContext.Session.GetString("UserName");
-                Pass = _httpContextAccessor.HttpContext.Session.GetString("Pass");
-                DiaChi = _httpContextAccessor.HttpContext.Session.GetString("DiaChi");
-                SoDienThoai = _httpContextAccessor.HttpContext.Session.GetString("SoDienThoai");
-                Gmail = _httpContextAccessor.HttpContext.Session.GetString("Gmail");
-                KhachHang kh = new KhachHang();
-                kh.HoKh = HoKh;
-                kh.TenKh = TenKh;
-                kh.UserName = UserName;
-                kh.Pass = Pass;
-                kh.DiaChi = DiaChi;
-                kh.SoDienThoai = SoDienThoai;
-                kh.Gmail = Gmail;
-                da.KhachHangs.Add(kh);
-                da.SaveChanges();
-                return RedirectToAction("Dangnhap");
+                if (existingUserByPhone != null)
+                {
+                    ModelState.AddModelError(string.Empty, "Số điện thoại đã được sử dụng.");
+                    return this.DangKy();
+                }
+
+                // Tạo mã xác minh và gửi qua email
+                var verificationCode = GenerateVerificationCode(); // Tạo mã xác minh
+                await SendVerificationEmail(Gmail, verificationCode); // Gửi mã xác minh qua email
+
+                // Lưu tạm thời thông tin người dùng vào session để xác minh
+                _httpContextAccessor.HttpContext.Session.SetString("HoKh", HoKh);
+                _httpContextAccessor.HttpContext.Session.SetString("TenKh", TenKh);
+                _httpContextAccessor.HttpContext.Session.SetString("UserName", UserName);
+                _httpContextAccessor.HttpContext.Session.SetString("Pass", Pass);
+                _httpContextAccessor.HttpContext.Session.SetString("DiaChi", DiaChi);
+                _httpContextAccessor.HttpContext.Session.SetString("SoDienThoai", SoDienThoai);
+                _httpContextAccessor.HttpContext.Session.SetString("Gmail", Gmail);
+                _httpContextAccessor.HttpContext.Session.SetString("VerificationCode", verificationCode); // Lưu mã xác minh
+
+                return RedirectToAction("VerifyEmail");
             }
             return this.DangKy();
+        }
+
+        public IActionResult VerifyEmail()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> VerifyEmail(string verificationCode)
+        {
+            var sessionCode = _httpContextAccessor.HttpContext.Session.GetString("VerificationCode");
+
+            if (verificationCode == sessionCode)
+            {
+                // Tạo mới khách hàng và lưu vào cơ sở dữ liệu
+                KhachHang kh = new KhachHang
+                {
+                    HoKh = _httpContextAccessor.HttpContext.Session.GetString("HoKh"),
+                    TenKh = _httpContextAccessor.HttpContext.Session.GetString("TenKh"),
+                    UserName = _httpContextAccessor.HttpContext.Session.GetString("UserName"),
+                    Pass = _httpContextAccessor.HttpContext.Session.GetString("Pass"),
+                    DiaChi = _httpContextAccessor.HttpContext.Session.GetString("DiaChi"),
+                    SoDienThoai = _httpContextAccessor.HttpContext.Session.GetString("SoDienThoai"),
+                    Gmail = _httpContextAccessor.HttpContext.Session.GetString("Gmail")
+                };
+
+                da.KhachHangs.Add(kh);
+                await da.SaveChangesAsync();
+
+                // Xóa thông tin trong session sau khi hoàn tất
+                _httpContextAccessor.HttpContext.Session.Remove("VerificationCode");
+                _httpContextAccessor.HttpContext.Session.Remove("HoKh");
+                _httpContextAccessor.HttpContext.Session.Remove("TenKh");
+                _httpContextAccessor.HttpContext.Session.Remove("UserName");
+                _httpContextAccessor.HttpContext.Session.Remove("Pass");
+                _httpContextAccessor.HttpContext.Session.Remove("DiaChi");
+                _httpContextAccessor.HttpContext.Session.Remove("SoDienThoai");
+                _httpContextAccessor.HttpContext.Session.Remove("Gmail");
+
+                return RedirectToAction("Dangnhap");
+            }
+
+            ViewData["ErrorMessage"] = "Mã xác minh không đúng.";
+            return View();
+        }
+
+        private string GenerateVerificationCode()
+        {
+            // Tạo mã xác minh ngẫu nhiên, có thể là 6 chữ số
+            var random = new Random();
+            return random.Next(100000, 999999).ToString();
+        }
+
+        private async Task SendVerificationEmail(string email, string verificationCode)
+        {
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress("trongphuc1321@gmail.com"),
+                Subject = "Mã xác minh đăng ký tài khoản",
+                Body = $"Mã xác minh của bạn là: {verificationCode}",
+                IsBodyHtml = true
+            };
+            mailMessage.To.Add(email);
+
+            using (var smtpClient = new SmtpClient("smtp.gmail.com", 587))
+            {
+                smtpClient.Credentials = new NetworkCredential("trongphuc1321@gmail.com", "wpwz qkyu pgju oaug");
+                smtpClient.EnableSsl = true;
+                await smtpClient.SendMailAsync(mailMessage);
+            }
         }
 
         public ActionResult DangNhap()
@@ -525,6 +608,15 @@ namespace QuanLyQuanCaPhe23.Controllers
                     .OrderByDescending(dh => dh.NgayTao)
                     .ToList();
 
+                foreach (var donHang in dsDonHang)
+                {
+                    var hoursSinceOrder = donHang.NgayTao.HasValue ? (DateTime.Now - donHang.NgayTao.Value).TotalHours : double.MaxValue;
+                    if (hoursSinceOrder > 3 && donHang.TrangThai != "Đã hủy")
+                    {
+                        donHang.TrangThai = "Đã giao"; // Cập nhật trạng thái
+                    }
+                }
+
                 if (!dsDonHang.Any())
                 {
                     ViewBag.Message = "Bạn chưa có đơn hàng nào.";
@@ -542,10 +634,11 @@ namespace QuanLyQuanCaPhe23.Controllers
                 return RedirectToAction("DangNhap");
             }
         }
+
         public IActionResult HuyDonHang(int id)
         {
             var donHang = _context.DonHangs.Include(d => d.ChiTietDonHangs)
-                                          .FirstOrDefault(d => d.Id == id);
+                                           .FirstOrDefault(d => d.Id == id);
             if (donHang == null)
             {
                 return NotFound();
@@ -554,17 +647,17 @@ namespace QuanLyQuanCaPhe23.Controllers
             if (donHang.NgayTao.HasValue)
             {
                 // Tính khoảng thời gian giữa hiện tại và ngày tạo
-                var daysSinceCreation = (DateTime.Now - donHang.NgayTao.Value).TotalDays;
+                var hoursSinceCreation = (DateTime.Now - donHang.NgayTao.Value).TotalHours;
 
-                if (daysSinceCreation <= 1)
+                if (hoursSinceCreation <= 3)
                 {
-                    // Nếu đơn hàng trong ngày, thì có thể hủy và xóa chi tiết đơn hàng
+                    // Nếu đơn hàng trong vòng 3 giờ, thì có thể hủy và xóa chi tiết đơn hàng
                     _context.ChiTietDonHangs.RemoveRange(donHang.ChiTietDonHangs);
                     _context.DonHangs.Remove(donHang);
                 }
                 else
                 {
-                    // Nếu đơn hàng quá 1 ngày, thì chỉ cập nhật trạng thái
+                    // Nếu đơn hàng quá 3 giờ, thì chỉ cập nhật trạng thái
                     donHang.TrangThai = "Đã hủy";
                 }
 
@@ -580,6 +673,7 @@ namespace QuanLyQuanCaPhe23.Controllers
 
             return RedirectToAction("LichSuDonHang");
         }
+
         // GET: NguoiDungController/DoiDiaChi
         public IActionResult DoiDiaChi()
         {

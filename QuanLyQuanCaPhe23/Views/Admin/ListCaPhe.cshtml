@@ -3,12 +3,13 @@
 @{
     ViewData["Title"] = "Danh sách cà phê";
 }
+
 <style>
     body {
         margin-top: 75px;
         background-color: #f8f9fa;
         color: #343a40;
-        font-family: 'Arial', sans-serif;
+        font-family: 'Roboto', sans-serif;
     }
 
     .container {
@@ -16,50 +17,165 @@
     }
 
     .card {
-        margin-bottom: 20px;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
     }
 
-    .btn-block {
-        display: block;
-        width: 100%;
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+    .search-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+
+    .search-box, .filter-box, .price-box {
+        position: relative;
+        flex: 1;
+        margin-right: 15px;
+    }
+
+    .search-input, .filter-select, .price-input {
+        width: 100%;
+        padding: 12px 40px 12px 15px;
+        border: 1px solid #ced4da;
+        border-radius: 25px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+        .search-input:focus, .filter-select:focus, .price-input:focus {
+            outline: none;
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .search-icon, .select-icon, .price-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+    }
+
+    .search-btn {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+        .search-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
 
     .table {
-        font-size: 1rem;
+        background-color: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-    th, td {
-        text-align: center;
-        vertical-align: middle;
-    }
+        .table th {
+            background-color: #343a40;
+            color: #fff;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
-    .thead-dark th {
-        background-color: #343a40;
-        color: #ffffff;
-    }
+        .table td {
+            vertical-align: middle;
+        }
 
     .btn-group .btn {
+        border-radius: 20px;
+        padding: 5px 15px;
+        font-size: 0.9rem;
         margin-right: 5px;
+        transition: all 0.3s ease;
     }
 
+        .btn-group .btn:hover {
+            transform: translateY(-2px);
+        }
+
     .pagination {
-        margin-bottom: 20px;
+        margin-top: 30px;
     }
 
         .pagination .page-link {
+            border-radius: 50%;
+            margin: 0 5px;
             color: #007bff;
+            transition: all 0.3s ease;
         }
 
             .pagination .page-link:hover {
-                color: #0056b3;
+                background-color: #007bff;
+                color: #fff;
             }
 
         .pagination .page-item.active .page-link {
             background-color: #007bff;
             border-color: #007bff;
-            color: #ffffff;
         }
+
+    .img-fluid {
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+        .img-fluid:hover {
+            transform: scale(1.05);
+        }
+
+    back_to_top {
+        position: fixed;
+        bottom: 20px;
+        right: 40px;
+        font-size: 18px;
+        width: 40px;
+        height: 40px;
+        color: #fff;
+        background-color: #0a5e98;
+        border: none;
+        cursor: pointer;
+        border-radius: 50%;
+        outline: none;
+        transition-duration: 0.2s;
+        transition-timing-function: ease-in-out;
+        transition-property: backround-color, color;
+    }
+
+    #back_to_top:hover,
+    #back_to_top:focus {
+        background-color: #71afd5;
+        color: white;
+    }
+
+    .button_entrance {
+        animation-duration: 0.5s;
+        animation-fill-mode: both;
+        animation-name: button_entrance;
+    }
 </style>
+
 <div class="container mt-5">
     @section Scripts {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
@@ -94,6 +210,9 @@
             });
         </script>
     }
+
+    <h1 class="text-center mb-5">Quản lý Danh sách Cà phê</h1>
+
     <form asp-action="ListCaPhe" method="get">
         <div class="search-wrapper">
             <div class="search-box">
@@ -120,53 +239,66 @@
         </div>
     </form>
 
-   <nav aria-label="Page navigation" class="mt-5">
-        <ul class="pagination justify-content-center">
-            @for (int i = 1; i <= (int)ViewData["TotalPages"]; i++)
-            {
-                <li class="page-item @(i == (int)ViewData["CurrentPage"] ? "active" : "")">
-                    <a class="page-link" href="/Admin/ListCaPhe?page=@i&kw=@ViewData["FilterKw"]&size=@ViewData["FilterSize"]&gia=@ViewData["FilterGia"]">@i</a>
-                </li>
-            }
-        </ul>
-    </nav>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a asp-action="Create" class="btn btn-success">
+            <i class="fas fa-plus-circle mr-2"></i>Thêm mới cà phê
+        </a>
+        <nav aria-label="Page navigation">
+            <ul class="pagination mb-0">
+                @for (int i = 1; i <= (int)ViewData["TotalPages"]; i++)
+                {
+                    <li class="page-item @(i == (int)ViewData["CurrentPage"] ? "active" : "")">
+                        <a class="page-link" href="/Admin/ListCaPhe?page=@i&kw=@ViewData["FilterKw"]&size=@ViewData["FilterSize"]&gia=@ViewData["FilterGia"]">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
 
-    <p>
-        <a asp-action="Create" class="btn btn-success mb-4">Thêm mới cà phê</a>
-    </p>
-
-    <table class="table table-hover table-striped">
-        <thead class="thead-dark">
-            <tr>
-                <th>Ảnh</th>
-                <th>Tên cà phê</th>
-                <th>Miêu tả</th>
-                <th>Size</th>
-                <th>Giá tiền</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
                 <tr>
-                    <td>
-                        <img src="@Html.DisplayFor(modelItem => item.Anh)" alt="@item.Ten" class="img-fluid rounded" width="100px" />
-                    </td>
-                    <td>@Html.DisplayFor(modelItem => item.Ten)</td>
-                    <td>@Html.DisplayFor(modelItem => item.MieuTa)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Size.Ten)</td>
-                    <td>@string.Format("{0:N0} VNĐ", item.Tien)</td> <!-- Định dạng giá tiền -->
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Sửa</a>
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Chi tiết</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Xóa</a>
-                    </td>
+                    <th>Ảnh</th>
+                    <th>Tên cà phê</th>
+                    <th>Miêu tả</th>
+                    <th>Size</th>
+                    <th>Giá tiền</th>
+                    <th>Hành động</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-    <script>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <img src="@Html.DisplayFor(modelItem => item.Anh)" alt="@item.Ten" class="img-fluid rounded" width="100px" />
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.Ten)</td>
+                        <td>@Html.DisplayFor(modelItem => item.MieuTa)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Size.Ten)</td>
+                        <td>@string.Format("{0:N0} VNĐ", item.Tien)</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-edit"></i> Sửa
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">
+                                    <i class="fas fa-info-circle"></i> Chi tiết
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash-alt"></i> Xóa
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<button id="back_to_top"><i class="fa-solid fa-angles-up"></i></button>
+<script>
     document.addEventListener("DOMContentLoaded", function () {
         var selectedSize = "@ViewData["FilterSize"]";
         var selectElement = document.getElementById("filter2");
@@ -180,6 +312,33 @@
             priceElement.value = selectedGia;
         }
     });
-    </script>
-</div>
+    
+    /*Back to top button*/
+    const backToTopbtn = document.querySelector("#back_to_top");
+    window.addEventListener("scroll", scrollFunction);
 
+    function scrollFunction() {
+        if (window.pageYOffset > 1000) {  //show backtotop
+            if (!backToTopbtn.classList.contains("button_entrance")) {
+                backToTopbtn.classList.remove("button_exit");
+                backToTopbtn.classList.add("button_entrance");
+
+                backToTopbtn.style.display = "block";
+            }
+        }
+        else { //hidden backtotop
+            if (backToTopbtn.classList.contains("button_entrance")) {
+                backToTopbtn.classList.remove("button_entrance");
+                backToTopbtn.classList.add("button_exit");
+                setTimeout(function () {
+                    backToTopbtn.style.display = "none";
+                }, 200);
+            }
+        }
+        backToTopbtn.addEventListener("click", backtotop);
+
+        function backtotop() {
+            window.scrollTo(0, 0);
+        }
+    }
+</script>

@@ -34,6 +34,11 @@
                 transform: scaleX(1);
                 transform-origin: bottom left;
             }
+
+            .menu-item.active::after {
+                transform: scaleX(1);
+                transform-origin: bottom left;
+            }
         .container {
             max-width: 1180px;
         }
@@ -256,10 +261,19 @@
                                 <a class="nav-link menu-item" asp-area="" asp-controller="Home" asp-action="TrangChu" style="color: #8B4513 !important; font-weight: 400">Về trang chủ</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link menu-item" asp-area="" asp-controller="NguoiDung" asp-action="LichSuDonHang" style="color: #8B4513 !important; font-weight: 400">Lịch sử Đơn hàng</a>
+                                <a class="nav-link menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "LichSuDonHang" ? "active" : "")"
+                                   asp-area="" asp-controller="NguoiDung" asp-action="LichSuDonHang"
+                                   style="color: #8B4513 !important; font-weight: 400">Lịch sử Đơn hàng</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link menu-item" asp-area="" asp-controller="NguoiDung" asp-action="ListCaphe" style="color: #8B4513 !important; font-weight: 400">Danh sách cà phê</a>
+                                <a class="nav-link menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "ListCaphe" ? "active" : "")"
+                                   asp-area="" asp-controller="NguoiDung" asp-action="ListCaphe"
+                                   style="color: #8B4513 !important; font-weight: 400">Danh sách cà phê</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "ListCarts" ? "active" : "")"
+                                   asp-area="" asp-controller="GioHang" asp-action="ListCarts"
+                                   style="color: #8B4513 !important; font-weight: 400">Giỏ hàng</a>
                             </li>
                         }
                     </ul>

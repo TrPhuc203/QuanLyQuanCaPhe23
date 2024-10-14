@@ -1,107 +1,166 @@
 ﻿@model QuanLyQuanCaPhe23.Models.CaPhe
 
 @{
-    ViewData["Title"] = "Sửa thông tin";
+    ViewData["Title"] = "Sửa thông tin cà phê";
 }
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <div class="container mt-5">
-    <div class="card shadow-lg p-3 mb-5 bg-white rounded">
-        <div class="card-body">
-            <h1 class="text-center mb-4">SỬA THÔNG TIN MÓN CÀ PHÊ</h1>
-            <hr />
-            <div class="row">
-                <div class="col-md-6 offset-md-3">
-                    <form asp-action="Edit" method="post" enctype="multipart/form-data">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <div class="card shadow-lg border-0 rounded-lg overflow-hidden">
+        <div class="card-header bg-gradient-coffee text-white text-center py-4">
+            <h2 class="font-weight-bold mb-0">SỬA THÔNG TIN MÓN CÀ PHÊ</h2>
+        </div>
+        <div class="card-body p-5">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
                         <div class="form-group">
-                            <label asp-for="Anh" class="control-label">Ảnh</label>
-                            <div class="mb-3">
-                                <img src="@Model.Anh" alt="Ảnh" class="img-fluid rounded shadow-sm" width="200px" />
+                            <label asp-for="Anh" class="form-label">Ảnh hiện tại</label>
+                            <div class="position-relative mb-3">
+                                <img src="@Model.Anh" alt="Ảnh cà phê" class="img-fluid rounded shadow-sm d-block" style="max-width: 200px;" />
+                                <div class="position-absolute top-0 end-0">
+                                    <label for="Anh" class="btn btn-sm btn-primary rounded-circle">
+                                        <i class="fas fa-camera"></i>
+                                    </label>
+                                </div>
                             </div>
-                            <input type="file" name="Anh" asp-for="Anh" class="form-control" />
-                            <span asp-validation-for="Anh" class="text-danger"></span>
+                            <input type="file" id="Anh" name="Anh" asp-for="Anh" class="form-control d-none" onchange="previewImage(this);" />
+                            <span asp-validation-for="Anh" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Ten" class="form-label">Tên cà phê</label>
+                            <input asp-for="Ten" class="form-control" placeholder="Nhập tên cà phê" />
+                            <span asp-validation-for="Ten" class="text-danger small"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="Ten" class="control-label">Tên</label>
-                            <input asp-for="Ten" class="form-control" />
-                            <span asp-validation-for="Ten" class="text-danger"></span>
+                            <label asp-for="MieuTa" class="form-label">Miêu tả</label>
+                            <textarea asp-for="MieuTa" class="form-control" rows="3" placeholder="Nhập miêu tả"></textarea>
+                            <span asp-validation-for="MieuTa" class="text-danger small"></span>
                         </div>
-                        <div class="form-group">
-                            <label asp-for="MieuTa" class="control-label">Miêu tả</label>
-                            <textarea asp-for="MieuTa" class="form-control"></textarea>
-                            <span asp-validation-for="MieuTa" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="SizeId" class="control-label">Size</label>
-                            <select asp-for="SizeId" class="form-control" asp-items="@(ViewData["Sizes"] as SelectList)"></select>
-                            <span asp-validation-for="SizeId" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Tien" class="control-label">Giá tiền</label>
-                            <input asp-for="Tien" class="form-control" value="@string.Format("{0:N0}", Model.Tien)" />
-                            <span asp-validation-for="Tien" class="text-danger"></span>
-                        </div>
-                        <div class="form-group text-center">
-                            <input type="submit" value="Lưu" class="btn btn-primary btn-lg" />
-                            <a asp-action="ListCaPhe" class="btn btn-secondary btn-lg ml-2">Trở về danh sách</a>
-                        </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="SizeId" class="form-label">Size</label>
+                            <select asp-for="SizeId" class="form-control custom-select" asp-items="@(ViewData["Sizes"] as SelectList)"></select>
+                            <span asp-validation-for="SizeId" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Tien" class="form-label">Giá tiền</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">VNĐ</span>
+                                </div>
+                                <input asp-for="Tien" class="form-control" value="@string.Format("{0:N0}", Model.Tien)" placeholder="Nhập giá tiền" />
+                            </div>
+                            <span asp-validation-for="Tien" class="text-danger small"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="ListCaPhe" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Trở về danh sách
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save mr-2"></i>Lưu thay đổi
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('img').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 }
 
 <style>
     body {
-        margin-top: 75px;
-        background-color: #f8f9fa !important;
-        color: #343a40 !important;
-        font-family: 'Arial', sans-serif;
+        margin-top: 10px;
+        background-color: #f8f9fa;
+        font-family: 'Roboto', sans-serif;
+    }
+    .container .mt-5{
+        margin-bottom: 60px;
+    }
+    .container {
+        max-width: 1100px;
     }
 
-    .container {
-        max-width: 800px !important;
+    .bg-gradient-coffee {
+        background: linear-gradient(45deg, #6F4E37, #B5651D);
     }
 
     .card {
-        border: none !important;
+        border: none;
+        transition: all 0.3s ease;
     }
 
-    .card-body {
-        padding: 2rem !important;
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+
+    .form-control, .custom-select {
+        border-radius: 0.25rem;
+        border: 1px solid #ced4da;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     }
 
-    .img-fluid {
-        border-radius: 0.25rem !important;
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+        .form-control:focus, .custom-select:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .btn {
+        border-radius: 0.25rem;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
     }
 
-    .form-group {
-        margin-bottom: 1.5rem !important;
-    }
-
-    .btn-lg {
-        font-size: 1.25rem !important;
-    }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
 
     .btn-primary {
-        background-color: #007bff !important;
-        border-color: #007bff !important;
+        background-color: #007bff;
+        border-color: #007bff;
     }
 
-    .btn-secondary {
-        background-color: #6c757d !important;
-        border-color: #6c757d !important;
+    .btn-outline-secondary {
+        color: #6c757d;
+        border-color: #6c757d;
     }
 
-    .text-center {
-        text-align: center !important;
-    }
+        .btn-outline-secondary:hover {
+            color: #fff;
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
 </style>

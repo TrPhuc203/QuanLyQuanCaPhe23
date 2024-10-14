@@ -140,6 +140,36 @@
                 font-size: 1.25rem;
                 color: #7f8c8d;
             }
+
+        back_to_top {
+            position: fixed;
+            bottom: 20px;
+            right: 40px;
+            font-size: 18px;
+            width: 40px;
+            height: 40px;
+            color: #fff;
+            background-color: #0a5e98;
+            border: none;
+            cursor: pointer;
+            border-radius: 50%;
+            outline: none;
+            transition-duration: 0.2s;
+            transition-timing-function: ease-in-out;
+            transition-property: backround-color, color;
+        }
+
+        #back_to_top:hover,
+        #back_to_top:focus {
+            background-color: #71afd5;
+            color: white;
+        }
+
+        .button_entrance {
+            animation-duration: 0.5s;
+            animation-fill-mode: both;
+            animation-name: button_entrance;
+        }
     </style>
 </head>
 <body>
@@ -150,7 +180,7 @@
         {
             foreach (var donHang in Model)
             {
-                var daysSinceOrder = donHang.NgayTao.HasValue ? (DateTime.Now - donHang.NgayTao.Value).TotalDays : double.MaxValue;
+                var hoursSinceOrder = donHang.NgayTao.HasValue ? (DateTime.Now - donHang.NgayTao.Value).TotalHours : double.MaxValue;
                 <div class="order-card">
                     <div class="order-header">
                         <span>Mã đơn hàng: #@donHang.Id</span>
@@ -178,7 +208,7 @@
                                 </li>
                             }
                         </ul>
-                        @if (daysSinceOrder <= 1 && donHang.TrangThai != "Đã hủy")
+                        @if (hoursSinceOrder <= 3 && donHang.TrangThai != "Đã hủy")
                         {
                             <button class="btn-cancel" onclick="return confirmDelete(@donHang.Id);">
                                 <i class="fas fa-times-circle"></i> Hủy đơn
@@ -196,8 +226,7 @@
             </div>
         }
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <button id="back_to_top"><i class="fa-solid fa-angles-up"></i></button>
     <script>
         function confirmDelete(id) {
             event.preventDefault();
@@ -217,6 +246,35 @@
             });
             return false;
         }
+        /*Back to top button*/
+        const backToTopbtn = document.querySelector("#back_to_top");
+        window.addEventListener("scroll", scrollFunction);
+
+        function scrollFunction() {
+            if (window.pageYOffset > 1000) {  //show backtotop
+                if (!backToTopbtn.classList.contains("button_entrance")) {
+                    backToTopbtn.classList.remove("button_exit");
+                    backToTopbtn.classList.add("button_entrance");
+
+                    backToTopbtn.style.display = "block";
+                }
+            }
+            else { //hidden backtotop
+                if (backToTopbtn.classList.contains("button_entrance")) {
+                    backToTopbtn.classList.remove("button_entrance");
+                    backToTopbtn.classList.add("button_exit");
+                    setTimeout(function () {
+                        backToTopbtn.style.display = "none";
+                    }, 200);
+                }
+            }
+            backToTopbtn.addEventListener("click", backtotop);
+
+            function backtotop() {
+                window.scrollTo(0, 0);
+            }
+        }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

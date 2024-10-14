@@ -34,11 +34,10 @@
     <PackageReference Include="Sek.Module.Payment.VnPay.AspNetCore" Version="1.0.0" />
     <PackageReference Include="Sek.Module.Payment.VnPay.Common" Version="1.0.0" />
     <PackageReference Include="Sek.Module.Payment.VnPay.Core" Version="1.0.0" />
-    <PackageReference Include="Twilio" Version="7.1.0" />
+    <PackageReference Include="Twilio" Version="7.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="JS\" />
     <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\fonts\" />
   </ItemGroup>

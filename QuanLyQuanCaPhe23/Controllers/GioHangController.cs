@@ -203,6 +203,7 @@ namespace QuanLyQuanCaPhe23.Controllers
 
             var khachHang = da.KhachHangs.Find(MaKH);
             string userName = khachHang.HoKh + " " + khachHang.TenKh;
+            string customerEmail = khachHang.Gmail;
 
             var hubContext = (IHubContext<NotificationHub>)HttpContext.RequestServices.GetService(typeof(IHubContext<NotificationHub>));
             await hubContext.Clients.All.SendAsync("ReceiveNotification", o.Id, userName);
@@ -239,13 +240,25 @@ namespace QuanLyQuanCaPhe23.Controllers
             {
                 From = new MailAddress("trongphuc1321@gmail.com"),
                 Subject = "Thông báo thanh toán đơn hàng",
-                Body = $"Đơn hàng #{o.Id} đã được thanh toán thành công." +
+                Body = $"Đơn hàng #{o.Id} sẽ được thanh toán tại quầy." +
                $"<br/>Người mua: {userName}" +
+               $"<br/>Số điện thoại: {khachHang.SoDienThoai}" +
                $"<br/><br/>Chi tiết sản phẩm:<br/>{productDetails.ToString()}",
                 IsBodyHtml = true
             };
             mailMessage.To.Add(adminEmail); // Gửi mã OTP đến email người dùng đã đăng ký
 
+            // Gửi email cho khách hàng
+            var customerMailMessage = new MailMessage
+            {
+                From = new MailAddress("trongphuc1321@gmail.com"),
+                Subject = "Xác nhận đơn hàng",
+                Body = $"Đơn hàng #{o.Id} của bạn đã được ghi nhận. Vui lòng đến quầy để thanh toán." +
+                       $"<br/><br/>Số điện thoại: {khachHang.SoDienThoai}" +
+                       $"<br/><br/>Chi tiết sản phẩm:<br/>{productDetails.ToString()}",
+                IsBodyHtml = true
+            };
+            customerMailMessage.To.Add(customerEmail); // Gửi đến email khách hàng
             // Gửi email
             try
             {
@@ -253,11 +266,16 @@ namespace QuanLyQuanCaPhe23.Controllers
                 {
                     smtpClient.Credentials = new NetworkCredential("trongphuc1321@gmail.com", "wpwz qkyu pgju oaug");
                     smtpClient.EnableSsl = true;
-                    await smtpClient.SendMailAsync(mailMessage);
-                }
 
-                // Thông báo thành công
-                ViewData["Message"] = "Đơn hàng thanh toán đã gửi đến gmail của Admin";
+                    // Gửi email cho admin
+                    await smtpClient.SendMailAsync(mailMessage);
+
+                    // Gửi email cho khách hàng
+                    await smtpClient.SendMailAsync(customerMailMessage);
+
+                    // Thông báo thành công
+                    ViewData["Message"] = "Đơn hàng thanh toán đã gửi đến email của Admin và Khách hàng";
+                }
             }
             catch (SmtpException ex)
             {
@@ -413,6 +431,7 @@ namespace QuanLyQuanCaPhe23.Controllers
                         Subject = "Thông báo thanh toán đơn hàng",
                         Body = $"Đơn hàng #{o.Id} đã được thanh toán thành công." +
                        $"<br/>Người mua: {userName}" +
+                       $"<br/>Số điện thoại: {khachHang.SoDienThoai}" +
                        $"<br/><br/>Chi tiết sản phẩm:<br/>{productDetails.ToString()}",
                         IsBodyHtml = true
                     };

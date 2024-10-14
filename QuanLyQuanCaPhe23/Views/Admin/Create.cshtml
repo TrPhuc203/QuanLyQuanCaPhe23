@@ -2,58 +2,223 @@
 
 @{
     ViewData["Title"] = "Thêm món cà phê";
+    Layout = "_Layout";
 }
+<title>@ViewData["Title"]</title>
+<div class="coffee-add-page">
+    <div class="container">
+        <div class="coffee-add-card">
+            <div class="card-header">
+                <h2>Thêm Món Cà Phê Mới</h2>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-<div class="container mt-5">
-    <div class="card shadow-lg p-3 mb-5 bg-white rounded">
-        <div class="card-body">
-            <h1 class="text-center mb-4">Thêm món cà phê mới</h1>
-            <hr />
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <form asp-action="Create" method="post" enctype="multipart/form-data">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="form-group">
-                            <label asp-for="Anh" class="control-label">Ảnh</label>
-                            <input type="file" name="Anh" asp-for="Anh" class="form-control" />
-                            <span asp-validation-for="Anh" class="text-danger"></span>
+                    <div class="form-group">
+                        <label asp-for="Anh">Ảnh sản phẩm</label>
+                        <div class="custom-file-upload">
+                            <input type="file" name="Anh" asp-for="Anh" id="coffee-image" class="custom-file-input">
+                            <label for="coffee-image">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Chọn file ảnh</span>
+                            </label>
                         </div>
-                        <div class="form-group">
-                            <label asp-for="Ten" class="control-label">Tên</label>
-                            <input asp-for="Ten" class="form-control" />
-                            <span asp-validation-for="Ten" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="MieuTa" class="control-label">Miêu tả</label>
-                            <textarea asp-for="MieuTa" class="form-control"></textarea>
-                            <span asp-validation-for="MieuTa" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="SizeId" class="control-label">Size</label>
-                            <select asp-for="SizeId" class="form-control" asp-items="@(ViewData["Sizes"] as SelectList)"></select>
+                        <span asp-validation-for="Anh" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Ten">Tên cà phê</label>
+                        <input asp-for="Ten" class="form-control" placeholder="Nhập tên cà phê" />
+                        <span asp-validation-for="Ten" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="MieuTa">Mô tả</label>
+                        <textarea asp-for="MieuTa" class="form-control" rows="3" placeholder="Mô tả hương vị, đặc điểm..."></textarea>
+                        <span asp-validation-for="MieuTa" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="SizeId">Kích cỡ</label>
+                            <select asp-for="SizeId" class="form-control custom-select" asp-items="@(ViewData["Sizes"] as SelectList)">
+                                <option value="">-- Chọn kích cỡ --</option>
+                            </select>
                             <span asp-validation-for="SizeId" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
-                            <label asp-for="Tien" class="control-label">Giá tiền</label>
-                            <input asp-for="Tien" class="form-control" />
+                        <div class="form-group col-md-6">
+                            <label asp-for="Tien">Giá bán</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">VNĐ</span>
+                                </div>
+                                <input asp-for="Tien" class="form-control" placeholder="Nhập giá bán" />
+                            </div>
                             <span asp-validation-for="Tien" class="text-danger"></span>
                         </div>
-                        <div class="form-group text-center">
-                            <input type="submit" value="Thêm Mới" class="btn btn-success btn-lg" />
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="text-center mt-3">
-                <a asp-action="ListCaPhe" class="btn btn-primary">Trở về danh sách</a>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus-circle"></i> Thêm Mới
+                        </button>
+                        <a asp-action="ListCaPhe" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Trở Về
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
+<style>
+    .coffee-add-page {
+        background: linear-gradient(135deg, #6e4a2c, #3c2415);
+        min-height: 100vh;
+        padding: 50px 0;
+    }
+
+    .coffee-add-card {
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .card-header {
+        background-color: #4a3223;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+    }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+    .card-body {
+        padding: 40px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    label {
+        font-weight: 600;
+        color: #4a3223;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .form-control {
+        border: 2px solid #e1e1e1;
+        border-radius: 8px;
+        padding: 6px 15px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: #4a3223;
+            box-shadow: 0 0 0 0.2rem rgba(74, 50, 35, 0.25);
+        }
+
+    .custom-file-upload {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+    }
+
+        .custom-file-upload input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+
+        .custom-file-upload label {
+            display: block;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+            .custom-file-upload label:hover {
+                background-color: #e9ecef;
+            }
+
+        .custom-file-upload i {
+            margin-right: 10px;
+        }
+
+    .input-group-text {
+        background-color: #4a3223;
+        color: #fff;
+        border: none;
+    }
+
+    .form-actions {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .btn {
+        padding: 12px 25px;
+        font-size: 16px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #4a3223;
+        border-color: #4a3223;
+    }
+
+        .btn-primary:hover {
+            background-color: #3c2415;
+            border-color: #3c2415;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+    .btn i {
+        margin-right: 8px;
+    }
+</style>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        $(document).ready(function () {
+            $('#coffee-image').change(function () {
+                var fileName = $(this).val().split('\\').pop();
+                $(this).next('label').find('span').html(fileName);
+            });
+        });
+    </script>
 }
-

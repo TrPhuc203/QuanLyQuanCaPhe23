@@ -70,5 +70,33 @@
             let ctx1 = document.getElementById("myChart").getContext('2d');
             drawChartTheoSoLuong(ctx1, labels, data, "THỐNG KÊ SỐ LƯỢNG SẢN PHẨM BÁN");
         }
+    function drawChartTheoSoLuong(ctx, labels, data, title) {
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: title,
+                    data: data,
+                    backgroundColor: ['red', 'green', 'blue', 'gold', 'brown', 'orange']
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        ticks: {
+                            beginAtZero: true,
+                            stepSize: 1, // Đặt bước nhảy của trục y là 1
+                            callback: function (value) {
+                                if (Number.isInteger(value)) {
+                                    return value; // Chỉ hiển thị số nguyên
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
 </script>
 

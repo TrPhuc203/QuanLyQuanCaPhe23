@@ -8,7 +8,7 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link rel="stylesheet" href="~/css/card.css">
-
+<title>@ViewData["Title"]</title>
 <div class="container mt-5">
     <div class="product-details-container">
         <div class="product-image-container">
@@ -94,13 +94,56 @@
         <p>Bạn cần <a asp-action="DangNhap" asp-controller="NguoiDung">đăng nhập</a> để bình luận.</p>
     }
 </div>
-
+<button id="back_to_top"><i class="fa-solid fa-angles-up"></i></button>
 <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
 <df-messenger intent="WELCOME"
               chat-title="CSKH-PPK-Coffee"
               agent-id="66dfadc2-e7dc-4761-9ada-f796b9eabad2"
               language-code="vi"></df-messenger>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var selectedSize = "@ViewData["FilterSize"]";
+        var selectElement = document.getElementById("filter2");
+        if (selectedSize) {
+            selectElement.value = selectedSize;
+        }
 
+        var selectedGia = "@ViewData["FilterGia"]";
+        var priceElement = document.getElementById("filter3");
+        if (selectedGia) {
+            priceElement.value = selectedGia;
+        }
+    });
+
+    /*Back to top button*/
+    const backToTopbtn = document.querySelector("#back_to_top");
+    window.addEventListener("scroll", scrollFunction);
+
+    function scrollFunction() {
+        if (window.pageYOffset > 1000) {  //show backtotop
+            if (!backToTopbtn.classList.contains("button_entrance")) {
+                backToTopbtn.classList.remove("button_exit");
+                backToTopbtn.classList.add("button_entrance");
+
+                backToTopbtn.style.display = "block";
+            }
+        }
+        else { //hidden backtotop
+            if (backToTopbtn.classList.contains("button_entrance")) {
+                backToTopbtn.classList.remove("button_entrance");
+                backToTopbtn.classList.add("button_exit");
+                setTimeout(function () {
+                    backToTopbtn.style.display = "none";
+                }, 200);
+            }
+        }
+        backToTopbtn.addEventListener("click", backtotop);
+
+        function backtotop() {
+            window.scrollTo(0, 0);
+        }
+    }
+</script>
 <style>
     body {
         margin-top: 75px;
@@ -266,5 +309,35 @@
         border: none;
         border-radius: 4px;
         cursor: pointer;
+    }
+
+    back_to_top {
+        position: fixed;
+        bottom: 20px;
+        right: 40px;
+        font-size: 18px;
+        width: 40px;
+        height: 40px;
+        color: #fff;
+        background-color: #0a5e98;
+        border: none;
+        cursor: pointer;
+        border-radius: 50%;
+        outline: none;
+        transition-duration: 0.2s;
+        transition-timing-function: ease-in-out;
+        transition-property: backround-color, color;
+    }
+
+    #back_to_top:hover,
+    #back_to_top:focus {
+        background-color: #71afd5;
+        color: white;
+    }
+
+    .button_entrance {
+        animation-duration: 0.5s;
+        animation-fill-mode: both;
+        animation-name: button_entrance;
     }
 </style>

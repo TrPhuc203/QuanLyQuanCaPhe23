@@ -1,9 +1,194 @@
 ﻿@{
-    ViewData["Title"] = "Trang chủ admin";
+    ViewData["Title"] = "Trang chủ Quản trị";
     Layout = "_Layout";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Xin chào Quản trị viên</h1>
-    
+<div class="admin-dashboard">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="welcome-title">Chào mừng, Quản trị viên</h1>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="stat-card bg-primary">
+                    <i class="fas fa-users stat-icon"></i>
+                    <div class="stat-details">
+                        <h3 class="stat-number">1,234</h3>
+                        <p class="stat-text">Người dùng</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card bg-success">
+                    <i class="fas fa-shopping-cart stat-icon"></i>
+                    <div class="stat-details">
+                        <h3 class="stat-number">56</h3>
+                        <p class="stat-text">Đơn hàng mới</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card bg-warning">
+                    <i class="fas fa-coffee stat-icon"></i>
+                    <div class="stat-details">
+                        <h3 class="stat-number">27</h3>
+                        <p class="stat-text">Sản phẩm</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card bg-info">
+                    <i class="fas fa-chart-line stat-icon"></i>
+                    <div class="stat-details">
+                        <h3 class="stat-number">$1,000</h3>
+                        <p class="stat-text">Doanh thu</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Biểu đồ doanh thu</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Đơn hàng gần đây</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Đơn hàng #234
+                                <span class="badge bg-primary rounded-pill">$50</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Đơn hàng #235
+                                <span class="badge bg-primary rounded-pill">$75</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Đơn hàng #236
+                                <span class="badge bg-primary rounded-pill">$100</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+    .container-fluid {
+        margin-top: 75px !important;
+    }
+    .admin-dashboard {
+
+        padding: 2rem 0;
+        background-color: #f8f9fa;
+    }
+    .welcome-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #343a40;
+        margin-bottom: 2rem;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .stat-card {
+        display: flex;
+        align-items: center;
+        padding: 1.5rem;
+        border-radius: 10px;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+    .stat-icon {
+        font-size: 3rem;
+        margin-right: 1rem;
+    }
+
+    .stat-details {
+        flex-grow: 1;
+    }
+
+    .stat-number {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 0;
+    }
+
+    .stat-text {
+        font-size: 1rem;
+        margin-bottom: 0;
+        opacity: 0.8;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+
+        .card:hover {
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .card-title {
+        margin-bottom: 0;
+        font-weight: 600;
+        color: #495057;
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('revenueChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: [12, 19, 3, 5, 2, 3, 10],
+                    backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                    borderColor: 'rgba(0, 123, 255, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}

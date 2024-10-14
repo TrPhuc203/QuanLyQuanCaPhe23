@@ -4,6 +4,7 @@
     ViewData["Title"] = "Giỏ hàng của bạn";
     Layout = "_NewLayout";
 }
+<title>@ViewData["Title"]</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <div class="container mt-5">
     <h1 class="text-center my-4">Giỏ hàng của bạn</h1>
@@ -65,10 +66,7 @@
                 <div class="col-md-6">
                     <div class="payment-buttons">
                         <a href="@Url.Action("Order", "GioHang")" class="payment-button order">
-                            <i class="fas fa-store"></i> Thanh toán tại chỗ
-                        </a>
-                        <a href="@Url.Action("ThanhToanOnline", "GioHang")" class="payment-button online">
-                            <i class="fas fa-credit-card"></i> Thanh toán online
+                            <i class="fas fa-store"></i> Thanh toán tại quầy
                         </a>
                         <a href="@Url.Action("ThanhToanPayPal", "GioHang")" class="payment-button paypal">
                             <i class="fab fa-paypal"></i> Thanh toán PayPal

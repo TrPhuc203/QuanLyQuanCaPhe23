@@ -4,11 +4,11 @@
     ViewData["Title"] = "Danh sách cà phê";
     Layout = "_NewLayout";
 }
+<title>@ViewData["Title"]</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link rel="stylesheet" href="~/css/card.css">
 <div class="container coffee-list-container">
     <h1 class="text-center mb-5">Danh sách cà phê</h1>
-
     <div class="search-container mb-5">
         <form asp-action="ListCaPhe" method="get">
             <div class="search-wrapper">
@@ -78,7 +78,7 @@
         </ul>
     </nav>
 </div>
-
+<button id="back_to_top"><i class="fa-solid fa-angles-up"></i></button>
 <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -94,6 +94,35 @@
             priceElement.value = selectedGia;
         }
     });
+
+            /*Back to top button*/
+            const backToTopbtn = document.querySelector("#back_to_top");
+    window.addEventListener("scroll", scrollFunction);
+
+    function scrollFunction() {
+        if (window.pageYOffset > 1000) {  //show backtotop
+            if (!backToTopbtn.classList.contains("button_entrance")) {
+                backToTopbtn.classList.remove("button_exit");
+                backToTopbtn.classList.add("button_entrance");
+
+                backToTopbtn.style.display = "block";
+            }
+        }
+        else { //hidden backtotop
+            if (backToTopbtn.classList.contains("button_entrance")) {
+                backToTopbtn.classList.remove("button_entrance");
+                backToTopbtn.classList.add("button_exit");
+                setTimeout(function () {
+                    backToTopbtn.style.display = "none";
+                }, 200);
+            }
+        }
+        backToTopbtn.addEventListener("click", backtotop);
+
+        function backtotop() {
+            window.scrollTo(0, 0);
+        }
+    }
 </script>
 <df-messenger intent="WELCOME"
               chat-title="CoffeeChatBot"
@@ -104,6 +133,70 @@
     body {
         margin-top: 75px;
     }
+    /* slide show auto */
+        .slick-dots li button:before {
+            font-size: 13px;
+        }
+        .slider {
+            width: 100%;
+            margin: 20px auto;
+        }
+
+        .slick-slide img {
+            width: 100%;
+        }
+
+        .slick-arrows {
+            position: absolute;
+            width: 40px;
+            height: 50px;
+            border-radius: 4px;
+            border: none;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+            .slick-arrows:hover {
+                background: rgba(255, 255, 255, 0.6);
+                color: #000;
+            }
+
+        .slick-prev {
+            left: 0;
+        }
+
+        .slick-next {
+            right: 0;
+        }
+
+        .slick-dots {
+            position: absolute;
+            list-style: none;
+            display: flex !important;
+            z-index: 2;
+            left: 93%;
+            transform: translateX(-50%);
+            bottom: -30px;
+        }
+
+            .slick-dots button {
+                background-color: rgb(207, 204, 204);
+                font-size: 13px;
+                border-radius: 50%;
+                border: none;
+                outline: none;
+                width: 15px;
+                margin: 0px;
+                height: 15px;
+            }
+
+                .slick-dots .slick-active button,
+                .slick-dots button:hover {
+                    background: #0a5e98;
+                }
     .coffee-list-container {
         background-color: #f8f9fa;
         padding: 3rem 0;
@@ -240,4 +333,33 @@
         --df-messenger-user-message: #5a3d2b;
     }
 
+    back_to_top {
+        position: fixed;
+        bottom: 20px;
+        right: 40px;
+        font-size: 18px;
+        width: 40px;
+        height: 40px;
+        color: #fff;
+        background-color: #0a5e98;
+        border: none;
+        cursor: pointer;
+        border-radius: 50%;
+        outline: none;
+        transition-duration: 0.2s;
+        transition-timing-function: ease-in-out;
+        transition-property: backround-color, color;
+    }
+
+    #back_to_top:hover,
+    #back_to_top:focus {
+        background-color: #71afd5;
+        color: white;
+    }
+
+    .button_entrance {
+        animation-duration: 0.5s;
+        animation-fill-mode: both;
+        animation-name: button_entrance;
+    }
 </style>

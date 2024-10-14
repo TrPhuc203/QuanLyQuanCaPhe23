@@ -3,60 +3,112 @@
 @{
     ViewData["Title"] = "Chi tiết cà phê";
 }
-<style>
-    body {
-        margin-top: 75px;
-    }
-</style>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<title>@ViewData["Title"]</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <div class="container mt-5">
-    <div class="card shadow-lg p-3 mb-5 bg-white rounded">
-        <div class="card-body">
-            <h1 class="text-center mb-4">CHI TIẾT MÓN CÀ PHÊ</h1>
-            <hr />
-            <dl class="row">
-                <dt class="col-sm-3 font-weight-bold">Ảnh</dt>
-                <dd class="col-sm-9">
-                    <img width="200px" src="@Html.DisplayFor(model => model.SanPham.Anh)" class="img-fluid rounded" />
-                </dd>
-                <dt class="col-sm-3 font-weight-bold">Mã cà phê</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.SanPham.Id)</dd>
-                <dt class="col-sm-3 font-weight-bold">Tên cà phê</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.SanPham.Ten)</dd>
-                <dt class="col-sm-3 font-weight-bold">Miêu tả</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.SanPham.MieuTa)</dd>
-                <dt class="col-sm-3 font-weight-bold">Size</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.SanPham.Size.Ten)</dd>
-                <dt class="col-sm-3 font-weight-bold">Giá tiền</dt>
-                <dd class="col-sm-9">@string.Format("{0:N0} VNĐ", Model.SanPham.Tien)</dd>
-            </dl>
+    <div class="card shadow-lg border-0 rounded-lg overflow-hidden">
+        <div class="card-header bg-gradient-coffee text-white text-center py-4">
+            <h2 class="font-weight-bold mb-0">CHI TIẾT MÓN CÀ PHÊ</h2>
+        </div>
+        <div class="card-body p-5">
+            <div class="row">
+                <div class="col-md-5 mb-4 mb-md-0">
+                    <img src="@Model.SanPham.Anh" alt="@Model.SanPham.Ten" class="img-fluid rounded shadow-sm" />
+                </div>
+                <div class="col-md-7">
+                    <h3 class="mb-3">@Model.SanPham.Ten</h3>
+                    <p class="lead mb-4">@Model.SanPham.MieuTa</p>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">Mã cà phê: #@Model.SanPham.Id</span>
+                        <span class="badge badge-pill badge-primary">@Model.SanPham.Size.Ten</span>
+                    </div>
+                    <h4 class="text-primary mb-4">@string.Format("{0:N0} VNĐ", Model.SanPham.Tien)</h4>
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Edit" asp-route-id="@Model.SanPham.Id" class="btn btn-warning">
+                            <i class="fas fa-edit mr-2"></i>Chỉnh sửa
+                        </a>
+                        <a asp-action="ListCaPhe" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left mr-2"></i>Trở về danh sách
+                        </a>
+                    </div>
+                </div>
+            </div>
 
-            <!-- Danh sách bình luận -->
-            <h2 class="mt-5">Bình luận của khách hàng</h2>
-            <hr />
-            @if (Model.BinhLuans != null && Model.BinhLuans.Any())
-            {
-                <ul class="list-group">
-                    @foreach (var bl in Model.BinhLuans)
+            <!-- Đánh giá và Bình luận -->
+            <div class="mt-5">
+                <h3 class="mb-4">Đánh giá và Bình luận</h3>
+                @if (Model.BinhLuans != null && Model.BinhLuans.Any())
+                {
+                    foreach (var bl in Model.BinhLuans)
                     {
-                        <li class="list-group-item">
-                            <strong>@bl.KhachHang.HoKh @bl.KhachHang.TenKh:</strong> <!-- Hiển thị họ và tên khách hàng -->
-                            <p>@bl.NoiDung</p>
-                            <span>Số sao: @bl.SoSao</span>
-                            <br />
-                            <span class="text-muted">Ngày bình luận: @bl.NgayTao.Value.ToString("dd/MM/yyyy")</span>
-                        </li>
+                        <div class="card mb-3 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h5 class="mb-0">@bl.KhachHang.HoKh @bl.KhachHang.TenKh</h5>
+                                    <small class="text-muted">@bl.NgayTao.Value.ToString("dd/MM/yyyy")</small>
+                                </div>
+                                <p class="card-text">@bl.NoiDung</p>
+                                <div class="d-flex align-items-center">
+                                    <span class="mr-2">Đánh giá:</span>
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="fas fa-star @(i <= bl.SoSao ? "text-warning" : "text-muted")"></i>
+                                    }
+                                </div>
+                            </div>
+                        </div>
                     }
-                </ul>
-            }
-            else
-            {
-                <p>Không có bình luận nào cho sản phẩm này.</p>
-            }
-
-            <div class="text-center mt-4">
-                @Html.ActionLink("Chỉnh sửa", "Edit", new { id = Model.SanPham.Id }, new { @class = "btn btn-warning btn-lg mr-2" })
-                <a asp-action="ListCaPhe" class="btn btn-primary btn-lg">Trở về danh sách</a>
+                }
+                else
+                {
+                    <p class="text-muted">Chưa có đánh giá nào cho sản phẩm này.</p>
+                }
             </div>
         </div>
     </div>
 </div>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<style>
+    body {
+        margin-top: 10px;
+        background-color: #f8f9fa;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .container .mt-5 {
+        margin-bottom: 60px;
+    }
+    .bg-gradient-coffee {
+        background: linear-gradient(45deg, #6F4E37, #B5651D);
+    }
+
+    .card {
+        transition: all 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+    .btn {
+        border-radius: 30px;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+    }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+    .badge-primary {
+        background-color: #6F4E37;
+    }
+
+    .fas.fa-star {
+        font-size: 0.8rem;
+    }
+</style>
